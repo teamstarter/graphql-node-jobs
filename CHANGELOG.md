@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.2](https://github.com/teamstarter/node-jobs/compare/v0.1.1...v0.1.2) (2019-12-26)
+
+
+### Features
+
+* Change project name as npm slot is taken. ([b789f15](https://github.com/teamstarter/node-jobs/commit/b789f156d3fcca1542ee287ce11f11efaa94399a))
+
+
+### Bug Fixes
+
+* Try to fix relative path. ([665206c](https://github.com/teamstarter/node-jobs/commit/665206c456b2926795b7b29d74cf5b3880b4cfab))
+
 ### 0.1.1 (2019-12-26)
 
 
