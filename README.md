@@ -1,7 +1,7 @@
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
 [![Build Status](https://travis-ci.org/vincentdesmares/node-jobs.svg?branch=master)](https://travis-ci.org/vincentdesmares/node-jobs)
 
-# node-jobs
+# node-graphql-jobs
 
 A job scheduler, a runner and an interface to manage jobs. In one lib.
 
@@ -11,7 +11,7 @@ It allows you to setup many execution pipelines and run them.
 
 - How it works
 
-NJ (node-jobs) is available as:
+NGJ (node-graphql-jobs) is available as:
 
 - A standalone nodejs application
 - A schema plugable to your Apollo server Schema
@@ -22,9 +22,9 @@ By default the server runs on a local SQLite database. You can use your own data
 
 Migration commands are available to migrate your database manually. We strongly advise to specify a dedicated schema when using your own database to avoid any naming overlap.
 
-- How can I integrate node-jobs to my app?
+- How can I integrate NGJ to my app?
 
-To use the api, there is [node-jobs-react](https://github.com/vincentdesmares/node-jobs-react) that provide convenient Components to list/trigger/delete and other useful actions.
+To use the api, there is [node-graphql-jobs-react](https://github.com/vincentdesmares/node-jobs-react) that provide convenient Components to list/trigger/delete and other useful actions.
 
 ## Table of Contents
 
