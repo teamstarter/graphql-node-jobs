@@ -1,0 +1,19 @@
+{
+  "name": "node-jobs",
+  "version": "0.1.0",
+  "private": false,
+  "dependencies": {},
+  "devDependencies": {
+    "pm2": "^4.2.1",
+    "typescript": "^3.7.4",
+    "webpack-cli": "^3.3.10"
+  },
+  "scripts": {
+    "dev": "pm2 delete all -s; pm2 startOrReload ecosystem.dev.config.js",
+    "build": "tsc --lib es2019 --esModuleInterop --outDir ./build ./src/index.ts",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "storybook": "start-storybook -p 9009 -s public",
+    "build-storybook": "build-storybook -s public"
+  }
+}
