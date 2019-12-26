@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.3](https://github.com/teamstarter/node-jobs/compare/v0.1.2...v0.1.3) (2019-12-26)
+
+
+### Bug Fixes
+
+* Add missing files to the build ([d77ffbb](https://github.com/teamstarter/node-jobs/commit/d77ffbb4e472ecf3e0b1c8a368520be7215afc1d))
+
 ### [0.1.2](https://github.com/teamstarter/node-jobs/compare/v0.1.1...v0.1.2) (2019-12-26)
 
 
