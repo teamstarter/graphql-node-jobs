@@ -2,18 +2,37 @@
   "name": "node-jobs",
   "version": "0.1.0",
   "private": false,
-  "dependencies": {},
+  "author": {
+    "email": "vincent.desmares@gmail.com",
+    "name": "Vincent Desmares",
+    "url": "https://twitter.com/VincentDesmares"
+  },
+  "files": [
+    "lib/**/*"
+  ],
+  "dependencies": {
+    "graphql-sequelize-generator": "^5.0.2",
+    "sequelize": "^5.21.3",
+    "umzug": "^2.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:teamstarter/node-jobs.git"
+  },
+  "main": "./lib/index.js",
+  "engines": {
+    "node": ">=12.14.0"
+  },
   "devDependencies": {
     "pm2": "^4.2.1",
+    "standard-version": "^7.0.1",
     "typescript": "^3.7.4",
     "webpack-cli": "^3.3.10"
   },
+  "license": "LGPL",
   "scripts": {
     "dev": "pm2 delete all -s; pm2 startOrReload ecosystem.dev.config.js",
-    "build": "tsc --lib es2019 --esModuleInterop --outDir ./build ./src/index.ts",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "storybook": "start-storybook -p 9009 -s public",
-    "build-storybook": "build-storybook -s public"
+    "build": "tsc --lib es2019 --esModuleInterop --outDir ./lib ./src/index.ts",
+    "release": "standard-version"
   }
 }
