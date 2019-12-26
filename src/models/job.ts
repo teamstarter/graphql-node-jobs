@@ -1,26 +1,26 @@
-import Sequelize from 'sequelize'
+import { DataTypes } from 'sequelize'
 
 export default function Job(sequelize: any) {
   const Job = sequelize.define(
     'job',
     {
       type: {
-        type: Sequelize.STRING
+        type: DataTypes.STRING
       },
       name: {
-        type: Sequelize.STRING
+        type: DataTypes.STRING
       },
       input: {
-        type: Sequelize.STRING
+        type: DataTypes.STRING
       },
       output: {
-        type: Sequelize.STRING
+        type: DataTypes.STRING
       },
       status: {
-        type: Sequelize.STRING
+        type: DataTypes.STRING
       },
       batchId: {
-        type: Sequelize.INTEGER
+        type: DataTypes.INTEGER
       }
     },
     {

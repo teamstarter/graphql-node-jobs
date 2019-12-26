@@ -1,14 +1,14 @@
-import Sequelize from 'sequelize'
+import { DataTypes } from 'sequelize'
 
 export default function Batch(sequelize: any) {
   var Batch = sequelize.define(
     'batch',
     {
       status: {
-        type: Sequelize.STRING
+        type: DataTypes.STRING
       },
       pipelineId: {
-        type: Sequelize.INTEGER
+        type: DataTypes.INTEGER
       }
     },
     {

@@ -1,14 +1,14 @@
-import Sequelize from 'sequelize'
+import { DataTypes } from 'sequelize'
 
 export default function Pipeline(sequelize: any) {
   var Pipeline = sequelize.define(
     'pipeline',
     {
       name: {
-        type: Sequelize.STRING
+        type: DataTypes.STRING
       },
       metadata: {
-        type: Sequelize.STRING
+        type: DataTypes.STRING
       }
     },
     {

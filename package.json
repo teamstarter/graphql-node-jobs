@@ -32,7 +32,7 @@
   "license": "LGPL",
   "scripts": {
     "dev": "pm2 delete all -s; pm2 startOrReload ecosystem.dev.config.js",
-    "build": "tsc --lib es2019 --esModuleInterop --outDir ./lib ./src/index.ts",
+    "build": "tsc --lib es2019 --esModuleInterop --outDir ./lib ./src/index.ts ./src/models/*.ts",
     "release": "standard-version"
   }
 }

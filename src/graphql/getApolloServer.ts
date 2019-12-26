@@ -2,7 +2,7 @@ import {
   generateApolloServer,
   generateModelTypes
 } from 'graphql-sequelize-generator'
-import getModels from './../models'
+import getModels from '../models'
 
 import job from './job'
 import batch from './batch'
@@ -14,9 +14,9 @@ export default (dbConfig: any) => {
   const types = generateModelTypes(models)
 
   const graphqlSchemaDeclaration = {
-    job: job(types),
-    batch: batch(types),
-    pipeline: pipeline(types)
+    job: job(types, models),
+    batch: batch(types, models),
+    pipeline: pipeline(types, models)
   }
 
   return generateApolloServer({

@@ -1,8 +1,8 @@
 import fs from 'fs'
 import path from 'path'
-import Sequelize from 'sequelize'
+import { Sequelize } from 'sequelize'
 
-let db = null
+let db: any = null
 
 /**
  * In a standard project the configuration is a commited file. But here
@@ -12,14 +12,25 @@ let db = null
  * It must be noted that NJ does not support changing the models configuration
  * once the models are fetched.
  */
-function initDb(config) {
+function initDb(config: any) {
   const basename = path.basename(module.filename)
   db = {}
-  config.operatorsAliases = operatorsAliases
 
-  let sequelize = config.use_env_variable
-    ? new Sequelize(process.env[config.use_env_variable])
-    : new Sequelize(config.database, config.username, config.password, config)
+  let sequelize: any = null
+
+  if (
+    typeof config.use_env_variable !== 'undefined' &&
+    config.use_env_variable
+  ) {
+    sequelize = new Sequelize()
+  } else {
+    sequelize = new Sequelize(
+      config.database,
+      config.username,
+      config.password,
+      config
+    )
+  }
 
   fs.readdirSync(__dirname)
     .filter(function(file) {
@@ -42,7 +53,7 @@ function initDb(config) {
   db.Sequelize = Sequelize
 }
 
-export default function getModels(dbConfig) {
+export default function getModels(dbConfig: any) {
   if (!db) {
     initDb(dbConfig)
   }

@@ -1,10 +1,12 @@
-import getModels from './../models'
-import { OutputTypes, ModelEndpointsConfiguration } from '../types'
-
-const models = getModels()
+import {
+  OutputTypes,
+  ModelEndpointsConfiguration,
+  SequelizeModels
+} from '../types'
 
 export default function PipelineConfiguration(
-  outputTypes: OutputTypes
+  outputTypes: OutputTypes,
+  models: SequelizeModels
 ): ModelEndpointsConfiguration {
   return {
     model: models.pipeline,
