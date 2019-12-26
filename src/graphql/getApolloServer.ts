@@ -2,7 +2,7 @@ import {
   generateApolloServer,
   generateModelTypes
 } from 'graphql-sequelize-generator'
-import getModels from '../models'
+import getModels from './../models'
 
 import job from './job'
 import batch from './batch'

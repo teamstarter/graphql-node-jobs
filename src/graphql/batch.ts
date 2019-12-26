@@ -1,5 +1,5 @@
 import getModels from './../models'
-import { OutputTypes, ModelEndpointsConfiguration } from '../types'
+import { OutputTypes, ModelEndpointsConfiguration } from './../types'
 
 const models = getModels()
 
