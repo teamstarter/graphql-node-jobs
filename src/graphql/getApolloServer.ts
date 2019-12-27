@@ -8,7 +8,7 @@ import job from './job'
 import batch from './batch'
 import pipeline from './pipeline'
 
-export default (dbConfig: any) => {
+export default function getApolloServer(dbConfig: any) {
   const models = getModels(dbConfig)
 
   const types = generateModelTypes(models)

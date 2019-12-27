@@ -1,7 +1,7 @@
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
-[![Build Status](https://travis-ci.org/vincentdesmares/node-jobs.svg?branch=master)](https://travis-ci.org/vincentdesmares/node-jobs)
+[![Build Status](https://travis-ci.org/vincentdesmares/graphql-node-jobs.svg?branch=master)](https://travis-ci.org/teamstarter/graphql-node-jobs)
 
-# node-graphql-jobs
+# graphql-node-jobs
 
 A job scheduler, a runner and an interface to manage jobs. In one lib.
 
@@ -11,7 +11,7 @@ It allows you to setup many execution pipelines and run them.
 
 - How it works
 
-NGJ (node-graphql-jobs) is available as:
+NGJ (graphql-node-jobs) is available as:
 
 - A standalone nodejs application
 - A schema plugable to your Apollo server Schema

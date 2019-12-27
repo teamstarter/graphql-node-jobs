@@ -24,12 +24,12 @@ function initDb(config: any) {
   ) {
     sequelize = new Sequelize()
   } else {
-    sequelize = new Sequelize(
-      config.database,
-      config.username,
-      config.password,
-      config
-    )
+    const connexion =
+      process.env.NODE_ENV &&
+      typeof config[process.env.NODE_ENV] !== 'undefined'
+        ? config[process.env.NODE_ENV]
+        : config
+    sequelize = new Sequelize(connexion)
   }
 
   fs.readdirSync(__dirname)

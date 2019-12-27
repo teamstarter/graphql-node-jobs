@@ -41,11 +41,13 @@ export default async (models: SequelizeModels) => {
 
   // Array containing the filenames of the seeders files without extensions, sorted chronologically.
   const functionFiles = fs
-    .readdirSync('./../migrations')
+    .readdirSync(path.join(__dirname, '/../migrations'))
     .sort()
     .map((f: any) => path.basename(f, '.js'))
 
-  const functions = new Umzug(umzugOptions('./../migrations'))
+  const functions = new Umzug(
+    umzugOptions(path.join(__dirname, '/../migrations'))
+  )
 
   await functions.up({
     migrations: functionFiles
