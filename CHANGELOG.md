@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.12](https://github.com/teamstarter/graphql-node-jobs/compare/v0.1.11...v0.1.12) (2019-12-27)
+
+
+### Features
+
+* Add a first test to setup the CI. ([20a62f5](https://github.com/teamstarter/graphql-node-jobs/commit/20a62f53115817499be05ac946ea49533250f9ca))
+
 ### [0.1.11](https://github.com/teamstarter/graphql-node-jobs/compare/v0.1.10...v0.1.11) (2019-12-27)
 
 
