@@ -33,15 +33,35 @@ To use the api, there is [node-graphql-jobs-react](https://github.com/vincentdes
 
 ## Available commands
 
+### Start the default server
+
 ```bash
-npx node-jobs start
+npx gnj run
 ```
 
-When the server is starter, you can open the following url and discover the schema:
+When the server is started, you can open the following url : http://localhost:8080/graphiql and discover the schema. If it's the first time you run it, an sqlite database will be created in the data folder relative to the path you started it.
 
+You can also run the following command to run a server with a specific database.
+
+```bash
+npx gnj run ./../yourSequelizeConfigFile.js
 ```
-http://localhost:8080/graphiql
+
+GNJ is build as a microservice but can also be embedded in your application if needed. We advise to run it and the associated workers with a process manager like pm2.
+
+### Migration the GNJ schema
+
+```bash
+npx gnj migrate ./../yourSequelizeConfigFile.js
 ```
+
+### Start an In-memory server (no DB)
+
+```bash
+npx gnj run-in-memory
+```
+
+When the server is started, you can open the following url : http://localhost:8080/graphiql and discover the schema. If you shutdown the server, all data will be lost.
 
 # Modifting Node-jobs
 
@@ -81,13 +101,17 @@ npm-exec
 source ~/.bashrc
 ```
 
-## TODO list
+## Test the migration script locally
 
-- [ ] Migrate the project to typescript
-- [ ] Add pipelines
-- [ ] Make batches work (with status "stashed")
-- [ ] Delete old jobs when re-assigning them.
-- [ ] ?
+```bash
+yarn run gnj migrate ./../tests/sqliteTestConfig.js
+```
+
+## Start a test server using the test database migrated previously
+
+```bash
+yarn start
+```
 
 ## Project References
 
