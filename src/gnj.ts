@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import program from 'commander'
 import migrate from './migrate'
 import getModels from './models'
@@ -12,7 +14,7 @@ program
     try {
       config = require(configPath)
     } catch (e) {
-      console.log('Could not load the given config.', e)
+      throw new Error('Could not load the given config.' + e.message)
     }
     const models = getModels(config)
     await migrate(models)
