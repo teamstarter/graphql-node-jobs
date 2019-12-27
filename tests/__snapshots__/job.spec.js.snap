@@ -1,6 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Test the job endpoint QUERY: jobs 1`] = `
+exports[`Test the job endpoint Acquiring a job require a type 1`] = `"Variable \\"$type\\" of required type \\"String!\\" was not provided."`;
+
+exports[`Test the job endpoint List the jobs 1`] = `
 Object {
   "data": Object {
     "job": Array [
@@ -13,6 +15,33 @@ Object {
         "name": "Bla b",
       },
     ],
+  },
+}
+`;
+
+exports[`Test the job endpoint One can acquire a job of a given type. 1`] = `
+Object {
+  "acquireJob": Object {
+    "id": 1,
+    "name": "Bla a",
+    "output": "{}",
+    "status": "processing",
+  },
+}
+`;
+
+exports[`Test the job endpoint checkForJobs allows to simply acquire and update jobs. 1`] = `
+Object {
+  "data": Object {
+    "job": Object {
+      "__typename": "job",
+      "id": 1,
+      "input": "{}",
+      "name": "Bla a",
+      "output": "{\\"total\\":125}",
+      "status": "successful",
+      "type": "a",
+    },
   },
 }
 `;

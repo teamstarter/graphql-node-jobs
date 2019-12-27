@@ -58,7 +58,7 @@ export default async function checkForJobs({
     fetch
   })
   const cache = new InMemoryCache()
-  debug(`Started worker ${workerId} in charge of types :${type}.`)
+  debug(`Worker ${workerId}, checking for jobs of types :${type}.`)
   const client = new ApolloClient({
     link,
     cache

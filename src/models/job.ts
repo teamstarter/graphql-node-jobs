@@ -32,7 +32,7 @@ export default function Job(sequelize: any) {
               'queued', // default state for a new job without batch or pipeline
               'processing',
               'failed',
-              'sucessful',
+              'successful',
               'cancelled'
             ]
           ]
