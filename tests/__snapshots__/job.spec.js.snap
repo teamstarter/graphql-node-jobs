@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test the job endpoint QUERY: jobs 1`] = `
+Object {
+  "data": Object {
+    "job": Array [
+      Object {
+        "id": 1,
+        "name": "Bla a",
+      },
+      Object {
+        "id": 2,
+        "name": "Bla b",
+      },
+    ],
+  },
+}
+`;

@@ -2,6 +2,8 @@ export type OutputTypes = any
 
 export type SequelizeModel = any
 
+export type SequelizeConfig = any
+
 export type SequelizeModels = {
   [key: string]: SequelizeModel
 }

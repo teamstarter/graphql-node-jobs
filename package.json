@@ -12,6 +12,7 @@
     "migrations/*"
   ],
   "dependencies": {
+    "@types/spdy": "^3.4.4",
     "commander": "^4.0.1",
     "dataloader-sequelize": "^2.1.1",
     "graphql-sequelize-generator": "^5.0.2",
@@ -34,11 +35,13 @@
     "graphql": "^14.0.2",
     "graphql-relay": "^0.5.5",
     "graphql-sequelize": "^9.3.5",
+    "jest": "^24.9.0",
     "pm2": "^4.2.1",
     "sequelize": "5.21.1",
     "spdy": "^4.0.1",
     "sqlite3": "^4.1.1",
     "standard-version": "^7.0.1",
+    "supertest": "^4.0.2",
     "typescript": "^3.7.4",
     "webpack-cli": "^3.3.10"
   },
@@ -53,6 +56,7 @@
     "graphql-node-jobs": "node ./lib/gnj.js",
     "dev": "pm2 delete all -s; pm2 startOrReload ecosystem.dev.config.js",
     "build": "tsc --lib es2019 --esModuleInterop --outDir ./lib ./src/index.ts ./src/models/*.ts ./src/gnj.ts",
+    "test": "DEBUG=-* NODE_ENV=test PORT=3332 jest",
     "release": "standard-version",
     "gnj": "node ./lib/gnj.js",
     "start": "node ./tests/server.js"

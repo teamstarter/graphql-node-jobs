@@ -113,6 +113,18 @@ yarn run gnj migrate ./../tests/sqliteTestConfig.js
 yarn start
 ```
 
+## Running the test
+
+```bash
+yarn test
+```
+
+Debugging a specific test
+
+```bash
+node --inspect-brk ./node_modules/jest/bin/jest.js ./tests/job.spec.js
+```
+
 ## Project References
 
 [The React library](https://github.com/vincentdesmares/node-jobs-react)

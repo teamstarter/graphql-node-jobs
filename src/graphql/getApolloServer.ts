@@ -32,7 +32,7 @@ export default function getApolloServer(dbConfig: any) {
       //     () => new ErrorTrackingExtension()
       //   ],
       // Be sure to enable tracing
-      tracing: true
+      tracing: false
     },
     customMutations: {}
   })
