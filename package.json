@@ -49,9 +49,9 @@
     "graphql": "^14.0.2",
     "graphql-relay": "^0.5.5",
     "graphql-sequelize": "^9.3.5",
-    "sequelize": "5.21.1"
+    "sequelize": "5.21.3"
   },
-  "license": "LGPL",
+  "license": "Apache-2.0",
   "scripts": {
     "graphql-node-jobs": "node ./lib/gnj.js",
     "dev": "pm2 delete all -s; pm2 startOrReload ecosystem.dev.config.js",
