@@ -30,11 +30,13 @@
     "node": ">=12.14.0"
   },
   "devDependencies": {
+    "express": "^4.17.1",
     "graphql": "^14.0.2",
     "graphql-relay": "^0.5.5",
     "graphql-sequelize": "^9.3.5",
     "pm2": "^4.2.1",
     "sequelize": "5.21.1",
+    "spdy": "^4.0.1",
     "sqlite3": "^4.1.1",
     "standard-version": "^7.0.1",
     "typescript": "^3.7.4",
