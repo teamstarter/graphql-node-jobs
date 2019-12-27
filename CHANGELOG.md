@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.11](https://github.com/teamstarter/graphql-node-jobs/compare/v0.1.10...v0.1.11) (2019-12-27)
+
+
+### Features
+
+* Make the migrations use a different schema. ([ba8d078](https://github.com/teamstarter/graphql-node-jobs/commit/ba8d0788035f11f7425dec20fed95e45594028bf))
+
 ### [0.1.10](https://github.com/teamstarter/graphql-node-jobs/compare/v0.1.9...v0.1.10) (2019-12-27)
 
 
