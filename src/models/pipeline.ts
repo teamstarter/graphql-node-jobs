@@ -4,6 +4,11 @@ export default function Pipeline(sequelize: any) {
   var Pipeline = sequelize.define(
     'pipeline',
     {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+      },
       name: {
         type: DataTypes.STRING
       },

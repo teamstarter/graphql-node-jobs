@@ -14,7 +14,7 @@ module.exports = {
           id: 1,
           type: 'a',
           name: 'Bla a',
-          status: 'planned',
+          status: 'queued',
           input: '{}',
           output: '{}',
           batchId: 1
@@ -23,7 +23,7 @@ module.exports = {
           id: 2,
           type: 'b',
           name: 'Bla b',
-          status: 'processing',
+          status: 'queued',
           input: '{}',
           output: '{}',
           batchId: 2

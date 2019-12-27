@@ -77,7 +77,19 @@ exports.seedDatabase = async () =>
 /**
  * Deletes all the tables
  */
-exports.deleteTables = async () => sequelize.getQueryInterface().dropAllTables()
+exports.deleteTables = async () => {
+  await sequelize.getQueryInterface().dropAllTables()
+}
+
+exports.resetDatabase = async () => {
+  try {
+    await exports.migrateDatabase()
+    await exports.seedDatabase()
+  } catch (e) {
+    console.log('Critical error during the database migration', e.message, e)
+    throw e
+  }
+}
 
 exports.models = models
 

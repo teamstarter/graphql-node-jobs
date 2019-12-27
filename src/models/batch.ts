@@ -4,6 +4,11 @@ export default function Batch(sequelize: any) {
   var Batch = sequelize.define(
     'batch',
     {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+      },
       status: {
         type: DataTypes.STRING
       },

@@ -1,11 +1,11 @@
 import {
-  OutputTypes,
   ModelEndpointsConfiguration,
-  SequelizeModels
+  SequelizeModels,
+  InAndOutGraphqlTypes
 } from './../types'
 
 export default function BatchConfiguration(
-  outputTypes: OutputTypes,
+  graphqlTypes: InAndOutGraphqlTypes,
   models: SequelizeModels
 ): ModelEndpointsConfiguration {
   return {

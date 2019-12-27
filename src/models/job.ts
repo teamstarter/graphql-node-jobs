@@ -4,6 +4,11 @@ export default function Job(sequelize: any) {
   const Job = sequelize.define(
     'job',
     {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+      },
       type: {
         type: DataTypes.STRING
       },
@@ -17,7 +22,21 @@ export default function Job(sequelize: any) {
         type: DataTypes.STRING
       },
       status: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'queued',
+        validate: {
+          isIn: [
+            [
+              'planned', // Job inside a batch or a pipeline. Waits to be moved to queued.˜
+              'queued', // default state for a new job without batch or pipeline
+              'processing',
+              'failed',
+              'sucessful',
+              'cancelled'
+            ]
+          ]
+        }
       },
       batchId: {
         type: DataTypes.INTEGER

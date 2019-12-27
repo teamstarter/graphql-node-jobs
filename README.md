@@ -128,3 +128,4 @@ node --inspect-brk ./node_modules/jest/bin/jest.js ./tests/job.spec.js
 ## Project References
 
 [The React library](https://github.com/vincentdesmares/node-jobs-react)
+[Architecture Documentation](https://docs.google.com/document/d/1r5F-kTZh_81AXy_9-DG4gMf9UwPJmfg6KBsCEK6Yero/edit#)
