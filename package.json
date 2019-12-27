@@ -8,7 +8,8 @@
     "url": "https://twitter.com/VincentDesmares"
   },
   "files": [
-    "lib/**/*"
+    "lib/**/*",
+    "migrations/*"
   ],
   "dependencies": {
     "commander": "^4.0.1",
