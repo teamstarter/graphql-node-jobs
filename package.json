@@ -47,6 +47,7 @@
   },
   "license": "LGPL",
   "scripts": {
+    "graphql-node-jobs": "node ./lib/gnj.js",
     "dev": "pm2 delete all -s; pm2 startOrReload ecosystem.dev.config.js",
     "build": "tsc --lib es2019 --esModuleInterop --outDir ./lib ./src/index.ts ./src/models/*.ts ./src/gnj.ts",
     "release": "standard-version",
