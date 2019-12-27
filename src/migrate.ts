@@ -22,7 +22,8 @@ export default async (models: SequelizeModels) => {
   const umzugOptions = (path: string) => ({
     storage: 'sequelize',
     storageOptions: {
-      sequelize
+      sequelize,
+      tableName: 'gnj_sequelize_meta'
     },
     migrations: {
       params: [

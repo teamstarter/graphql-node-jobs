@@ -22,13 +22,12 @@ server.applyMiddleware({
   path: '/graphql'
 })
 
-const serverHttp = http
-  .createServer(options, app)
-  .listen(process.env.PORT || 8080, async () => {
-    console.log(
-      `🚀 http/https/h2 server runs on  http://localhost:${process.env.PORT ||
-        8080}/graphql .`
-    )
-  })
+const port = process.env.PORT || 8080
+
+const serverHttp = http.createServer(options, app).listen(port, async () => {
+  console.log(
+    `🚀 http/https/h2 server runs on  http://localhost:${port}/graphql .`
+  )
+})
 
 server.installSubscriptionHandlers(serverHttp)
