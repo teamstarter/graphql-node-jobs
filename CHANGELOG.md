@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.9](https://github.com/teamstarter/graphql-node-jobs/compare/v0.1.8...v0.1.9) (2019-12-27)
+
+
+### Features
+
+* **api:** Add basic mutations for models. ([a68e39c](https://github.com/teamstarter/graphql-node-jobs/commit/a68e39c3b6732283137bfdb0c96daec2218017e5))
+
 ### [0.1.8](https://github.com/teamstarter/graphql-node-jobs/compare/v0.1.7...v0.1.8) (2019-12-27)
 
 
