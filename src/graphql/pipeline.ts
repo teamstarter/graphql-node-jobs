@@ -10,7 +10,7 @@ export default function PipelineConfiguration(
 ): ModelEndpointsConfiguration {
   return {
     model: models.pipeline,
-    actions: ['list'],
+    actions: ['list', 'update', 'create'],
     list: {
       before: findOptions => {
         return findOptions

@@ -10,7 +10,7 @@ export default function JobConfiguration(
 ): ModelEndpointsConfiguration {
   return {
     model: models.job,
-    actions: ['list'],
+    actions: ['list', 'update', 'create'],
     list: {
       before: findOptions => {
         return findOptions
