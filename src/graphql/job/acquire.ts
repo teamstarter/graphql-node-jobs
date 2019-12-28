@@ -1,4 +1,4 @@
-import { GraphQLString, GraphQLNonNull } from 'graphql'
+import { GraphQLString, GraphQLNonNull, GraphQLList } from 'graphql'
 import {
   InAndOutGraphqlTypes,
   SequelizeModels,
@@ -14,14 +14,16 @@ export default function AcquireJobDefinition(
     description:
       'Try to find a job of a given type and assign it to the given worker.',
     args: {
-      type: { type: new GraphQLNonNull(GraphQLString) },
+      typeList: {
+        type: new GraphQLNonNull(GraphQLList(new GraphQLNonNull(GraphQLString)))
+      },
       workerId: { type: GraphQLString }
     },
     resolve: async (source, args, context) => {
       const transaction = await models.sequelize.transaction()
       const job = await models.job.findOne({
         where: {
-          type: args.type,
+          type: args.typeList,
           status: 'queued'
         },
         order: [['id', 'ASC']],

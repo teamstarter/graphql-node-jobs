@@ -5,15 +5,15 @@ import ApolloClient from 'apollo-client'
 import gql from 'graphql-tag'
 import { HttpLink } from 'apollo-link-http'
 import { InMemoryCache } from 'apollo-cache-inmemory'
-import fetch from 'unfetch'
+import fetch from 'node-fetch'
 
 const debug = _debug('graphql-node-jobs')
 
 const loopTime = 1000
 
 const acquireJobQuery = gql`
-  mutation acquireJob($type: String!, $workerId: String) {
-    job: acquireJob(type: $type, workerId: $workerId) {
+  mutation acquireJob($typeList: [String!]!, $workerId: String) {
+    job: acquireJob(typeList: $typeList, workerId: $workerId) {
       id
       type
       name
@@ -39,26 +39,32 @@ const updateJobQuery = gql`
 export default async function checkForJobs({
   processingFunction,
   uri,
-  type,
+  typeList,
   workerId = undefined,
   looping = true
 }: {
   processingFunction: (job: Job) => Promise<any>
   uri: string
-  type: string | Array<String>
+  typeList: Array<String>
   workerId?: string
   looping: true
 }): Promise<any> {
+  if (!typeList || typeList.length === 0) {
+    throw new Error('Please provide a typeList property in the configuration.')
+  }
+
   if (!workerId) {
     workerId = uuidv4()
   }
 
   const link = new HttpLink({
     uri,
-    fetch
+    fetch: fetch as any
   })
   const cache = new InMemoryCache()
-  debug(`Worker ${workerId}, checking for jobs of types :${type}.`)
+  debug(
+    `Worker ${workerId}, checking for jobs of types :${typeList.join(', ')}.`
+  )
   const client = new ApolloClient({
     link,
     cache
@@ -66,7 +72,7 @@ export default async function checkForJobs({
 
   const { data } = await client.mutate({
     mutation: acquireJobQuery,
-    variables: { type, workerId }
+    variables: { typeList, workerId }
   })
 
   const { job } = data
@@ -105,7 +111,13 @@ export default async function checkForJobs({
     })
 
     if (looping) {
-      return checkForJobs({ processingFunction, uri, type, workerId, looping })
+      return checkForJobs({
+        processingFunction,
+        uri,
+        typeList,
+        workerId,
+        looping
+      })
     }
     return result
   } catch (err) {

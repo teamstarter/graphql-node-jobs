@@ -13,6 +13,7 @@
   ],
   "dependencies": {
     "@types/debug": "^4.1.5",
+    "@types/node-fetch": "^2.5.4",
     "@types/spdy": "^3.4.4",
     "@types/uuid": "^3.4.6",
     "apollo-cache-inmemory": "^1.6.5",
@@ -22,9 +23,9 @@
     "dataloader-sequelize": "^2.1.1",
     "debug": "^4.1.1",
     "graphql-sequelize-generator": "^5.0.2",
+    "node-fetch": "^2.6.0",
     "sequelize": "^5.21.3",
     "umzug": "^2.2.0",
-    "unfetch": "^4.1.0",
     "uuid": "^3.3.3"
   },
   "repository": {

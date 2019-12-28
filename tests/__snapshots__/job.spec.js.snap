@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Test the job endpoint Acquiring a job require a type 1`] = `"Variable \\"$type\\" of required type \\"String!\\" was not provided."`;
+exports[`Test the job endpoint Acquiring a job require a type 1`] = `"Variable \\"$typeList\\" of required type \\"[String!]!\\" was not provided."`;
 
 exports[`Test the job endpoint List the jobs 1`] = `
 Object {
@@ -30,6 +30,22 @@ Object {
 }
 `;
 
+exports[`Test the job endpoint checkForJobs allows to asynchronous processing functions. 1`] = `
+Object {
+  "data": Object {
+    "job": Object {
+      "__typename": "job",
+      "id": 1,
+      "input": "{}",
+      "name": "Bla a",
+      "output": "{\\"total\\":\\"plop\\"}",
+      "status": "successful",
+      "type": "a",
+    },
+  },
+}
+`;
+
 exports[`Test the job endpoint checkForJobs allows to simply acquire and update jobs. 1`] = `
 Object {
   "data": Object {
@@ -41,6 +57,38 @@ Object {
       "output": "{\\"total\\":125}",
       "status": "successful",
       "type": "a",
+    },
+  },
+}
+`;
+
+exports[`Test the job endpoint checkForJobs allows to simply acquire multiple types of jobs at the same time. 1`] = `
+Object {
+  "data": Object {
+    "job": Object {
+      "__typename": "job",
+      "id": 1,
+      "input": "{}",
+      "name": "Bla a",
+      "output": "{\\"total\\":125}",
+      "status": "successful",
+      "type": "a",
+    },
+  },
+}
+`;
+
+exports[`Test the job endpoint checkForJobs allows to simply acquire multiple types of jobs at the same time. 2`] = `
+Object {
+  "data": Object {
+    "job": Object {
+      "__typename": "job",
+      "id": 2,
+      "input": "{}",
+      "name": "Bla b",
+      "output": "{\\"total\\":125}",
+      "status": "successful",
+      "type": "b",
     },
   },
 }

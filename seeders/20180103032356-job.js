@@ -17,7 +17,7 @@ module.exports = {
           status: 'queued',
           input: '{}',
           output: '{}',
-          batchId: 1
+          batchId: null
         },
         {
           id: 2,
@@ -26,7 +26,7 @@ module.exports = {
           status: 'queued',
           input: '{}',
           output: '{}',
-          batchId: 2
+          batchId: null
         }
       ].map(timestamp),
       {}

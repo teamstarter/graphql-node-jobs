@@ -14,9 +14,9 @@ let server = null
 const uri = `http://localhost:${process.env.PORT || 8080}/graphql`
 
 const acquireJob = variables => ({
-  query: `mutation($type: String!, $workerId: String) {
+  query: `mutation($typeList: [String!]!, $workerId: String) {
     acquireJob(
-      type: $type
+      typeList: $typeList
       workerId: $workerId
     ) {
       id
@@ -79,7 +79,7 @@ describe('Test the job endpoint', () => {
       .post('/graphql')
       .send(
         acquireJob({
-          type: 'a'
+          typeList: ['a']
         })
       )
 
@@ -90,7 +90,7 @@ describe('Test the job endpoint', () => {
       .post('/graphql')
       .send(
         acquireJob({
-          type: 'a'
+          typeList: ['a']
         })
       )
 
@@ -100,10 +100,55 @@ describe('Test the job endpoint', () => {
 
   it('checkForJobs allows to simply acquire and update jobs.', async () => {
     const job = await checkForJobs({
-      type: 'a',
+      typeList: ['a'],
       uri,
       processingFunction: job => {
         return { total: 125 }
+      },
+      looping: false
+    })
+    expect(job).not.toBeUndefined()
+    expect(job).not.toBe(null)
+    expect(job).toMatchSnapshot()
+  })
+
+  it('checkForJobs allows to simply acquire multiple types of jobs at the same time.', async () => {
+    const job = await checkForJobs({
+      typeList: ['a', 'b'],
+      uri,
+      processingFunction: job => {
+        return { total: 125 }
+      },
+      looping: false
+    })
+    expect(job).not.toBeUndefined()
+    expect(job).not.toBe(null)
+    expect(job).toMatchSnapshot()
+
+    const job2 = await checkForJobs({
+      typeList: ['a', 'b'],
+      uri,
+      processingFunction: job => {
+        return { total: 125 }
+      },
+      looping: false
+    })
+    expect(job2).not.toBeUndefined()
+    expect(job2).not.toBe(null)
+    expect(job2).toMatchSnapshot()
+  })
+
+  it('checkForJobs allows to asynchronous processing functions.', async () => {
+    const job = await checkForJobs({
+      typeList: ['a', 'b'],
+      uri,
+      processingFunction: async job => {
+        const result = await new Promise((resolve, reject) =>
+          setTimeout(() => {
+            resolve('plop')
+          }, 100)
+        )
+        return { total: result }
       },
       looping: false
     })
