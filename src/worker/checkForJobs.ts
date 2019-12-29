@@ -41,13 +41,15 @@ export default async function checkForJobs({
   uri,
   typeList,
   workerId = undefined,
-  looping = true
+  looping = true,
+  loopTime = 1000
 }: {
   processingFunction: (job: Job) => Promise<any>
   uri: string
   typeList: Array<String>
   workerId?: string
   looping: true
+  loopTime?: number
 }): Promise<any> {
   if (!typeList || typeList.length === 0) {
     throw new Error('Please provide a typeList property in the configuration.')
@@ -79,7 +81,18 @@ export default async function checkForJobs({
 
   if (!job) {
     if (looping) {
-      setTimeout(checkForJobs, loopTime)
+      setTimeout(
+        () =>
+          checkForJobs({
+            processingFunction,
+            uri,
+            typeList,
+            workerId,
+            looping,
+            loopTime
+          }),
+        loopTime
+      )
       return null
     } else {
       return null
@@ -116,7 +129,8 @@ export default async function checkForJobs({
         uri,
         typeList,
         workerId,
-        looping
+        looping,
+        loopTime
       })
     }
     return result
