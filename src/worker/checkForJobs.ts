@@ -133,7 +133,7 @@ export default async function checkForJobs({
         loopTime
       })
     }
-    return result
+    return result.data.job
   } catch (err) {
     debug('Failed to update the success status of the current job.', err)
   }

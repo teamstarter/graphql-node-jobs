@@ -29,6 +29,21 @@ const acquireJob = variables => ({
   operationName: null
 })
 
+const jobCreate = variables => ({
+  query: `mutation($job: jobInput!) {
+    jobCreate(
+      job: $job
+    ) {
+      id
+      name
+      status
+      output
+    }
+  }`,
+  variables,
+  operationName: null
+})
+
 /**
  * Starting the tests
  */
@@ -155,5 +170,48 @@ describe('Test the job endpoint', () => {
     expect(job).not.toBeUndefined()
     expect(job).not.toBe(null)
     expect(job).toMatchSnapshot()
+
+    const jobEntity = await models.job.findOne({ where: { id: job.id } })
+    expect(jobEntity.startedAt).not.toBe(null)
+    expect(jobEntity.endedAt).not.toBe(null)
+  })
+
+  it('One can create a job of a given type.', async () => {
+    const response = await request(server)
+      .post('/graphql')
+      .send(
+        jobCreate({
+          job: { name: 'c', type: 'c' }
+        })
+      )
+
+    expect(response.body.errors).toBeUndefined()
+    expect(response.body.data).toMatchSnapshot()
+    // By default a created job is always in queued state.
+    expect(response.body.data.jobCreate.status).toBe('queued')
+  })
+
+  it('One cannot create a job without a type.', async () => {
+    const response = await request(server)
+      .post('/graphql')
+      .send(
+        jobCreate({
+          job: { name: 'c' }
+        })
+      )
+
+    expect(response.body.errors).not.toBeUndefined()
+  })
+
+  it('One cannot create a job without a type.', async () => {
+    const response = await request(server)
+      .post('/graphql')
+      .send(
+        jobCreate({
+          job: { name: 'c' }
+        })
+      )
+
+    expect(response.body.errors).not.toBeUndefined()
   })
 })

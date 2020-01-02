@@ -37,7 +37,8 @@ export default function AcquireJobDefinition(
       await job.update(
         {
           workerId: args.workerId,
-          status: 'processing'
+          status: 'processing',
+          startedAt: new Date()
         },
         { transaction }
       )

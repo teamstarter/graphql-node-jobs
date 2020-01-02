@@ -10,16 +10,21 @@ export default function Job(sequelize: any) {
         autoIncrement: true
       },
       type: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        allowNull: false
       },
       name: {
         type: DataTypes.STRING
       },
       input: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue: null
       },
       output: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue: null
       },
       status: {
         type: DataTypes.STRING,
@@ -39,7 +44,19 @@ export default function Job(sequelize: any) {
         }
       },
       batchId: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        defaultValue: null
+      },
+      workerId: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue: null
+      },
+      startedAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
+        defaultValue: null
       }
     },
     {

@@ -30,66 +30,61 @@ Object {
 }
 `;
 
+exports[`Test the job endpoint One can create a job of a given type. 1`] = `
+Object {
+  "jobCreate": Object {
+    "id": 3,
+    "name": "c",
+    "output": null,
+    "status": "queued",
+  },
+}
+`;
+
 exports[`Test the job endpoint checkForJobs allows to asynchronous processing functions. 1`] = `
 Object {
-  "data": Object {
-    "job": Object {
-      "__typename": "job",
-      "id": 1,
-      "input": "{}",
-      "name": "Bla a",
-      "output": "{\\"total\\":\\"plop\\"}",
-      "status": "successful",
-      "type": "a",
-    },
-  },
+  "__typename": "job",
+  "id": 1,
+  "input": "{}",
+  "name": "Bla a",
+  "output": "{\\"total\\":\\"plop\\"}",
+  "status": "successful",
+  "type": "a",
 }
 `;
 
 exports[`Test the job endpoint checkForJobs allows to simply acquire and update jobs. 1`] = `
 Object {
-  "data": Object {
-    "job": Object {
-      "__typename": "job",
-      "id": 1,
-      "input": "{}",
-      "name": "Bla a",
-      "output": "{\\"total\\":125}",
-      "status": "successful",
-      "type": "a",
-    },
-  },
+  "__typename": "job",
+  "id": 1,
+  "input": "{}",
+  "name": "Bla a",
+  "output": "{\\"total\\":125}",
+  "status": "successful",
+  "type": "a",
 }
 `;
 
 exports[`Test the job endpoint checkForJobs allows to simply acquire multiple types of jobs at the same time. 1`] = `
 Object {
-  "data": Object {
-    "job": Object {
-      "__typename": "job",
-      "id": 1,
-      "input": "{}",
-      "name": "Bla a",
-      "output": "{\\"total\\":125}",
-      "status": "successful",
-      "type": "a",
-    },
-  },
+  "__typename": "job",
+  "id": 1,
+  "input": "{}",
+  "name": "Bla a",
+  "output": "{\\"total\\":125}",
+  "status": "successful",
+  "type": "a",
 }
 `;
 
 exports[`Test the job endpoint checkForJobs allows to simply acquire multiple types of jobs at the same time. 2`] = `
 Object {
-  "data": Object {
-    "job": Object {
-      "__typename": "job",
-      "id": 2,
-      "input": "{}",
-      "name": "Bla b",
-      "output": "{\\"total\\":125}",
-      "status": "successful",
-      "type": "b",
-    },
-  },
+  "__typename": "job",
+  "id": 2,
+  "input": "{}",
+  "name": "Bla b",
+  "output": "{\\"total\\":125}",
+  "status": "successful",
+  "type": "b",
 }
 `;
