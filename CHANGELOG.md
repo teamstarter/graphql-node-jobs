@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.17](https://github.com/teamstarter/graphql-node-jobs/compare/v0.1.16...v0.1.17) (2020-01-02)
+
+
+### Bug Fixes
+
+* **job:** Fix start and end date. ([d83dcd7](https://github.com/teamstarter/graphql-node-jobs/commit/d83dcd7daafc6cdc9e9728781ee69f746ad601d1))
+
 ### [0.1.16](https://github.com/teamstarter/graphql-node-jobs/compare/v0.1.15...v0.1.16) (2020-01-02)
 
 
