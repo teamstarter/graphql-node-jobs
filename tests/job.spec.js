@@ -214,4 +214,21 @@ describe('Test the job endpoint', () => {
 
     expect(response.body.errors).not.toBeUndefined()
   })
+
+  it('One can query the timefields', async () => {
+    const response = await request(server).get(
+      `/graphql?query=query getJobs {
+          job(order:"id") {
+            id
+            startedAt
+            endedAt
+            createdAt
+            deletedAt
+          }
+        }
+        &operationName=getJobs`
+    )
+
+    expect(response.body.errors).toBeUndefined()
+  })
 })

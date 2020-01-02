@@ -18,7 +18,8 @@ export default function Pipeline(sequelize: any) {
     },
     {
       freezeTableName: true,
-      tableName: 'pipeline'
+      tableName: 'pipeline',
+      paranoid: true
     }
   )
   Pipeline.associate = function(models: any) {

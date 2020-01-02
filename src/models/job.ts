@@ -57,11 +57,30 @@ export default function Job(sequelize: any) {
         type: DataTypes.DATE,
         allowNull: true,
         defaultValue: null
+      },
+      endedAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
+        defaultValue: null
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false
+      },
+      deletedAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
+        defaultValue: null
       }
     },
     {
       freezeTableName: true,
-      tableName: 'job'
+      tableName: 'job',
+      paranoid: true
     }
   )
   Job.associate = function(models: any) {

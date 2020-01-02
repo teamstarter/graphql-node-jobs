@@ -18,7 +18,8 @@ export default function Batch(sequelize: any) {
     },
     {
       freezeTableName: true,
-      tableName: 'batch'
+      tableName: 'batch',
+      paranoid: true
     }
   )
 
