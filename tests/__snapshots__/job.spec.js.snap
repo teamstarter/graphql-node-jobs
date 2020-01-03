@@ -88,3 +88,5 @@ Object {
   "type": "b",
 }
 `;
+
+exports[`Test the job endpoint checkForJobs declare jobs as failed when an error is raised. 1`] = `[TypeError: a.awd is not a function]`;

@@ -176,6 +176,27 @@ describe('Test the job endpoint', () => {
     expect(jobEntity.endedAt).not.toBe(null)
   })
 
+  it('checkForJobs declare jobs as failed when an error is raised.', async () => {
+    const job = await checkForJobs({
+      typeList: ['a'],
+      uri,
+      processingFunction: async () => {
+        const a = {}
+        a.awd()
+        return a
+      },
+      looping: false
+    })
+    expect(job).not.toBeUndefined()
+    expect(job).not.toBe(null)
+    expect(job).toMatchSnapshot()
+
+    const jobEntity = await models.job.findOne({ where: { id: 1 } })
+    expect(jobEntity.startedAt).not.toBe(null)
+    expect(jobEntity.endedAt).not.toBe(null)
+    expect(jobEntity.status).toBe('failed')
+  })
+
   it('One can create a job of a given type.', async () => {
     const response = await request(server)
       .post('/graphql')

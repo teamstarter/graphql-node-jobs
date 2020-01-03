@@ -106,7 +106,28 @@ export default async function checkForJobs({
     debug("Job's done", job.id)
   } catch (err) {
     debug('Error during the job processing', err)
-    // @todo update job status.
+    await client.mutate({
+      mutation: updateJobQuery,
+      variables: {
+        job: {
+          id: job.id,
+          status: 'failed',
+          output: `${JSON.stringify(err)}`
+        }
+      }
+    })
+
+    if (looping) {
+      return checkForJobs({
+        processingFunction,
+        uri,
+        typeList,
+        workerId,
+        looping,
+        loopTime
+      })
+    }
+    return err
   }
 
   debug('Updating job')
