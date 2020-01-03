@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.21](https://github.com/teamstarter/graphql-node-jobs/compare/v0.1.20...v0.1.21) (2020-01-03)
+
+
+### Features
+
+* **server:** Allow to customize the gsg call. ([f91afd9](https://github.com/teamstarter/graphql-node-jobs/commit/f91afd92ff61f03df126b7a7a35507ab120fac03))
+
 ### [0.1.20](https://github.com/teamstarter/graphql-node-jobs/compare/v0.1.19...v0.1.20) (2020-01-03)
 
 
