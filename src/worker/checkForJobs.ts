@@ -112,7 +112,7 @@ export default async function checkForJobs({
         job: {
           id: job.id,
           status: 'failed',
-          output: `${JSON.stringify(err)}`
+          output: `[${err.toString()}] Stack: ${err.stack.toString()}`
         }
       }
     })

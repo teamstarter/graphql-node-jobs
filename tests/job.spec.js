@@ -195,6 +195,7 @@ describe('Test the job endpoint', () => {
     expect(jobEntity.startedAt).not.toBe(null)
     expect(jobEntity.endedAt).not.toBe(null)
     expect(jobEntity.status).toBe('failed')
+    expect(jobEntity.output).toMatchSnapshot()
   })
 
   it('One can create a job of a given type.', async () => {
