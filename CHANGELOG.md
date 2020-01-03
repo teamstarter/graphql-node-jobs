@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.18](https://github.com/teamstarter/graphql-node-jobs/compare/v0.1.17...v0.1.18) (2020-01-03)
+
+
+### Features
+
+* **checkForJob:** Handle the failed status automatically. ([e248c53](https://github.com/teamstarter/graphql-node-jobs/commit/e248c53b83a8e62d80958a9c39f59ae2a5d02d3d))
+
 ### [0.1.17](https://github.com/teamstarter/graphql-node-jobs/compare/v0.1.16...v0.1.17) (2020-01-02)
 
 
