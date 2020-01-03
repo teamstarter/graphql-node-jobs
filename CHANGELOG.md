@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.20](https://github.com/teamstarter/graphql-node-jobs/compare/v0.1.19...v0.1.20) (2020-01-03)
+
+
+### Bug Fixes
+
+* **job:** Allow to store more text in input and output fields. BC commit but ok for now. ([490e9fc](https://github.com/teamstarter/graphql-node-jobs/commit/490e9fc52ad43662c6f7abdee27c03890f60ab5b))
+
 ### [0.1.19](https://github.com/teamstarter/graphql-node-jobs/compare/v0.1.18...v0.1.19) (2020-01-03)
 
 
