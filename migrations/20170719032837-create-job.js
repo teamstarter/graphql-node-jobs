@@ -18,10 +18,10 @@ module.exports = {
         type: Sequelize.STRING
       },
       input: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
       },
       output: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
       },
       createdAt: {
         allowNull: false,

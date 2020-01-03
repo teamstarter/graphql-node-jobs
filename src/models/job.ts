@@ -17,12 +17,12 @@ export default function Job(sequelize: any) {
         type: DataTypes.STRING
       },
       input: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: true,
         defaultValue: null
       },
       output: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: true,
         defaultValue: null
       },
