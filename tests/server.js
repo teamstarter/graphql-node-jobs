@@ -1,6 +1,7 @@
 const { getApolloServer } = require('./../lib/index')
 const express = require('express')
 const http = require('spdy')
+const { PubSub } = require('graphql-subscriptions')
 const config = require('./sqliteTestConfig.js')
 const app = express()
 
@@ -10,7 +11,9 @@ var options = {
   }
 }
 
-const server = getApolloServer(config)
+const pubSubInstance = new PubSub()
+
+const server = getApolloServer(config, { pubSubInstance })
 
 /**
  * This is the test server.

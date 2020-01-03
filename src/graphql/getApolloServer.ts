@@ -8,7 +8,11 @@ import job from './job'
 import batch from './batch'
 import pipeline from './pipeline'
 
-export default function getApolloServer(dbConfig: any) {
+/**
+ * @param dbConfig Sequelize database configuration object
+ * @param gsgParams Params from graphql-sequelize-generator that overwrite the default ones.
+ */
+export default function getApolloServer(dbConfig: any, gsgParams: any = {}) {
   const models = getModels(dbConfig)
 
   const types = generateModelTypes(models)
@@ -34,6 +38,7 @@ export default function getApolloServer(dbConfig: any) {
       // Be sure to enable tracing
       tracing: false
     },
-    customMutations: {}
+    customMutations: {},
+    ...gsgParams
   })
 }
