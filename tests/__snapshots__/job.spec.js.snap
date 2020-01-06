@@ -91,12 +91,16 @@ Object {
 
 exports[`Test the job endpoint checkForJobs declare jobs as failed when an error is raised. 1`] = `[TypeError: a.awd is not a function]`;
 
-exports[`Test the job endpoint checkForJobs declare jobs as failed when an error is raised. 2`] = `
-"[TypeError: a.awd is not a function] Stack: TypeError: a.awd is not a function
-    at processingFunction (/Users/vincent/projects/node-jobs/tests/job.spec.js:185:11)
-    at call (/Users/vincent/projects/node-jobs/lib/worker/checkForJobs.js:110:42)
-    at step (/Users/vincent/projects/node-jobs/lib/worker/checkForJobs.js:37:23)
-    at Object.next (/Users/vincent/projects/node-jobs/lib/worker/checkForJobs.js:18:53)
-    at fulfilled (/Users/vincent/projects/node-jobs/lib/worker/checkForJobs.js:9:58)
-    at processTicksAndRejections (internal/process/task_queues.js:93:5)"
+exports[`Test the job endpoint checkForJobs processing function can return nothing if needed. 1`] = `
+Object {
+  "__typename": "job",
+  "id": 1,
+  "input": "{}",
+  "name": "Bla a",
+  "output": "{}",
+  "status": "successful",
+  "type": "a",
+}
 `;
+
+exports[`Test the job endpoint checkForJobs processing function can return nothing if needed. 2`] = `"{}"`;

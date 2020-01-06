@@ -195,7 +195,7 @@ describe('Test the job endpoint', () => {
     expect(jobEntity.startedAt).not.toBe(null)
     expect(jobEntity.endedAt).not.toBe(null)
     expect(jobEntity.status).toBe('failed')
-    expect(jobEntity.output).toMatchSnapshot()
+    expect(jobEntity.output.search('at processingFunction')).not.toBe(-1)
   })
 
   it('One can create a job of a given type.', async () => {
@@ -252,5 +252,23 @@ describe('Test the job endpoint', () => {
     )
 
     expect(response.body.errors).toBeUndefined()
+  })
+
+  it('checkForJobs processing function can return nothing if needed.', async () => {
+    const job = await checkForJobs({
+      typeList: ['a'],
+      uri,
+      processingFunction: async () => {},
+      looping: false
+    })
+    expect(job).not.toBeUndefined()
+    expect(job).not.toBe(null)
+    expect(job).toMatchSnapshot()
+
+    const jobEntity = await models.job.findOne({ where: { id: 1 } })
+    expect(jobEntity.startedAt).not.toBe(null)
+    expect(jobEntity.endedAt).not.toBe(null)
+    expect(jobEntity.status).toBe('successful')
+    expect(jobEntity.output).toMatchSnapshot()
   })
 })
