@@ -112,7 +112,9 @@ export default async function checkForJobs({
         job: {
           id: job.id,
           status: 'failed',
-          output: `[${err.toString()}] Stack: ${err.stack.toString()}`
+          output: `[${err.toString()}] Stack: ${
+            err.stack ? err.stack.toString() : 'No stack available.'
+          }`
         }
       }
     })
