@@ -41,6 +41,29 @@ Object {
 }
 `;
 
+exports[`Test the job endpoint The processingFunction expose . 1`] = `
+Object {
+  "__typename": "job",
+  "id": 1,
+  "input": "{}",
+  "name": "Bla a",
+  "output": "{}",
+  "processingInfo": Object {
+    "percent": 10,
+  },
+  "status": "successful",
+  "type": "a",
+}
+`;
+
+exports[`Test the job endpoint The processingFunction expose . 2`] = `"{}"`;
+
+exports[`Test the job endpoint The processingFunction expose . 3`] = `
+Object {
+  "percent": 10,
+}
+`;
+
 exports[`Test the job endpoint checkForJobs allows to asynchronous processing functions. 1`] = `
 Object {
   "__typename": "job",
@@ -48,6 +71,7 @@ Object {
   "input": "{}",
   "name": "Bla a",
   "output": "{\\"total\\":\\"plop\\"}",
+  "processingInfo": null,
   "status": "successful",
   "type": "a",
 }
@@ -60,6 +84,7 @@ Object {
   "input": "{}",
   "name": "Bla a",
   "output": "{\\"total\\":125}",
+  "processingInfo": null,
   "status": "successful",
   "type": "a",
 }
@@ -72,6 +97,7 @@ Object {
   "input": "{}",
   "name": "Bla a",
   "output": "{\\"total\\":125}",
+  "processingInfo": null,
   "status": "successful",
   "type": "a",
 }
@@ -84,6 +110,7 @@ Object {
   "input": "{}",
   "name": "Bla b",
   "output": "{\\"total\\":125}",
+  "processingInfo": null,
   "status": "successful",
   "type": "b",
 }
@@ -98,6 +125,7 @@ Object {
   "input": "{}",
   "name": "Bla a",
   "output": "{}",
+  "processingInfo": null,
   "status": "successful",
   "type": "a",
 }

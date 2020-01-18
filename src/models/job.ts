@@ -26,6 +26,11 @@ export default function Job(sequelize: any) {
         allowNull: true,
         defaultValue: null
       },
+      processingInfo: {
+        type: DataTypes.JSON,
+        allowNull: true,
+        defaultValue: null
+      },
       status: {
         type: DataTypes.STRING,
         allowNull: false,

@@ -271,4 +271,25 @@ describe('Test the job endpoint', () => {
     expect(jobEntity.status).toBe('successful')
     expect(jobEntity.output).toMatchSnapshot()
   })
+
+  it('The processingFunction expose .', async () => {
+    const job = await checkForJobs({
+      typeList: ['a'],
+      uri,
+      processingFunction: async (job, { updateProcessingInfo }) => {
+        await updateProcessingInfo({ percent: 10 })
+      },
+      looping: false
+    })
+    expect(job).not.toBeUndefined()
+    expect(job).not.toBe(null)
+    expect(job).toMatchSnapshot()
+
+    const jobEntity = await models.job.findOne({ where: { id: 1 } })
+    expect(jobEntity.startedAt).not.toBe(null)
+    expect(jobEntity.endedAt).not.toBe(null)
+    expect(jobEntity.status).toBe('successful')
+    expect(jobEntity.output).toMatchSnapshot()
+    expect(jobEntity.processingInfo).toMatchSnapshot()
+  })
 })

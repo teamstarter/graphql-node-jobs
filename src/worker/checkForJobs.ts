@@ -1,4 +1,4 @@
-import { Job } from '../types'
+import { Job, JSONValue } from '../types'
 import uuidv4 from 'uuid'
 import _debug from 'debug'
 import ApolloClient from 'apollo-client'
@@ -6,6 +6,9 @@ import gql from 'graphql-tag'
 import { HttpLink } from 'apollo-link-http'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import fetch from 'node-fetch'
+
+import updateProcessingInfo from './updateProcessingInfo'
+import updateJobQuery from './updateJobQuery'
 
 const debug = _debug('graphql-node-jobs')
 
@@ -23,19 +26,6 @@ const acquireJobQuery = gql`
   }
 `
 
-const updateJobQuery = gql`
-  mutation jobUpdate($job: jobInput!) {
-    job: jobUpdate(job: $job) {
-      id
-      type
-      name
-      input
-      output
-      status
-    }
-  }
-`
-
 export default async function checkForJobs({
   processingFunction,
   uri,
@@ -44,7 +34,10 @@ export default async function checkForJobs({
   looping = true,
   loopTime = 1000
 }: {
-  processingFunction: (job: Job) => Promise<any>
+  processingFunction: (
+    job: Job,
+    facilities: { updateProcessingInfo: Function }
+  ) => Promise<any>
   uri: string
   typeList: Array<String>
   workerId?: string
@@ -102,7 +95,11 @@ export default async function checkForJobs({
   debug('Reiceived a new job', job)
   let output = null
   try {
-    output = await processingFunction(job)
+    output = await processingFunction(job, {
+      updateProcessingInfo: (info: JSONValue) => {
+        updateProcessingInfo(client, job, info)
+      }
+    })
     debug("Job's done", job.id)
   } catch (err) {
     debug('Error during the job processing', err)
