@@ -2,9 +2,9 @@ import { GraphQLScalarType, GraphQLNonNull } from 'graphql'
 import { Model, Sequelize, BuildOptions } from 'sequelize/types'
 
 export type JSONPrimitive = string | number | boolean | null
-export type JSONValue = JSONPrimitive | JSONObject | JSONArray
 export type JSONObject = { [member: string]: JSONValue }
 export type JSONArray = JSONValue[]
+export type JSONValue = JSONPrimitive | JSONObject | JSONArray
 
 export type JobStatus =
   | 'planned'
@@ -17,8 +17,8 @@ export type Job = {
   id: number
   type: string
   name: string
-  input: string
-  output: string
+  input: JSONValue
+  output: JSONValue
   status: JobStatus
   batchId: number
 }

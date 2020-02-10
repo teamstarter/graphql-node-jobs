@@ -24,7 +24,7 @@ Object {
   "acquireJob": Object {
     "id": 1,
     "name": "Bla a",
-    "output": "{}",
+    "output": Object {},
     "status": "processing",
   },
 }
@@ -45,9 +45,9 @@ exports[`Test the job endpoint The processingFunction expose . 1`] = `
 Object {
   "__typename": "job",
   "id": 1,
-  "input": "{}",
+  "input": Object {},
   "name": "Bla a",
-  "output": "{}",
+  "output": Object {},
   "processingInfo": Object {
     "percent": 10,
   },
@@ -56,7 +56,7 @@ Object {
 }
 `;
 
-exports[`Test the job endpoint The processingFunction expose . 2`] = `"{}"`;
+exports[`Test the job endpoint The processingFunction expose . 2`] = `Object {}`;
 
 exports[`Test the job endpoint The processingFunction expose . 3`] = `
 Object {
@@ -68,9 +68,11 @@ exports[`Test the job endpoint checkForJobs allows to asynchronous processing fu
 Object {
   "__typename": "job",
   "id": 1,
-  "input": "{}",
+  "input": Object {},
   "name": "Bla a",
-  "output": "{\\"total\\":\\"plop\\"}",
+  "output": Object {
+    "total": "plop",
+  },
   "processingInfo": null,
   "status": "successful",
   "type": "a",
@@ -81,9 +83,11 @@ exports[`Test the job endpoint checkForJobs allows to simply acquire and update 
 Object {
   "__typename": "job",
   "id": 1,
-  "input": "{}",
+  "input": Object {},
   "name": "Bla a",
-  "output": "{\\"total\\":125}",
+  "output": Object {
+    "total": 125,
+  },
   "processingInfo": null,
   "status": "successful",
   "type": "a",
@@ -94,9 +98,11 @@ exports[`Test the job endpoint checkForJobs allows to simply acquire multiple ty
 Object {
   "__typename": "job",
   "id": 1,
-  "input": "{}",
+  "input": Object {},
   "name": "Bla a",
-  "output": "{\\"total\\":125}",
+  "output": Object {
+    "total": 125,
+  },
   "processingInfo": null,
   "status": "successful",
   "type": "a",
@@ -107,9 +113,11 @@ exports[`Test the job endpoint checkForJobs allows to simply acquire multiple ty
 Object {
   "__typename": "job",
   "id": 2,
-  "input": "{}",
+  "input": Object {},
   "name": "Bla b",
-  "output": "{\\"total\\":125}",
+  "output": Object {
+    "total": 125,
+  },
   "processingInfo": null,
   "status": "successful",
   "type": "b",
@@ -122,13 +130,13 @@ exports[`Test the job endpoint checkForJobs processing function can return nothi
 Object {
   "__typename": "job",
   "id": 1,
-  "input": "{}",
+  "input": Object {},
   "name": "Bla a",
-  "output": "{}",
+  "output": Object {},
   "processingInfo": null,
   "status": "successful",
   "type": "a",
 }
 `;
 
-exports[`Test the job endpoint checkForJobs processing function can return nothing if needed. 2`] = `"{}"`;
+exports[`Test the job endpoint checkForJobs processing function can return nothing if needed. 2`] = `Object {}`;

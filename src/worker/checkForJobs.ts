@@ -109,9 +109,11 @@ export default async function checkForJobs({
         job: {
           id: job.id,
           status: 'failed',
-          output: `[${err.toString()}] Stack: ${
-            err.stack ? err.stack.toString() : 'No stack available.'
-          }`
+          output: {
+            error: `[${err.toString()}] Stack: ${
+              err.stack ? err.stack.toString() : 'No stack available.'
+            }`
+          }
         }
       }
     })
@@ -138,7 +140,7 @@ export default async function checkForJobs({
         job: {
           id: job.id,
           status: 'successful',
-          output: JSON.stringify(output)
+          output
         }
       }
     })
