@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.26](https://github.com/teamstarter/graphql-node-jobs/compare/v0.1.25...v0.1.26) (2020-02-10)
+
+
+### Bug Fixes
+
+* **migration:** Make the migration work for postgres and sqlite. ([cf6ba54](https://github.com/teamstarter/graphql-node-jobs/commit/cf6ba54e50fcbeeefc6d9e78d84e24c249b3153f))
+
 ### [0.1.25](https://github.com/teamstarter/graphql-node-jobs/compare/v0.1.24...v0.1.25) (2020-02-10)
 
 
