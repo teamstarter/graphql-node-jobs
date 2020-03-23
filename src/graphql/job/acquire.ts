@@ -1,4 +1,5 @@
 import { GraphQLString, GraphQLNonNull, GraphQLList } from 'graphql'
+import { Op } from 'sequelize'
 import {
   InAndOutGraphqlTypes,
   SequelizeModels,
@@ -24,7 +25,11 @@ export default function AcquireJobDefinition(
       const job = await models.job.findOne({
         where: {
           type: args.typeList,
-          status: 'queued'
+          status: 'queued',
+          [Op.or]: [
+            { startAfter: null },
+            { startAfter: { [Op.lt]: new Date() } }
+          ]
         },
         order: [['id', 'ASC']],
         transaction

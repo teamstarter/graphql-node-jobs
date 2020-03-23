@@ -63,6 +63,11 @@ export default function Job(sequelize: any) {
         allowNull: true,
         defaultValue: null
       },
+      startAfter: {
+        type: DataTypes.DATE,
+        allowNull: true,
+        defaultValue: null
+      },
       endedAt: {
         type: DataTypes.DATE,
         allowNull: true,

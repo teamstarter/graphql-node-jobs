@@ -1,4 +1,6 @@
 const request = require('supertest')
+const addMinutes = require('date-fns/addMinutes')
+
 const {
   migrateDatabase,
   seedDatabase,
@@ -291,5 +293,36 @@ describe('Test the job endpoint', () => {
     expect(jobEntity.status).toBe('successful')
     expect(jobEntity.output).toMatchSnapshot()
     expect(jobEntity.processingInfo).toMatchSnapshot()
+  })
+
+  it('When a job is planified to be run in the future, it cannot be acquired.', async () => {
+    const date = new Date()
+    const job = await models.job.findByPk(1)
+    await job.update({ startAfter: addMinutes(date, 5) })
+
+    const response = await request(server)
+      .post('/graphql')
+      .send(
+        acquireJob({
+          typeList: ['a']
+        })
+      )
+
+    expect(response.body.errors).toBeUndefined()
+    expect(response.body.data.acquireJob).toBe(null)
+
+    // A few milli-seconds passed, so the job should be returned
+    await job.update({ startAfter: date })
+
+    const response2 = await request(server)
+      .post('/graphql')
+      .send(
+        acquireJob({
+          typeList: ['a']
+        })
+      )
+
+    expect(response2.body.errors).toBeUndefined()
+    expect(response2.body.data.acquireJob).not.toBe(null)
   })
 })
