@@ -20,7 +20,7 @@ const listJobQuery = gql`
   }
 `
 
-export default function listJobs(
+export default async function listJobs(
   client: ApolloClient<any>,
   {
     where,
@@ -52,8 +52,14 @@ export default function listJobs(
     variables.offset = offset
   }
 
-  return client.query({
+  const response = await client.query({
     query: listJobQuery,
     variables
   })
+
+  if (response.errors) {
+    throw new Error(response.errors[0].message)
+  }
+
+  return response.data.jobs
 }

@@ -334,27 +334,24 @@ describe('Test the job endpoint', () => {
   })
 
   it('Workers can easily query jobs.', async () => {
-    const response = await listJobs(client)
+    const jobs = await listJobs(client)
 
-    expect(response.errors).toBeUndefined()
-    expect(response.data.jobs).toMatchSnapshot()
+    expect(jobs).toMatchSnapshot()
 
-    const responseWhereType = await listJobs(client, { where: { type: 'a' } })
+    const jobsWhereType = await listJobs(client, { where: { type: 'a' } })
 
-    expect(responseWhereType.errors).toBeUndefined()
-    expect(responseWhereType.data.jobs).toMatchSnapshot()
+    expect(jobsWhereType).toMatchSnapshot()
 
     const date = new Date()
     const job = await models.job.findByPk(1)
     await job.update({ startAfter: date })
 
-    const responseStartAfter = await listJobs(client, {
+    const jobsStartAfter = await listJobs(client, {
       where: { startAfter: date }
     })
 
-    expect(responseStartAfter.errors).toBeUndefined()
-    expect(responseStartAfter.data.jobs[0].id).toBe(1)
-    expect(responseStartAfter.data.jobs.length).toBe(1)
+    expect(jobsStartAfter[0].id).toBe(1)
+    expect(jobsStartAfter.length).toBe(1)
   })
 
   it('Workers can easily create jobs.', async () => {
