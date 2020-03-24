@@ -10,7 +10,7 @@ const {
   deleteTables,
   resetDatabase
 } = require('./test-database.js')
-const { checkForJobs } = require('./../lib/index')
+const { checkForJobs, listJobs } = require('./../lib/index')
 
 let server = null
 const uri = `http://localhost:${process.env.PORT || 8080}/graphql`
@@ -324,5 +324,29 @@ describe('Test the job endpoint', () => {
 
     expect(response2.body.errors).toBeUndefined()
     expect(response2.body.data.acquireJob).not.toBe(null)
+  })
+
+  it('Workers can easily query jobs.', async () => {
+    const response = await listJobs(uri)
+
+    expect(response.errors).toBeUndefined()
+    expect(response.data.jobs).toMatchSnapshot()
+
+    const responseWhereType = await listJobs(uri, { where: { type: 'a' } })
+
+    expect(responseWhereType.errors).toBeUndefined()
+    expect(responseWhereType.data.jobs).toMatchSnapshot()
+
+    const date = new Date()
+    const job = await models.job.findByPk(1)
+    await job.update({ startAfter: date })
+
+    const responseStartAfter = await listJobs(uri, {
+      where: { startAfter: date }
+    })
+
+    expect(responseStartAfter.errors).toBeUndefined()
+    expect(responseStartAfter.data.jobs[0].id).toBe(1)
+    expect(responseStartAfter.data.jobs.length).toBe(1)
   })
 })

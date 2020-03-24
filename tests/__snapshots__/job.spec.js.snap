@@ -64,6 +64,40 @@ Object {
 }
 `;
 
+exports[`Test the job endpoint Workers can easily query jobs. 1`] = `
+Array [
+  Object {
+    "__typename": "job",
+    "id": 1,
+    "input": Object {},
+    "name": "Bla a",
+    "output": Object {},
+    "type": "a",
+  },
+  Object {
+    "__typename": "job",
+    "id": 2,
+    "input": Object {},
+    "name": "Bla b",
+    "output": Object {},
+    "type": "b",
+  },
+]
+`;
+
+exports[`Test the job endpoint Workers can easily query jobs. 2`] = `
+Array [
+  Object {
+    "__typename": "job",
+    "id": 1,
+    "input": Object {},
+    "name": "Bla a",
+    "output": Object {},
+    "type": "a",
+  },
+]
+`;
+
 exports[`Test the job endpoint checkForJobs allows to asynchronous processing functions. 1`] = `
 Object {
   "__typename": "job",
