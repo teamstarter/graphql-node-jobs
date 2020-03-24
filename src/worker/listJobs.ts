@@ -1,8 +1,5 @@
-import { InMemoryCache } from 'apollo-cache-inmemory'
-import { HttpLink } from 'apollo-link-http'
 import ApolloClient from 'apollo-client'
 import gql from 'graphql-tag'
-import fetch from 'node-fetch'
 
 import { JSONValue } from '../types'
 
@@ -24,7 +21,7 @@ const listJobQuery = gql`
 `
 
 export default function listJobs(
-  uri: string,
+  client: ApolloClient<any>,
   {
     where,
     order,
@@ -37,16 +34,6 @@ export default function listJobs(
     offset?: number
   } = {}
 ) {
-  const link = new HttpLink({
-    uri,
-    fetch: fetch as any
-  })
-  const cache = new InMemoryCache()
-  const client = new ApolloClient({
-    link,
-    cache
-  })
-
   const variables: any = {}
 
   if (where) {

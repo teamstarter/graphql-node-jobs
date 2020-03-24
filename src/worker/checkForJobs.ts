@@ -3,9 +3,6 @@ import uuidv4 from 'uuid'
 import _debug from 'debug'
 import ApolloClient from 'apollo-client'
 import gql from 'graphql-tag'
-import { HttpLink } from 'apollo-link-http'
-import { InMemoryCache } from 'apollo-cache-inmemory'
-import fetch from 'node-fetch'
 
 import updateProcessingInfo from './updateProcessingInfo'
 import updateJobQuery from './updateJobQuery'
@@ -28,7 +25,7 @@ const acquireJobQuery = gql`
 
 export default async function checkForJobs({
   processingFunction,
-  uri,
+  client,
   typeList,
   workerId = undefined,
   looping = true,
@@ -38,7 +35,7 @@ export default async function checkForJobs({
     job: Job,
     facilities: { updateProcessingInfo: Function }
   ) => Promise<any>
-  uri: string
+  client: ApolloClient<any>
   typeList: Array<String>
   workerId?: string
   looping: true
@@ -51,19 +48,6 @@ export default async function checkForJobs({
   if (!workerId) {
     workerId = uuidv4()
   }
-
-  const link = new HttpLink({
-    uri,
-    fetch: fetch as any
-  })
-  const cache = new InMemoryCache()
-  debug(
-    `Worker ${workerId}, checking for jobs of types :${typeList.join(', ')}.`
-  )
-  const client = new ApolloClient({
-    link,
-    cache
-  })
 
   const { data } = await client.mutate({
     mutation: acquireJobQuery,
@@ -78,7 +62,7 @@ export default async function checkForJobs({
         () =>
           checkForJobs({
             processingFunction,
-            uri,
+            client,
             typeList,
             workerId,
             looping,
@@ -121,7 +105,7 @@ export default async function checkForJobs({
     if (looping) {
       return checkForJobs({
         processingFunction,
-        uri,
+        client,
         typeList,
         workerId,
         looping,
@@ -148,7 +132,7 @@ export default async function checkForJobs({
     if (looping) {
       return checkForJobs({
         processingFunction,
-        uri,
+        client,
         typeList,
         workerId,
         looping,

@@ -14,7 +14,7 @@ export type JobStatus =
   | 'sucessful'
   | 'cancelled'
 export type Job = {
-  id: number
+  id?: number
   type: string
   name: string
   input: JSONValue

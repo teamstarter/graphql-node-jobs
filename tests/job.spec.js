@@ -10,10 +10,17 @@ const {
   deleteTables,
   resetDatabase
 } = require('./test-database.js')
-const { checkForJobs, listJobs } = require('./../lib/index')
+const {
+  checkForJobs,
+  listJobs,
+  getNewClient,
+  createJob
+} = require('./../lib/index')
 
 let server = null
-const uri = `http://localhost:${process.env.PORT || 8080}/graphql`
+const client = getNewClient(
+  `http://localhost:${process.env.PORT || 8080}/graphql`
+)
 
 const acquireJob = variables => ({
   query: `mutation($typeList: [String!]!, $workerId: String) {
@@ -118,7 +125,7 @@ describe('Test the job endpoint', () => {
   it('checkForJobs allows to simply acquire and update jobs.', async () => {
     const job = await checkForJobs({
       typeList: ['a'],
-      uri,
+      client,
       processingFunction: job => {
         return { total: 125 }
       },
@@ -132,7 +139,7 @@ describe('Test the job endpoint', () => {
   it('checkForJobs allows to simply acquire multiple types of jobs at the same time.', async () => {
     const job = await checkForJobs({
       typeList: ['a', 'b'],
-      uri,
+      client,
       processingFunction: job => {
         return { total: 125 }
       },
@@ -144,7 +151,7 @@ describe('Test the job endpoint', () => {
 
     const job2 = await checkForJobs({
       typeList: ['a', 'b'],
-      uri,
+      client,
       processingFunction: job => {
         return { total: 125 }
       },
@@ -158,7 +165,7 @@ describe('Test the job endpoint', () => {
   it('checkForJobs allows to asynchronous processing functions.', async () => {
     const job = await checkForJobs({
       typeList: ['a', 'b'],
-      uri,
+      client,
       processingFunction: async job => {
         const result = await new Promise((resolve, reject) =>
           setTimeout(() => {
@@ -181,7 +188,7 @@ describe('Test the job endpoint', () => {
   it('checkForJobs declare jobs as failed when an error is raised.', async () => {
     const job = await checkForJobs({
       typeList: ['a'],
-      uri,
+      client,
       processingFunction: async () => {
         const a = {}
         a.awd()
@@ -259,7 +266,7 @@ describe('Test the job endpoint', () => {
   it('checkForJobs processing function can return nothing if needed.', async () => {
     const job = await checkForJobs({
       typeList: ['a'],
-      uri,
+      client,
       processingFunction: async () => {},
       looping: false
     })
@@ -277,7 +284,7 @@ describe('Test the job endpoint', () => {
   it('The processingFunction expose .', async () => {
     const job = await checkForJobs({
       typeList: ['a'],
-      uri,
+      client,
       processingFunction: async (job, { updateProcessingInfo }) => {
         await updateProcessingInfo({ percent: 10 })
       },
@@ -327,12 +334,12 @@ describe('Test the job endpoint', () => {
   })
 
   it('Workers can easily query jobs.', async () => {
-    const response = await listJobs(uri)
+    const response = await listJobs(client)
 
     expect(response.errors).toBeUndefined()
     expect(response.data.jobs).toMatchSnapshot()
 
-    const responseWhereType = await listJobs(uri, { where: { type: 'a' } })
+    const responseWhereType = await listJobs(client, { where: { type: 'a' } })
 
     expect(responseWhereType.errors).toBeUndefined()
     expect(responseWhereType.data.jobs).toMatchSnapshot()
@@ -341,12 +348,19 @@ describe('Test the job endpoint', () => {
     const job = await models.job.findByPk(1)
     await job.update({ startAfter: date })
 
-    const responseStartAfter = await listJobs(uri, {
+    const responseStartAfter = await listJobs(client, {
       where: { startAfter: date }
     })
 
     expect(responseStartAfter.errors).toBeUndefined()
     expect(responseStartAfter.data.jobs[0].id).toBe(1)
     expect(responseStartAfter.data.jobs.length).toBe(1)
+  })
+
+  it('Workers can easily create jobs.', async () => {
+    const response = await createJob(client, { type: 'c' })
+
+    const { createdAt, ...rest } = response
+    expect(rest).toMatchSnapshot()
   })
 })

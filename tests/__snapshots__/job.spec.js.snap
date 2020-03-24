@@ -64,6 +64,20 @@ Object {
 }
 `;
 
+exports[`Test the job endpoint Workers can easily create jobs. 1`] = `
+Object {
+  "__typename": "job",
+  "batchId": null,
+  "id": 3,
+  "input": null,
+  "name": null,
+  "output": null,
+  "startAfter": null,
+  "status": "queued",
+  "type": "c",
+}
+`;
+
 exports[`Test the job endpoint Workers can easily query jobs. 1`] = `
 Array [
   Object {
