@@ -1,6 +1,13 @@
 const path = require('path')
 const fs = require('fs')
 const Umzug = require('umzug')
+const {
+  GraphQLObjectType,
+  GraphQLString,
+  GraphQLInt,
+  GraphQLList
+} = require('graphql')
+
 const { getStandAloneServer, getModels } = require('./../lib/index')
 
 var dbConfig = require(path.join(__dirname, '/sqliteTestConfig.js')).test
@@ -104,5 +111,32 @@ exports.closeEverything = async (mainServer, models, done) => {
 }
 
 exports.getNewServer = () => {
-  return getStandAloneServer(dbConfig)
+  return getStandAloneServer(
+    dbConfig,
+    {},
+    // You can add custom mutations if needed
+    {
+      customAcquire: {
+        type: new GraphQLObjectType({
+          name: 'customAcquire',
+          fields: {
+            id: { type: GraphQLInt }
+          }
+        }),
+        args: {
+          typeList: {
+            type: new GraphQLList(GraphQLString)
+          }
+        },
+        resolve: async (source, args, context) => {
+          // GNJ models can be retreived with the dbConfig if needed
+          // const models = getModels(dbConfig)
+          // get a job from the db
+          const job = await models.job.findByPk(1)
+
+          return job
+        }
+      }
+    }
+  )
 }

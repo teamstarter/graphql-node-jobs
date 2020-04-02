@@ -4,9 +4,13 @@ import { getApolloServer } from './../lib/index'
 import express from 'express'
 import http from 'spdy'
 
-export default async function getStandAloneServer(config: SequelizeConfig) {
+export default async function getStandAloneServer(
+  config: SequelizeConfig,
+  gsgParams: any = {},
+  customMutations: any = {}
+) {
   const app = express()
-  const server = getApolloServer(config)
+  const server = getApolloServer(config, gsgParams, customMutations)
 
   server.applyMiddleware({
     app,

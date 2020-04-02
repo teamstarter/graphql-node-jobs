@@ -53,6 +53,18 @@ const jobCreate = variables => ({
   operationName: null
 })
 
+const customAcquire = variables => ({
+  query: `mutation($typeList: [String!]!) {
+    customAcquire(
+      typeList: $typeList
+    ) {
+      id
+    }
+  }`,
+  variables,
+  operationName: null
+})
+
 /**
  * Starting the tests
  */
@@ -359,5 +371,14 @@ describe('Test the job endpoint', () => {
 
     const { createdAt, ...rest } = response
     expect(rest).toMatchSnapshot()
+  })
+
+  it('One can add his own mutations to the schema', async () => {
+    const response = await request(server)
+      .post('/graphql')
+      .send(customAcquire({ typeList: ['c'] }))
+
+    expect(response.body.errors).toBeUndefined()
+    expect(response.body.data).toMatchSnapshot()
   })
 })

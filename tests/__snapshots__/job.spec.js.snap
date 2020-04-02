@@ -30,6 +30,14 @@ Object {
 }
 `;
 
+exports[`Test the job endpoint One can add his own mutations to the schema 1`] = `
+Object {
+  "customAcquire": Object {
+    "id": 1,
+  },
+}
+`;
+
 exports[`Test the job endpoint One can create a job of a given type. 1`] = `
 Object {
   "jobCreate": Object {
