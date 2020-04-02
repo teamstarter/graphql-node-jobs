@@ -15,22 +15,6 @@ NGJ \(graphql-node-jobs\) is available as:
 - A standalone NodeJS application
 - A GraphQL schema plugable to your Apollo server Schema
 
-### Does the jobs persists if the server is stopped
-
-By default the server runs on a local SQLite database, created at the first start. You can use your own database by providing a Sequelize configuration.
-
-Migration commands are available to migrate your database manually. We strongly advise to specify a dedicated schema when using your own database to avoid any naming overlap or data loss.
-
-### How can I integrate NGJ to my app?
-
-To use the api, there is [node-graphql-jobs-react](https://github.com/vincentdesmares/node-jobs-react) that provide convenient Components to list/trigger/delete and other useful actions. It uses Websockets by default to provide a near-realtime experience.
-
-### Why using graphql-node-jobs?
-
-Use GNJ is you want a SIMPLE, DATABASE agnostic, execution pipeline with a nice default React interface.
-
-If you are using Postgresql and want high performances, [https://github.com/graphile/worker](https://github.com/graphile/worker) might be a better pick.
-
-GNJ is kept small on purpose, the goal is to have the smallest API for the biggest impact.
+# Manual
 
 Get started with [the online documentation](https://vincent-desmares.gitbook.io/graphql-node-jobs/)
