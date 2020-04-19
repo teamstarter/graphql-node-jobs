@@ -1,6 +1,6 @@
 {
   "name": "graphql-node-jobs",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "private": false,
   "author": {
     "email": "vincent.desmares@gmail.com",
@@ -16,7 +16,6 @@
     "apollo-client": "^2.6.8",
     "apollo-link-http": "^1.5.16",
     "commander": "^4.0.1",
-    "dataloader-sequelize": "^2.1.1",
     "debug": "^4.1.1",
     "graphql-sequelize-generator": "^5.0.2",
     "node-fetch": "^2.6.0",
