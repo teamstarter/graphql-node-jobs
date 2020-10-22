@@ -18,3 +18,5 @@ NGJ \(graphql-node-jobs\) is available as:
 # Manual
 
 Get started with [the online documentation](https://vincent-desmares.gitbook.io/graphql-node-jobs/)
+
+To learn more about graphql-sequelize-generator, check out the [GSG Documentation](https://teamstarter.github.io/gsg-documentation/)
