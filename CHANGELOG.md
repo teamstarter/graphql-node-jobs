@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0](https://github.com/teamstarter/graphql-node-jobs/compare/v0.2.3...v0.3.0) (2020-11-02)
+
+
+### ⚠ BREAKING CHANGES
+
+* upgrade sequelize to 6.3.5
+
+* Merge pull request #11 from teamstarter/upgrade-sequelize ([27f440c](https://github.com/teamstarter/graphql-node-jobs/commit/27f440cf92b2c96c7cf9ad773a78a431ca0d3410)), closes [#11](https://github.com/teamstarter/graphql-node-jobs/issues/11)
+
 ### [0.2.3](https://github.com/teamstarter/graphql-node-jobs/compare/v0.2.2...v0.2.3) (2020-04-19)
 
 ### [0.2.2](https://github.com/teamstarter/graphql-node-jobs/compare/v0.2.1...v0.2.2) (2020-04-02)
