@@ -1,13 +1,10 @@
-import {
-  OutputTypes,
-  ModelEndpointsConfiguration,
-  SequelizeModels
-} from '../types'
+import { InAndOutTypes, ModelDeclarationType, SequelizeModels } from 'graphql-sequelize-generator/types'
+
 
 export default function PipelineConfiguration(
-  outputTypes: OutputTypes,
+  types: InAndOutTypes,
   models: SequelizeModels
-): ModelEndpointsConfiguration {
+): ModelDeclarationType {
   return {
     model: models.pipeline,
     actions: ['list', 'update', 'create', 'count'],

@@ -1,13 +1,10 @@
 import { GraphQLString, GraphQLNonNull, GraphQLList } from 'graphql'
+import { CustomMutationConfiguration, InAndOutTypes, SequelizeModels } from 'graphql-sequelize-generator/types'
 import { Op } from 'sequelize'
-import {
-  InAndOutGraphqlTypes,
-  SequelizeModels,
-  CustomMutationConfiguration
-} from '../../types'
+
 
 export default function AcquireJobDefinition(
-  graphqlTypes: InAndOutGraphqlTypes,
+  graphqlTypes: InAndOutTypes,
   models: SequelizeModels
 ): CustomMutationConfiguration {
   return {

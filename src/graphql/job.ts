@@ -1,17 +1,15 @@
-import {
-  ModelEndpointsConfiguration,
-  SequelizeModels,
-  InAndOutGraphqlTypes
-} from './../types'
+import { ModelDeclarationType, SequelizeModels, InAndOutTypes } from "graphql-sequelize-generator/types"
+
 import acquireJob from './job/acquire'
 
 export default function JobConfiguration(
-  graphqlTypes: InAndOutGraphqlTypes,
+  graphqlTypes: InAndOutTypes,
   models: SequelizeModels
-): ModelEndpointsConfiguration {
+): ModelDeclarationType {
   return {
     model: models.job,
     actions: ['list', 'update', 'create', 'count'],
+    subscriptions: ['create', 'update', 'delete'],
     additionalMutations: {
       acquireJob: acquireJob(graphqlTypes, models)
     },

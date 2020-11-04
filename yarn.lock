@@ -3202,10 +3202,10 @@ graphql-relay@^0.5.5:
   resolved "https://registry.yarnpkg.com/graphql-relay/-/graphql-relay-0.5.5.tgz#d6815e6edd618e878d5d921c13fc66033ec867e2"
   integrity sha1-1oFebt1hjoeNXZIcE/xmAz7IZ+I=
 
-graphql-sequelize-generator@^7.2.1:
-  version "7.2.1"
-  resolved "https://registry.yarnpkg.com/graphql-sequelize-generator/-/graphql-sequelize-generator-7.2.1.tgz#719d08e60386b537cd051d5f019ec2876089ccf7"
-  integrity sha512-6h3jKV+7h0eqYRGFx2HhvurXZ53kmOSBjU7VnMmq1kAnFAIuMJnshIVUx9R7uJlexRgpR/JaFTuMNEPSFdIoSw==
+graphql-sequelize-generator@^7.3.1:
+  version "7.3.1"
+  resolved "https://registry.yarnpkg.com/graphql-sequelize-generator/-/graphql-sequelize-generator-7.3.1.tgz#b29ffbc3e52833312d8fe818eaf29d8649a3426a"
+  integrity sha512-eg4U9z1rIlUfTyjjQoXwbmKBKiEMS3eZbvtVqReLWHafHmbLQWFRf4OSdrwPXCiUe+24OOWEV0j9FTjRhVWAHg==
   dependencies:
     "@types/debug" "^4.1.5"
     "@types/express-serve-static-core" "^4.17.13"

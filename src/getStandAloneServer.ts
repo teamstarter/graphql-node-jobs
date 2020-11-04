@@ -1,11 +1,9 @@
-import { SequelizeConfig } from './types'
-
 import { getApolloServer } from './../lib/index'
 import express from 'express'
 import http from 'spdy'
 
 export default async function getStandAloneServer(
-  config: SequelizeConfig,
+  config: any,
   gsgParams: any = {},
   customMutations: any = {}
 ) {

@@ -1,13 +1,9 @@
-import {
-  ModelEndpointsConfiguration,
-  SequelizeModels,
-  InAndOutGraphqlTypes
-} from './../types'
+import { ModelDeclarationType, SequelizeModels, InAndOutTypes } from "graphql-sequelize-generator/types"
 
 export default function BatchConfiguration(
-  graphqlTypes: InAndOutGraphqlTypes,
+  graphqlTypes: InAndOutTypes,
   models: SequelizeModels
-): ModelEndpointsConfiguration {
+): ModelDeclarationType {
   return {
     model: models.batch,
     actions: ['list', 'update', 'create', 'count'],
