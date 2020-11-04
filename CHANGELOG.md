@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.3](https://github.com/teamstarter/graphql-node-jobs/compare/v0.3.2...v0.3.3) (2020-11-04)
+
+
+### Bug Fixes
+
+* **graphql:** Fix count endpoint missing after GSG upgrade. ([6a50b03](https://github.com/teamstarter/graphql-node-jobs/commit/6a50b033837de03d97973271302c47011291d5b4))
+
 ### [0.3.2](https://github.com/teamstarter/graphql-node-jobs/compare/v0.3.1...v0.3.2) (2020-11-03)
 
 
