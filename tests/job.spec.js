@@ -268,6 +268,7 @@ describe('Test the job endpoint', () => {
             createdAt
             deletedAt
           }
+          jobCount
         }
         &operationName=getJobs`
     )

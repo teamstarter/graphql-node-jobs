@@ -10,7 +10,7 @@ export default function BatchConfiguration(
 ): ModelEndpointsConfiguration {
   return {
     model: models.batch,
-    actions: ['list', 'update', 'create'],
+    actions: ['list', 'update', 'create', 'count'],
     list: {
       before: findOptions => {
         return findOptions

@@ -11,7 +11,7 @@ export default function JobConfiguration(
 ): ModelEndpointsConfiguration {
   return {
     model: models.job,
-    actions: ['list', 'update', 'create'],
+    actions: ['list', 'update', 'create', 'count'],
     additionalMutations: {
       acquireJob: acquireJob(graphqlTypes, models)
     },
