@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.4](https://github.com/teamstarter/graphql-node-jobs/compare/v0.3.3...v0.3.4) (2020-11-04)
+
+
+### Bug Fixes
+
+* **job:** Add missing subscriptions and remove hardcoded GSG types. ([cfd192a](https://github.com/teamstarter/graphql-node-jobs/commit/cfd192a7bd0ecc9a28783e5a445be83e59bb7d5b))
+
 ### [0.3.3](https://github.com/teamstarter/graphql-node-jobs/compare/v0.3.2...v0.3.3) (2020-11-04)
 
 
