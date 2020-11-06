@@ -463,7 +463,6 @@ describe('Test the job endpoint', () => {
       typeList: ['f'],
       client,
       processingFunction: async (job, { updateProcessingInfo }) => {
-        await updateProcessingInfo({ test: true })
         const updated = await request(server)
           .post('/graphql')
           .send(
@@ -473,8 +472,7 @@ describe('Test the job endpoint', () => {
           )
         const data = await models.job.findByPk(job.id)
         expect(data.status).toBe('cancel-requested')
-        expect(data.isUpdateAlreadyCalledWhileCancelRequested).toBe(true)
-        await updateProcessingInfo({ titi: true })
+        await updateProcessingInfo({ test: true })
         return { percent: 10 }
       },
       looping: false,
