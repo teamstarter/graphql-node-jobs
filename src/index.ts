@@ -6,6 +6,7 @@ import checkForJobs from './worker/checkForJobs'
 import listJobs from './worker/listJobs'
 import getNewClient from './worker/getNewClient'
 import createJob from './worker/createJob'
+import { CancelRequestedError } from './graphql/job'
 
 export {
   getApolloServer,
@@ -15,5 +16,6 @@ export {
   checkForJobs,
   listJobs,
   getNewClient,
-  createJob
+  createJob,
+  CancelRequestedError,
 }

@@ -23,6 +23,9 @@ module.exports = {
       output: {
         type: Sequelize.TEXT
       },
+      isUpdateAlreadyCalledWhileCancelRequested:{
+        type: Sequelize.BOOLEAN
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

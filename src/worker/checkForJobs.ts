@@ -6,6 +6,7 @@ import gql from 'graphql-tag'
 
 import updateProcessingInfo from './updateProcessingInfo'
 import updateJobQuery from './updateJobQuery'
+import { CancelRequestedError } from '../graphql/job'
 
 const debug = _debug('graphql-node-jobs')
 
@@ -29,7 +30,7 @@ export default async function checkForJobs({
   typeList,
   workerId = undefined,
   looping = true,
-  loopTime = 1000
+  loopTime = 1000,
 }: {
   processingFunction: (
     job: Job,
@@ -51,7 +52,7 @@ export default async function checkForJobs({
 
   const { data } = await client.mutate({
     mutation: acquireJobQuery,
-    variables: { typeList, workerId }
+    variables: { typeList, workerId },
   })
 
   const { job } = data
@@ -66,7 +67,7 @@ export default async function checkForJobs({
             typeList,
             workerId,
             looping,
-            loopTime
+            loopTime,
           }),
         loopTime
       )
@@ -82,25 +83,42 @@ export default async function checkForJobs({
     output = await processingFunction(job, {
       updateProcessingInfo: (info: JSONValue) => {
         updateProcessingInfo(client, job, info)
-      }
+      },
     })
     debug("Job's done", job.id)
   } catch (err) {
     debug('Error during the job processing', err)
-    await client.mutate({
-      mutation: updateJobQuery,
-      variables: {
-        job: {
-          id: job.id,
-          status: 'failed',
-          output: {
-            error: `[${err.toString()}] Stack: ${
-              err.stack ? err.stack.toString() : 'No stack available.'
-            }`
-          }
-        }
-      }
-    })
+    let updatedErrorJob = null
+    // @todo find why instanceof is not working
+    if (err.name === 'CancelRequestedError') {
+      updatedErrorJob = await client.mutate({
+        mutation: updateJobQuery,
+        variables: {
+          job: {
+            id: job.id,
+            status: 'cancelled',
+            output: {
+              cancelMessage: err.message || 'No cancel message provided',
+            },
+          },
+        },
+      })
+    } else {
+      updatedErrorJob = await client.mutate({
+        mutation: updateJobQuery,
+        variables: {
+          job: {
+            id: job.id,
+            status: 'failed',
+            output: {
+              error: `[${err.toString()}] Stack: ${
+                err.stack ? err.stack.toString() : 'No stack available.'
+              }`,
+            },
+          },
+        },
+      })
+    }
 
     if (looping) {
       return checkForJobs({
@@ -109,10 +127,10 @@ export default async function checkForJobs({
         typeList,
         workerId,
         looping,
-        loopTime
+        loopTime,
       })
     }
-    return err
+    return updatedErrorJob.data.job
   }
 
   debug('Updating job')
@@ -124,9 +142,9 @@ export default async function checkForJobs({
         job: {
           id: job.id,
           status: 'successful',
-          output
-        }
-      }
+          output,
+        },
+      },
     })
 
     if (looping) {
@@ -136,7 +154,7 @@ export default async function checkForJobs({
         typeList,
         workerId,
         looping,
-        loopTime
+        loopTime,
       })
     }
     return result.data.job

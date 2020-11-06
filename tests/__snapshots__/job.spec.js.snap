@@ -49,6 +49,30 @@ Object {
 }
 `;
 
+exports[`Test the job endpoint One can request a job cancel 1`] = `
+Object {
+  "__typename": "job",
+  "id": 3,
+  "input": null,
+  "name": null,
+  "output": Object {
+    "error": "[Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+Expected: [32mtrue[39m
+Received: [31mfalse[39m] Stack: Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+Expected: [32mtrue[39m
+Received: [31mfalse[39m
+    at processingFunction (/Users/friedrich/projects/graphql-node-jobs/tests/job.spec.js:412:75)",
+  },
+  "processingInfo": Object {
+    "toto": false,
+  },
+  "status": "failed",
+  "type": "d",
+}
+`;
+
 exports[`Test the job endpoint The processingFunction expose . 1`] = `
 Object {
   "__typename": "job",
@@ -78,6 +102,7 @@ Object {
   "batchId": null,
   "id": 3,
   "input": null,
+  "isUpdateAlreadyCalledWhileCancelRequested": false,
   "name": null,
   "output": null,
   "startAfter": null,
@@ -180,7 +205,26 @@ Object {
 }
 `;
 
-exports[`Test the job endpoint checkForJobs declare jobs as failed when an error is raised. 1`] = `[TypeError: a.awd is not a function]`;
+exports[`Test the job endpoint checkForJobs declare jobs as failed when an error is raised. 1`] = `
+Object {
+  "__typename": "job",
+  "id": 1,
+  "input": Object {},
+  "name": "Bla a",
+  "output": Object {
+    "error": "[TypeError: a.awd is not a function] Stack: TypeError: a.awd is not a function
+    at processingFunction (/Users/friedrich/projects/graphql-node-jobs/tests/job.spec.js:223:11)
+    at call (/Users/friedrich/projects/graphql-node-jobs/lib/worker/checkForJobs.js:97:42)
+    at step (/Users/friedrich/projects/graphql-node-jobs/lib/worker/checkForJobs.js:37:23)
+    at Object.next (/Users/friedrich/projects/graphql-node-jobs/lib/worker/checkForJobs.js:18:53)
+    at fulfilled (/Users/friedrich/projects/graphql-node-jobs/lib/worker/checkForJobs.js:9:58)
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)",
+  },
+  "processingInfo": null,
+  "status": "failed",
+  "type": "a",
+}
+`;
 
 exports[`Test the job endpoint checkForJobs processing function can return nothing if needed. 1`] = `
 Object {

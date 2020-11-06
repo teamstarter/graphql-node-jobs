@@ -10,6 +10,7 @@ const acquireJobQuery = gql`
       name
       type
       status
+      isUpdateAlreadyCalledWhileCancelRequested
       input
       output
       startAfter
@@ -29,7 +30,7 @@ export default async function createJob(
 
   const { data, errors } = await client.mutate({
     mutation: acquireJobQuery,
-    variables: { job }
+    variables: { job },
   })
 
   if (errors) {

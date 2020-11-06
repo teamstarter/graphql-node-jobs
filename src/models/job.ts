@@ -43,10 +43,16 @@ export default function Job(sequelize: any) {
               'processing',
               'failed',
               'successful',
+              'cancel-requested',
               'cancelled'
             ]
           ]
         }
+      },
+      isUpdateAlreadyCalledWhileCancelRequested: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
       },
       batchId: {
         type: DataTypes.INTEGER,
