@@ -82,7 +82,7 @@ export default async function checkForJobs({
   try {
     output = await processingFunction(job, {
       updateProcessingInfo: (info: JSONValue) => {
-        updateProcessingInfo(client, job, info)
+        return updateProcessingInfo(client, job, info)
       },
     })
     debug("Job's done", job.id)

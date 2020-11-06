@@ -19,7 +19,7 @@ const {
 } = require('./../lib/index')
 
 // This is the maximum amount of time the band of test can run before timing-out
-jest.setTimeout(300000)
+jest.setTimeout(600000)
 
 let server = null
 const client = getNewClient(
@@ -408,10 +408,8 @@ describe('Test the job endpoint', () => {
           )
         await updateProcessingInfo({ toto: false })
         const data = await models.job.findByPk(job.id)
-        expect(data.dataValues.status).toBe('cancel-requested')
-        expect(data.dataValues.isUpdateAlreadyCalledWhileCancelRequested).toBe(
-          true
-        )
+        expect(data.status).toBe('cancel-requested')
+        expect(data.isUpdateAlreadyCalledWhileCancelRequested).toBe(true)
         debugger
         throw new CancelRequestedError()
         return { percent: 10 }
@@ -420,5 +418,6 @@ describe('Test the job endpoint', () => {
     })
     const { createdAt, ...rest } = result
     expect(rest).toMatchSnapshot()
+    expect(rest.status).toBe('cancelled')
   })
 })

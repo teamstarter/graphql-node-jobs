@@ -12,8 +12,8 @@ export default function updateProcessingInfo(
     variables: {
       job: {
         id: job.id,
-        processingInfo
-      }
-    }
+        processingInfo,
+      },
+    },
   })
 }
