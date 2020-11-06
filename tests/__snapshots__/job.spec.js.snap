@@ -66,6 +66,23 @@ Object {
 }
 `;
 
+exports[`Test the job endpoint The job can be cancelled on cancel request 1`] = `
+Object {
+  "__typename": "job",
+  "id": 3,
+  "input": null,
+  "name": null,
+  "output": Object {
+    "cancelMessage": "A job cancelation was requested !",
+  },
+  "processingInfo": Object {
+    "test": true,
+  },
+  "status": "cancelled",
+  "type": "f",
+}
+`;
+
 exports[`Test the job endpoint The processingFunction expose . 1`] = `
 Object {
   "__typename": "job",
@@ -86,6 +103,23 @@ exports[`Test the job endpoint The processingFunction expose . 2`] = `Object {}`
 exports[`Test the job endpoint The processingFunction expose . 3`] = `
 Object {
   "percent": 10,
+}
+`;
+
+exports[`Test the job endpoint When a job is cancel-requeted an updateProcessingInfo call makes it fail 1`] = `
+Object {
+  "__typename": "job",
+  "id": 3,
+  "input": null,
+  "name": null,
+  "output": Object {
+    "error": "[Error: GraphQL error: The job was requested to be cancelled at the previous call. Please check for the status \\"cancel-requested\\" after calling updateProcessingInfo in your worker and throw a CancelRequestedError] Stack: Error: GraphQL error: The job was requested to be cancelled at the previous call. Please check for the status \\"cancel-requested\\" after calling updateProcessingInfo in your worker and throw a CancelRequestedError",
+  },
+  "processingInfo": Object {
+    "toto": false,
+  },
+  "status": "failed",
+  "type": "e",
 }
 `;
 
@@ -198,26 +232,7 @@ Object {
 }
 `;
 
-exports[`Test the job endpoint checkForJobs declare jobs as failed when an error is raised. 1`] = `
-Object {
-  "__typename": "job",
-  "id": 1,
-  "input": Object {},
-  "name": "Bla a",
-  "output": Object {
-    "error": "[TypeError: a.awd is not a function] Stack: TypeError: a.awd is not a function
-    at processingFunction (/Users/friedrich/projects/graphql-node-jobs/tests/job.spec.js:223:11)
-    at call (/Users/friedrich/projects/graphql-node-jobs/lib/worker/checkForJobs.js:97:42)
-    at step (/Users/friedrich/projects/graphql-node-jobs/lib/worker/checkForJobs.js:37:23)
-    at Object.next (/Users/friedrich/projects/graphql-node-jobs/lib/worker/checkForJobs.js:18:53)
-    at fulfilled (/Users/friedrich/projects/graphql-node-jobs/lib/worker/checkForJobs.js:9:58)
-    at processTicksAndRejections (internal/process/task_queues.js:97:5)",
-  },
-  "processingInfo": null,
-  "status": "failed",
-  "type": "a",
-}
-`;
+exports[`Test the job endpoint checkForJobs declare jobs as failed when an error is raised. 1`] = `"[TypeError: a.awd is not a function] Stack: TypeError: a.awd is not a function"`;
 
 exports[`Test the job endpoint checkForJobs processing function can return nothing if needed. 1`] = `
 Object {

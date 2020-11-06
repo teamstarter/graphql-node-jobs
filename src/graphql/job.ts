@@ -53,8 +53,8 @@ export default function JobConfiguration(
         ) {
           if (job.isUpdateAlreadyCalledWhileCancelRequested) {
             properties.status = 'cancelled'
-            throw new CancelRequestedError(
-              'The job was requested to be cancelled at the previous call. Please check for the status "cancel-requested" after calling updateProcessingInfo in your worker and throw a CancelJobError'
+            throw new Error(
+              'The job was requested to be cancelled at the previous call. Please check for the status "cancel-requested" after calling updateProcessingInfo in your worker and throw a CancelRequestedError'
             )
           } else {
             properties.isUpdateAlreadyCalledWhileCancelRequested = true

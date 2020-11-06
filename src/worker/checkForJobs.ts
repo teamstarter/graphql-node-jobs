@@ -31,6 +31,7 @@ export default async function checkForJobs({
   workerId = undefined,
   looping = true,
   loopTime = 1000,
+  isCancelledOnCancelRequest = false,
 }: {
   processingFunction: (
     job: Job,
@@ -41,6 +42,7 @@ export default async function checkForJobs({
   workerId?: string
   looping: true
   loopTime?: number
+  isCancelledOnCancelRequest?: boolean
 }): Promise<any> {
   if (!typeList || typeList.length === 0) {
     throw new Error('Please provide a typeList property in the configuration.')
@@ -82,7 +84,12 @@ export default async function checkForJobs({
   try {
     output = await processingFunction(job, {
       updateProcessingInfo: (info: JSONValue) => {
-        return updateProcessingInfo(client, job, info)
+        return updateProcessingInfo(
+          client,
+          job,
+          info,
+          isCancelledOnCancelRequest
+        )
       },
     })
     debug("Job's done", job.id)

@@ -225,9 +225,10 @@ describe('Test the job endpoint', () => {
       },
       looping: false,
     })
+    const error = job.output.error.split('\n')[0]
     expect(job).not.toBeUndefined()
     expect(job).not.toBe(null)
-    expect(job).toMatchSnapshot()
+    expect(error).toMatchSnapshot()
 
     const jobEntity = await models.job.findOne({ where: { id: 1 } })
     expect(jobEntity.startedAt).not.toBe(null)
@@ -410,11 +411,74 @@ describe('Test the job endpoint', () => {
         const data = await models.job.findByPk(job.id)
         expect(data.status).toBe('cancel-requested')
         expect(data.isUpdateAlreadyCalledWhileCancelRequested).toBe(true)
-        debugger
         throw new CancelRequestedError()
         return { percent: 10 }
       },
       looping: false,
+    })
+    const { createdAt, ...rest } = result
+    expect(rest).toMatchSnapshot()
+    expect(rest.status).toBe('cancelled')
+  })
+
+  it('When a job is cancel-requeted an updateProcessingInfo call makes it fail', async () => {
+    const job = await createJob(client, {
+      type: 'e',
+      status: 'queued',
+    })
+    expect(job.isUpdateAlreadyCalledWhileCancelRequested).toBe(false)
+    const result = await checkForJobs({
+      typeList: ['e'],
+      client,
+      processingFunction: async (job, { updateProcessingInfo }) => {
+        await updateProcessingInfo({ test: true })
+        const updated = await request(server)
+          .post('/graphql')
+          .send(
+            jobUpdate({
+              job: { id: job.id, status: 'cancel-requested' },
+            })
+          )
+        await updateProcessingInfo({ toto: false })
+        const data = await models.job.findByPk(job.id)
+        expect(data.status).toBe('cancel-requested')
+        expect(data.isUpdateAlreadyCalledWhileCancelRequested).toBe(true)
+        await updateProcessingInfo({ titi: true })
+        return { percent: 10 }
+      },
+      looping: false,
+    })
+    const { createdAt, ...rest } = result
+    rest.output.error = rest.output.error.split('\n')[0]
+    expect(rest).toMatchSnapshot()
+    expect(rest.status).toBe('failed')
+  })
+  it('The job can be cancelled on cancel request', async () => {
+    const job = await createJob(client, {
+      type: 'f',
+      status: 'queued',
+    })
+    expect(job.isUpdateAlreadyCalledWhileCancelRequested).toBe(false)
+    const result = await checkForJobs({
+      typeList: ['f'],
+      client,
+      processingFunction: async (job, { updateProcessingInfo }) => {
+        await updateProcessingInfo({ test: true })
+        const updated = await request(server)
+          .post('/graphql')
+          .send(
+            jobUpdate({
+              job: { id: job.id, status: 'cancel-requested' },
+            })
+          )
+        const data = await models.job.findByPk(job.id)
+        expect(data.status).toBe('cancel-requested')
+        expect(data.isUpdateAlreadyCalledWhileCancelRequested).toBe(true)
+        await updateProcessingInfo({ titi: true })
+        return { percent: 10 }
+      },
+      looping: false,
+      isCancelledOnCancelRequest: true,
     })
     const { createdAt, ...rest } = result
     expect(rest).toMatchSnapshot()
