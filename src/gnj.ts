@@ -9,7 +9,7 @@ program
   .description(
     'Migrate the database with the last schema of graphql-node-jobs. We advise to provide a separated schema.'
   )
-  .action(async function(configPath) {
+  .action(async function (configPath) {
     let config = null
     try {
       config = require(configPath)

@@ -1,12 +1,12 @@
-const timestamp = entry =>
+const timestamp = (entry) =>
   Object.assign(entry, {
     createdAt: entry.createdAt || new Date('2007-07-12 00:04:22'),
     updatedAt: new Date('2007-07-12 00:04:22'),
-    deletedAt: entry.deletedAt || null // If we want a seeders to have a deletedAt value, do not override it
+    deletedAt: entry.deletedAt || null, // If we want a seeders to have a deletedAt value, do not override it
   })
 
 module.exports = {
-  up: function(queryInterface) {
+  up: function (queryInterface) {
     return queryInterface.bulkInsert(
       'job',
       [
@@ -17,7 +17,7 @@ module.exports = {
           status: 'queued',
           input: '{}',
           output: '{}',
-          batchId: null
+          batchId: null,
         },
         {
           id: 2,
@@ -26,14 +26,14 @@ module.exports = {
           status: 'queued',
           input: '{}',
           output: '{}',
-          batchId: null
-        }
+          batchId: null,
+        },
       ].map(timestamp),
       {}
     )
   },
 
-  down: function(queryInterface) {
+  down: function (queryInterface) {
     return queryInterface.bulkDelete('job', null, {})
-  }
+  },
 }

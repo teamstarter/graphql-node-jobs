@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = {
-  up: function(queryInterface, Sequelize) {
+  up: function (queryInterface, Sequelize) {
     return Promise.all([
       queryInterface.addColumn('job', 'batchId', {
         type: Sequelize.INTEGER,
@@ -10,11 +10,11 @@ module.exports = {
           model: 'batch',
           key: 'id',
           onDelete: 'cascade',
-          onUpdate: 'cascade'
-        }
-      })
+          onUpdate: 'cascade',
+        },
+      }),
     ])
   },
 
-  down: function() {}
+  down: function () {},
 }

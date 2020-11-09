@@ -13,13 +13,13 @@ export default function getNewClient(
 ) {
   const link = new HttpLink({
     uri,
-    fetch: fetch as any
+    fetch: fetch as any,
   })
   const cache = new InMemoryCache()
   const client = new ApolloClient({
     link,
     cache,
-    ...apolloClientOptions
+    ...apolloClientOptions,
   })
   return client
 }

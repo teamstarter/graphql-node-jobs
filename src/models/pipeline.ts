@@ -7,26 +7,26 @@ export default function Pipeline(sequelize: any) {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
       },
       name: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
       },
       metadata: {
-        type: DataTypes.STRING
-      }
+        type: DataTypes.STRING,
+      },
     },
     {
       freezeTableName: true,
       tableName: 'pipeline',
-      paranoid: true
+      paranoid: true,
     }
   )
-  Pipeline.associate = function(models: any) {
+  Pipeline.associate = function (models: any) {
     models.pipeline.hasMany(models.batch, {
       as: 'batches',
       foreignKey: 'pipelineId',
-      sourceKey: 'id'
+      sourceKey: 'id',
     })
   }
   return Pipeline

@@ -8,21 +8,25 @@ const {
   models,
   closeEverything,
   deleteTables,
-  resetDatabase
+  resetDatabase,
 } = require('./test-database.js')
 const {
   checkForJobs,
   listJobs,
   getNewClient,
-  createJob
+  createJob,
+  CancelRequestedError,
 } = require('./../lib/index')
+
+// This is the maximum amount of time the band of test can run before timing-out
+jest.setTimeout(600000)
 
 let server = null
 const client = getNewClient(
   `http://localhost:${process.env.PORT || 8080}/graphql`
 )
 
-const acquireJob = variables => ({
+const acquireJob = (variables) => ({
   query: `mutation($typeList: [String!]!, $workerId: String) {
     acquireJob(
       typeList: $typeList
@@ -35,10 +39,10 @@ const acquireJob = variables => ({
     }
   }`,
   variables,
-  operationName: null
+  operationName: null,
 })
 
-const jobCreate = variables => ({
+const jobCreate = (variables) => ({
   query: `mutation($job: jobInput!) {
     jobCreate(
       job: $job
@@ -50,10 +54,25 @@ const jobCreate = variables => ({
     }
   }`,
   variables,
-  operationName: null
+  operationName: null,
 })
 
-const customAcquire = variables => ({
+const jobUpdate = (variables) => ({
+  query: `mutation($job: jobInput!) {
+    jobUpdate(
+      job: $job
+    ) {
+      id
+      name
+      status
+      isUpdateAlreadyCalledWhileCancelRequested
+    }
+  }`,
+  variables,
+  operationName: null,
+})
+
+const customAcquire = (variables) => ({
   query: `mutation($typeList: [String!]!) {
     customAcquire(
       typeList: $typeList
@@ -62,7 +81,7 @@ const customAcquire = variables => ({
     }
   }`,
   variables,
-  operationName: null
+  operationName: null,
 })
 
 /**
@@ -83,7 +102,7 @@ describe('Test the job endpoint', () => {
     await deleteTables()
   })
 
-  afterAll(async done => {
+  afterAll(async (done) => {
     await closeEverything(server, models, done)
   })
 
@@ -102,9 +121,7 @@ describe('Test the job endpoint', () => {
   })
 
   it('Acquiring a job require a type', async () => {
-    const response = await request(server)
-      .post('/graphql')
-      .send(acquireJob({}))
+    const response = await request(server).post('/graphql').send(acquireJob({}))
 
     expect(response.body.errors).toHaveLength(1)
     expect(response.body.errors[0].message).toMatchSnapshot()
@@ -115,7 +132,7 @@ describe('Test the job endpoint', () => {
       .post('/graphql')
       .send(
         acquireJob({
-          typeList: ['a']
+          typeList: ['a'],
         })
       )
 
@@ -126,7 +143,7 @@ describe('Test the job endpoint', () => {
       .post('/graphql')
       .send(
         acquireJob({
-          typeList: ['a']
+          typeList: ['a'],
         })
       )
 
@@ -138,10 +155,10 @@ describe('Test the job endpoint', () => {
     const job = await checkForJobs({
       typeList: ['a'],
       client,
-      processingFunction: job => {
+      processingFunction: (job) => {
         return { total: 125 }
       },
-      looping: false
+      looping: false,
     })
     expect(job).not.toBeUndefined()
     expect(job).not.toBe(null)
@@ -152,10 +169,10 @@ describe('Test the job endpoint', () => {
     const job = await checkForJobs({
       typeList: ['a', 'b'],
       client,
-      processingFunction: job => {
+      processingFunction: (job) => {
         return { total: 125 }
       },
-      looping: false
+      looping: false,
     })
     expect(job).not.toBeUndefined()
     expect(job).not.toBe(null)
@@ -164,10 +181,10 @@ describe('Test the job endpoint', () => {
     const job2 = await checkForJobs({
       typeList: ['a', 'b'],
       client,
-      processingFunction: job => {
+      processingFunction: (job) => {
         return { total: 125 }
       },
-      looping: false
+      looping: false,
     })
     expect(job2).not.toBeUndefined()
     expect(job2).not.toBe(null)
@@ -178,7 +195,7 @@ describe('Test the job endpoint', () => {
     const job = await checkForJobs({
       typeList: ['a', 'b'],
       client,
-      processingFunction: async job => {
+      processingFunction: async (job) => {
         const result = await new Promise((resolve, reject) =>
           setTimeout(() => {
             resolve('plop')
@@ -186,7 +203,7 @@ describe('Test the job endpoint', () => {
         )
         return { total: result }
       },
-      looping: false
+      looping: false,
     })
     expect(job).not.toBeUndefined()
     expect(job).not.toBe(null)
@@ -206,11 +223,12 @@ describe('Test the job endpoint', () => {
         a.awd()
         return a
       },
-      looping: false
+      looping: false,
     })
+    const error = job.output.error.split('\n')[0]
     expect(job).not.toBeUndefined()
     expect(job).not.toBe(null)
-    expect(job).toMatchSnapshot()
+    expect(error).toMatchSnapshot()
 
     const jobEntity = await models.job.findOne({ where: { id: 1 } })
     expect(jobEntity.startedAt).not.toBe(null)
@@ -224,7 +242,7 @@ describe('Test the job endpoint', () => {
       .post('/graphql')
       .send(
         jobCreate({
-          job: { name: 'c', type: 'c' }
+          job: { name: 'c', type: 'c' },
         })
       )
 
@@ -239,19 +257,7 @@ describe('Test the job endpoint', () => {
       .post('/graphql')
       .send(
         jobCreate({
-          job: { name: 'c' }
-        })
-      )
-
-    expect(response.body.errors).not.toBeUndefined()
-  })
-
-  it('One cannot create a job without a type.', async () => {
-    const response = await request(server)
-      .post('/graphql')
-      .send(
-        jobCreate({
-          job: { name: 'c' }
+          job: { name: 'c' },
         })
       )
 
@@ -281,7 +287,7 @@ describe('Test the job endpoint', () => {
       typeList: ['a'],
       client,
       processingFunction: async () => {},
-      looping: false
+      looping: false,
     })
     expect(job).not.toBeUndefined()
     expect(job).not.toBe(null)
@@ -301,7 +307,7 @@ describe('Test the job endpoint', () => {
       processingFunction: async (job, { updateProcessingInfo }) => {
         await updateProcessingInfo({ percent: 10 })
       },
-      looping: false
+      looping: false,
     })
     expect(job).not.toBeUndefined()
     expect(job).not.toBe(null)
@@ -324,7 +330,7 @@ describe('Test the job endpoint', () => {
       .post('/graphql')
       .send(
         acquireJob({
-          typeList: ['a']
+          typeList: ['a'],
         })
       )
 
@@ -338,7 +344,7 @@ describe('Test the job endpoint', () => {
       .post('/graphql')
       .send(
         acquireJob({
-          typeList: ['a']
+          typeList: ['a'],
         })
       )
 
@@ -360,7 +366,7 @@ describe('Test the job endpoint', () => {
     await job.update({ startAfter: date })
 
     const jobsStartAfter = await listJobs(client, {
-      where: { startAfter: date }
+      where: { startAfter: date },
     })
 
     expect(jobsStartAfter[0].id).toBe(1)
@@ -381,5 +387,99 @@ describe('Test the job endpoint', () => {
 
     expect(response.body.errors).toBeUndefined()
     expect(response.body.data).toMatchSnapshot()
+  })
+
+  it('One can request a job cancel', async () => {
+    const job = await createJob(client, {
+      type: 'd',
+      status: 'queued',
+    })
+    expect(job.isUpdateAlreadyCalledWhileCancelRequested).toBe(false)
+    const result = await checkForJobs({
+      typeList: ['d'],
+      client,
+      processingFunction: async (job, { updateProcessingInfo }) => {
+        await updateProcessingInfo({ test: true })
+        const updated = await request(server)
+          .post('/graphql')
+          .send(
+            jobUpdate({
+              job: { id: job.id, status: 'cancel-requested' },
+            })
+          )
+        await updateProcessingInfo({ toto: false })
+        const data = await models.job.findByPk(job.id)
+        expect(data.status).toBe('cancel-requested')
+        expect(data.isUpdateAlreadyCalledWhileCancelRequested).toBe(true)
+        throw new CancelRequestedError()
+        return { percent: 10 }
+      },
+      looping: false,
+    })
+    const { createdAt, ...rest } = result
+    expect(rest).toMatchSnapshot()
+    expect(rest.status).toBe('cancelled')
+  })
+
+  it('When a job is cancel-requeted an updateProcessingInfo call makes it fail', async () => {
+    const job = await createJob(client, {
+      type: 'e',
+      status: 'queued',
+    })
+    expect(job.isUpdateAlreadyCalledWhileCancelRequested).toBe(false)
+    const result = await checkForJobs({
+      typeList: ['e'],
+      client,
+      processingFunction: async (job, { updateProcessingInfo }) => {
+        await updateProcessingInfo({ test: true })
+        const updated = await request(server)
+          .post('/graphql')
+          .send(
+            jobUpdate({
+              job: { id: job.id, status: 'cancel-requested' },
+            })
+          )
+        await updateProcessingInfo({ toto: false })
+        const data = await models.job.findByPk(job.id)
+        expect(data.status).toBe('cancel-requested')
+        expect(data.isUpdateAlreadyCalledWhileCancelRequested).toBe(true)
+        await updateProcessingInfo({ titi: true })
+        return { percent: 10 }
+      },
+      looping: false,
+    })
+    const { createdAt, ...rest } = result
+    rest.output.error = rest.output.error.split('\n')[0]
+    expect(rest).toMatchSnapshot()
+    expect(rest.status).toBe('failed')
+  })
+  it('The job can be cancelled on cancel request', async () => {
+    const job = await createJob(client, {
+      type: 'f',
+      status: 'queued',
+    })
+    expect(job.isUpdateAlreadyCalledWhileCancelRequested).toBe(false)
+    const result = await checkForJobs({
+      typeList: ['f'],
+      client,
+      processingFunction: async (job, { updateProcessingInfo }) => {
+        const updated = await request(server)
+          .post('/graphql')
+          .send(
+            jobUpdate({
+              job: { id: job.id, status: 'cancel-requested' },
+            })
+          )
+        const data = await models.job.findByPk(job.id)
+        expect(data.status).toBe('cancel-requested')
+        await updateProcessingInfo({ test: true })
+        return { percent: 10 }
+      },
+      looping: false,
+      isCancelledOnCancelRequest: true,
+    })
+    const { createdAt, ...rest } = result
+    expect(rest).toMatchSnapshot()
+    expect(rest.status).toBe('cancelled')
   })
 })
