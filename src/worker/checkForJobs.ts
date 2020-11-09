@@ -24,15 +24,7 @@ const acquireJobQuery = gql`
   }
 `
 
-export default async function checkForJobs({
-  processingFunction,
-  client,
-  typeList,
-  workerId = undefined,
-  looping = true,
-  loopTime = 1000,
-  isCancelledOnCancelRequest = false,
-}: {
+export default async function checkForJobs(args: {
   processingFunction: (
     job: Job,
     facilities: { updateProcessingInfo: Function }
@@ -44,6 +36,16 @@ export default async function checkForJobs({
   loopTime?: number
   isCancelledOnCancelRequest?: boolean
 }): Promise<any> {
+  let {
+    processingFunction,
+    client,
+    typeList,
+    workerId = undefined,
+    looping = true,
+    loopTime = 1000,
+    isCancelledOnCancelRequest = false,
+  } = args
+
   if (!typeList || typeList.length === 0) {
     throw new Error('Please provide a typeList property in the configuration.')
   }
@@ -61,18 +63,7 @@ export default async function checkForJobs({
 
   if (!job) {
     if (looping) {
-      setTimeout(
-        () =>
-          checkForJobs({
-            processingFunction,
-            client,
-            typeList,
-            workerId,
-            looping,
-            loopTime,
-          }),
-        loopTime
-      )
+      setTimeout(() => checkForJobs(args), loopTime)
       return null
     } else {
       return null
@@ -128,14 +119,7 @@ export default async function checkForJobs({
     }
 
     if (looping) {
-      return checkForJobs({
-        processingFunction,
-        client,
-        typeList,
-        workerId,
-        looping,
-        loopTime,
-      })
+      return checkForJobs(args)
     }
     return updatedErrorJob.data.job
   }
@@ -155,14 +139,7 @@ export default async function checkForJobs({
     })
 
     if (looping) {
-      return checkForJobs({
-        processingFunction,
-        client,
-        typeList,
-        workerId,
-        looping,
-        loopTime,
-      })
+      return checkForJobs(args)
     }
     return result.data.job
   } catch (err) {
