@@ -1,5 +1,8 @@
-import { InAndOutTypes, ModelDeclarationType, SequelizeModels } from 'graphql-sequelize-generator/types'
-
+import {
+  InAndOutTypes,
+  ModelDeclarationType,
+  SequelizeModels,
+} from 'graphql-sequelize-generator/types'
 
 export default function PipelineConfiguration(
   types: InAndOutTypes,
@@ -9,9 +12,9 @@ export default function PipelineConfiguration(
     model: models.pipeline,
     actions: ['list', 'update', 'create', 'count'],
     list: {
-      before: findOptions => {
+      before: (findOptions) => {
         return findOptions
-      }
-    }
+      },
+    },
   }
 }

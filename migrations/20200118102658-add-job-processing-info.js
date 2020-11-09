@@ -1,13 +1,13 @@
 module.exports = {
-  up: async function(queryInterface, Sequelize) {
+  up: async function (queryInterface, Sequelize) {
     await queryInterface.addColumn('job', 'processingInfo', {
       type: Sequelize.JSON,
       allowNull: true,
-      defaultValue: null
+      defaultValue: null,
     })
   },
 
-  down: async function(queryInterface) {
+  down: async function (queryInterface) {
     await queryInterface.removeColumn('job', 'processingInfo')
-  }
+  },
 }

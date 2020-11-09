@@ -7,29 +7,29 @@ export default function Job(sequelize: any) {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
       },
       type: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
       },
       name: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
       },
       input: {
         type: DataTypes.JSON,
         allowNull: true,
-        defaultValue: null
+        defaultValue: null,
       },
       output: {
         type: DataTypes.JSON,
         allowNull: true,
-        defaultValue: null
+        defaultValue: null,
       },
       processingInfo: {
         type: DataTypes.JSON,
         allowNull: true,
-        defaultValue: null
+        defaultValue: null,
       },
       status: {
         type: DataTypes.STRING,
@@ -44,65 +44,65 @@ export default function Job(sequelize: any) {
               'failed',
               'successful',
               'cancel-requested',
-              'cancelled'
-            ]
-          ]
-        }
+              'cancelled',
+            ],
+          ],
+        },
       },
       isUpdateAlreadyCalledWhileCancelRequested: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
-        defaultValue: false
+        defaultValue: false,
       },
       batchId: {
         type: DataTypes.INTEGER,
         allowNull: true,
-        defaultValue: null
+        defaultValue: null,
       },
       workerId: {
         type: DataTypes.STRING,
         allowNull: true,
-        defaultValue: null
+        defaultValue: null,
       },
       startedAt: {
         type: DataTypes.DATE,
         allowNull: true,
-        defaultValue: null
+        defaultValue: null,
       },
       startAfter: {
         type: DataTypes.DATE,
         allowNull: true,
-        defaultValue: null
+        defaultValue: null,
       },
       endedAt: {
         type: DataTypes.DATE,
         allowNull: true,
-        defaultValue: null
+        defaultValue: null,
       },
       createdAt: {
         type: DataTypes.DATE,
-        allowNull: false
+        allowNull: false,
       },
       updatedAt: {
         type: DataTypes.DATE,
-        allowNull: false
+        allowNull: false,
       },
       deletedAt: {
         type: DataTypes.DATE,
         allowNull: true,
-        defaultValue: null
-      }
+        defaultValue: null,
+      },
     },
     {
       freezeTableName: true,
       tableName: 'job',
-      paranoid: true
+      paranoid: true,
     }
   )
-  Job.associate = function(models: any) {
+  Job.associate = function (models: any) {
     models.job.belongsTo(models.batch, {
       foreignKey: 'batchId',
-      sourceKey: 'id'
+      sourceKey: 'id',
     })
   }
   return Job

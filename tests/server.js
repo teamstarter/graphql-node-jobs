@@ -7,8 +7,8 @@ const app = express()
 
 var options = {
   spdy: {
-    plain: true
-  }
+    plain: true,
+  },
 }
 
 const pubSubInstance = new PubSub()
@@ -22,7 +22,7 @@ const server = getApolloServer(config, { pubSubInstance })
  */
 server.applyMiddleware({
   app,
-  path: '/graphql'
+  path: '/graphql',
 })
 
 const port = process.env.PORT || 8080

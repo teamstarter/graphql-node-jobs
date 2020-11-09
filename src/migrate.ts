@@ -23,7 +23,7 @@ export default async (models: SequelizeModels) => {
     storage: 'sequelize',
     storageOptions: {
       sequelize,
-      tableName: 'gnj_sequelize_meta'
+      tableName: 'gnj_sequelize_meta',
     },
     migrations: {
       params: [
@@ -33,11 +33,11 @@ export default async (models: SequelizeModels) => {
           throw new Error(
             'technical|Migration tried to use old style "done" callback. Please upgrade to "umzug" and return a promise instead.'
           )
-        }
+        },
       ],
       path,
-      pattern: /\.js$/
-    }
+      pattern: /\.js$/,
+    },
   })
 
   // Array containing the filenames of the seeders files without extensions, sorted chronologically.
@@ -51,6 +51,6 @@ export default async (models: SequelizeModels) => {
   )
 
   await functions.up({
-    migrations: functionFiles
+    migrations: functionFiles,
   })
 }

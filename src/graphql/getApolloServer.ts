@@ -1,6 +1,6 @@
 import {
   generateApolloServer,
-  generateModelTypes
+  generateModelTypes,
 } from 'graphql-sequelize-generator'
 import getModels from '../models'
 
@@ -24,7 +24,7 @@ export default function getApolloServer(
   const graphqlSchemaDeclaration = {
     job: job(types, models),
     batch: batch(types, models),
-    pipeline: pipeline(types, models)
+    pipeline: pipeline(types, models),
   }
 
   return generateApolloServer({
@@ -40,9 +40,9 @@ export default function getApolloServer(
       //     () => new ErrorTrackingExtension()
       //   ],
       // Be sure to enable tracing
-      tracing: false
+      tracing: false,
     },
     customMutations,
-    ...gsgParams
+    ...gsgParams,
   })
 }

@@ -1,7 +1,10 @@
 import { GraphQLString, GraphQLNonNull, GraphQLList } from 'graphql'
-import { CustomMutationConfiguration, InAndOutTypes, SequelizeModels } from 'graphql-sequelize-generator/types'
+import {
+  CustomMutationConfiguration,
+  InAndOutTypes,
+  SequelizeModels,
+} from 'graphql-sequelize-generator/types'
 import { Op } from 'sequelize'
-
 
 export default function AcquireJobDefinition(
   graphqlTypes: InAndOutTypes,
@@ -13,9 +16,11 @@ export default function AcquireJobDefinition(
       'Try to find a job of a given type and assign it to the given worker.',
     args: {
       typeList: {
-        type: new GraphQLNonNull(GraphQLList(new GraphQLNonNull(GraphQLString)))
+        type: new GraphQLNonNull(
+          GraphQLList(new GraphQLNonNull(GraphQLString))
+        ),
       },
-      workerId: { type: GraphQLString }
+      workerId: { type: GraphQLString },
     },
     resolve: async (source, args, context) => {
       const transaction = await models.sequelize.transaction()
@@ -25,11 +30,11 @@ export default function AcquireJobDefinition(
           status: 'queued',
           [Op.or]: [
             { startAfter: null },
-            { startAfter: { [Op.lt]: new Date() } }
-          ]
+            { startAfter: { [Op.lt]: new Date() } },
+          ],
         },
         order: [['id', 'ASC']],
-        transaction
+        transaction,
       })
       if (!job) {
         await transaction.commit()
@@ -40,13 +45,13 @@ export default function AcquireJobDefinition(
         {
           workerId: args.workerId,
           status: 'processing',
-          startedAt: new Date()
+          startedAt: new Date(),
         },
         { transaction }
       )
 
       await transaction.commit()
       return job
-    }
+    },
   }
 }

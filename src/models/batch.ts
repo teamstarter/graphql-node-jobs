@@ -7,31 +7,31 @@ export default function Batch(sequelize: any) {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
       },
       status: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
       },
       pipelineId: {
-        type: DataTypes.INTEGER
-      }
+        type: DataTypes.INTEGER,
+      },
     },
     {
       freezeTableName: true,
       tableName: 'batch',
-      paranoid: true
+      paranoid: true,
     }
   )
 
-  Batch.associate = function(models: any) {
+  Batch.associate = function (models: any) {
     models.batch.belongsTo(models.pipeline, {
       foreignKey: 'pipelineId',
-      sourceKey: 'id'
+      sourceKey: 'id',
     })
     models.batch.hasMany(models.job, {
       as: 'jobs',
       foreignKey: 'batchId',
-      sourceKey: 'id'
+      sourceKey: 'id',
     })
   }
   return Batch

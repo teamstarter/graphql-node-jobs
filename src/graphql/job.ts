@@ -6,6 +6,7 @@ import {
 
 import acquireJob from './job/acquire'
 
+// You will throw a CancelRequestedError in your application to set the job status to 'cancelled'
 export class CancelRequestedError extends Error {
   constructor(message: string) {
     super(message)

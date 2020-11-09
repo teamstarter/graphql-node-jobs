@@ -26,7 +26,7 @@ export default async function listJobs(
     where,
     order,
     limit,
-    offset
+    offset,
   }: {
     where?: JSONValue
     order?: string
@@ -54,7 +54,7 @@ export default async function listJobs(
 
   const response = await client.query({
     query: listJobQuery,
-    variables
+    variables,
   })
 
   if (response.errors) {

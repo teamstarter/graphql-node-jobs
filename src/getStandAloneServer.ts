@@ -12,7 +12,7 @@ export default async function getStandAloneServer(
 
   server.applyMiddleware({
     app,
-    path: '/graphql'
+    path: '/graphql',
   })
 
   const port = process.env.PORT || 8080
@@ -21,8 +21,8 @@ export default async function getStandAloneServer(
       .createServer(
         {
           spdy: {
-            plain: true
-          }
+            plain: true,
+          },
         },
         app
       )
