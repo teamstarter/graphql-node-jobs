@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.7](https://github.com/teamstarter/graphql-node-jobs/compare/v0.3.6...v0.3.7) (2020-11-30)
+
+
+### Features
+
+* **job:** Instantly cancel a not-yet-started job when requested to be cancelled and store the cancel date. ([c28890d](https://github.com/teamstarter/graphql-node-jobs/commit/c28890ddf7f9e398f0742e9570918c6deeabfbd5))
+
 ### [0.3.6](https://github.com/teamstarter/graphql-node-jobs/compare/v0.3.5...v0.3.6) (2020-11-09)
 
 
