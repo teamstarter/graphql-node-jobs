@@ -482,4 +482,23 @@ describe('Test the job endpoint', () => {
     expect(rest).toMatchSnapshot()
     expect(rest.status).toBe('cancelled')
   })
+
+  it('The job is instantly cancelled when not already started', async () => {
+    const job = await createJob(client, {
+      type: 'f',
+      status: 'queued',
+    })
+    expect(job.isUpdateAlreadyCalledWhileCancelRequested).toBe(false)
+
+    const response = await request(server)
+      .post('/graphql')
+      .send(
+        jobUpdate({
+          job: { id: job.id, status: 'cancel-requested' },
+        })
+      )
+
+    expect(response.body.errors).toBeUndefined()
+    expect(response.body.data).toMatchSnapshot()
+  })
 })

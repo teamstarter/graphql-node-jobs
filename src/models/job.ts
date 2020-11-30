@@ -92,6 +92,11 @@ export default function Job(sequelize: any) {
         allowNull: true,
         defaultValue: null,
       },
+      cancelledAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
+        defaultValue: null,
+      },
     },
     {
       freezeTableName: true,

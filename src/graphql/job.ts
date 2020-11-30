@@ -54,6 +54,7 @@ export default function JobConfiguration(
         ) {
           if (job.isUpdateAlreadyCalledWhileCancelRequested) {
             properties.status = 'cancelled'
+            properties.cancelledAt = new Date()
             throw new Error(
               'The job was requested to be cancelled at the previous call. Please check for the status "cancel-requested" after calling updateProcessingInfo in your worker and throw a CancelRequestedError'
             )
@@ -65,6 +66,16 @@ export default function JobConfiguration(
         // We set the start date when the status switch to processing.
         if ('processing' === args.job.status && job.status === 'queued') {
           properties.startedAt = new Date()
+        }
+
+        // We set the cancelled date when the status switches.
+        if ('cancelled' === args.job.status && job.status !== args.job.status) {
+          properties.cancelledAt = new Date()
+        }
+
+        // Queued job are instantly cancelled when requested to be cancelled.
+        if (args.job.status === 'cancel-requested' && job.status === 'queued') {
+          properties.status = 'cancelled'
         }
 
         return properties

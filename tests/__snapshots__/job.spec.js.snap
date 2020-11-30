@@ -83,6 +83,17 @@ Object {
 }
 `;
 
+exports[`Test the job endpoint The job is instantly cancelled when not already started 1`] = `
+Object {
+  "jobUpdate": Object {
+    "id": 3,
+    "isUpdateAlreadyCalledWhileCancelRequested": false,
+    "name": null,
+    "status": "cancelled",
+  },
+}
+`;
+
 exports[`Test the job endpoint The processingFunction expose . 1`] = `
 Object {
   "__typename": "job",
