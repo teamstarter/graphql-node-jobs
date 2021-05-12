@@ -70,17 +70,6 @@ Object {
 }
 `;
 
-exports[`Test the job endpoint Test retryJob 1`] = `
-Object {
-  "retryJob": Object {
-    "id": 4,
-    "name": "Bla b",
-    "status": "queued",
-    "type": "b",
-  },
-}
-`;
-
 exports[`Test the job endpoint The job can be cancelled on cancel request 1`] = `
 Object {
   "__typename": "job",
