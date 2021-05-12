@@ -5,6 +5,15 @@ import {
   SequelizeModels,
 } from 'graphql-sequelize-generator/types'
 
+const status = [
+  'planned',
+  'queued',
+  'processing',
+  'successful',
+  'cancel-requested',
+  'cancelled',
+]
+
 export default function RetryJob(
   graphqlTypes: InAndOutTypes,
   models: SequelizeModels
@@ -22,33 +31,30 @@ export default function RetryJob(
         throw new Error('The job does not exist.')
       }
 
-      if (job.status === 'queued') {
+      if (status.includes(job.status)) {
         throw new Error('The job must be failed.')
       }
 
-      if (job.status === 'failed') {
-        const attributesToDelete = ['id', 'createdAt', 'updateAt', 'status']
+      const attributesToDelete = ['id', 'createdAt', 'updateAt', 'status']
+      const oldJobAttributes = Object.keys(job.dataValues).reduce(
+        (acc: any, flag: any) => {
+          if (!attributesToDelete.includes(flag)) {
+            acc[flag] = job.dataValues[flag]
+          }
 
-        const oldJobAttributes = Object.keys(job.dataValues).reduce(
-          (acc: any, flag: any) => {
-            if (!attributesToDelete.includes(flag)) {
-              acc[flag] = job.dataValues[flag]
-            }
+          return acc
+        },
+        {}
+      )
 
-            return acc
-          },
-          {}
-        )
-
-        const attributes = {
-          ...oldJobAttributes,
-          retryOfJobId: job.id,
-        }
-
-        const newJob = await models.job.create(attributes)
-
-        return newJob
+      const attributes = {
+        ...oldJobAttributes,
+        retryOfJobId: job.id,
       }
+
+      const newJob = await models.job.create(attributes)
+
+      return newJob
     },
   }
 }
