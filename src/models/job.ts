@@ -9,6 +9,10 @@ export default function Job(sequelize: any) {
         primaryKey: true,
         autoIncrement: true,
       },
+      jobUniqueId: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
       type: {
         type: DataTypes.STRING,
         allowNull: false,
