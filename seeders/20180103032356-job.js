@@ -28,6 +28,15 @@ module.exports = {
           output: '{}',
           batchId: null,
         },
+        {
+          id: 3,
+          type: 'b',
+          name: 'Bla b',
+          status: 'failed',
+          input: '{}',
+          output: '{}',
+          batchId: null,
+        },
       ].map(timestamp),
       {}
     )

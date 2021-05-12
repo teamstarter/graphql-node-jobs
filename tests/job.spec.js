@@ -84,6 +84,19 @@ const customAcquire = (variables) => ({
   operationName: null,
 })
 
+const retryJob = (variables) => ({
+  query: `mutation retryJob($id: Int!){
+    retryJob(id: $id) {
+      id
+      name
+      type
+      status
+    }
+  }`,
+  variables,
+  operationName: null,
+})
+
 /**
  * Starting the tests
  */
@@ -500,5 +513,48 @@ describe('Test the job endpoint', () => {
 
     expect(response.body.errors).toBeUndefined()
     expect(response.body.data).toMatchSnapshot()
+  })
+
+  it('The job can be restarted if it fails', async () => {
+    const responseRetryJob = await request(server)
+      .post('/graphql')
+      .send(
+        retryJob({
+          id: 3,
+        })
+      )
+
+    expect(responseRetryJob.body.errors).toBeUndefined()
+    expect(responseRetryJob.body.data).toMatchSnapshot()
+  })
+
+  it('You cannot retry a job if this one is not failed', async () => {
+    const responseRetryJob = await request(server)
+      .post('/graphql')
+      .send(
+        retryJob({
+          id: 1,
+        })
+      )
+
+    expect(responseRetryJob.body.errors).toHaveLength(1)
+    expect(responseRetryJob.body.errors[0].message).toBe(
+      'The job must be failed.'
+    )
+  })
+
+  it('You cannot retry a job that does not exist', async () => {
+    const responseRetryJob = await request(server)
+      .post('/graphql')
+      .send(
+        retryJob({
+          id: 100,
+        })
+      )
+
+    expect(responseRetryJob.body.errors).toHaveLength(1)
+    expect(responseRetryJob.body.errors[0].message).toBe(
+      'The job does not exist.'
+    )
   })
 })
