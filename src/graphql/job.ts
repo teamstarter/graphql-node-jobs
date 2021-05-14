@@ -81,5 +81,8 @@ export default function JobConfiguration(
         return properties
       },
     },
+    create: {
+      preventDuplicateOnAttributes: ['jobUniqueId'],
+    },
   }
 }
