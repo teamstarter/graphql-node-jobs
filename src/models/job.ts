@@ -64,6 +64,11 @@ export default function Job(sequelize: any) {
         allowNull: true,
         defaultValue: null,
       },
+      isHighFrequency: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
       startedAt: {
         type: DataTypes.DATE,
         allowNull: true,

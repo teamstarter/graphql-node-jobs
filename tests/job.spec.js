@@ -72,6 +72,21 @@ const jobUpdate = (variables) => ({
   operationName: null,
 })
 
+const jobList = (variables) => ({
+  query: `query($where: SequelizeJSON!) {
+    job(
+      where: $where
+    ) {
+      id
+      name
+      status
+      isHighFrequency
+    }
+  }`,
+  variables,
+  operationName: null,
+})
+
 const customAcquire = (variables) => ({
   query: `mutation($typeList: [String!]!) {
     customAcquire(
@@ -500,5 +515,42 @@ describe('Test the job endpoint', () => {
 
     expect(response.body.errors).toBeUndefined()
     expect(response.body.data).toMatchSnapshot()
+  })
+
+  it('Create a job with the flag "isHighFrequency"', async () => {
+    const job = await createJob(client, {
+      type: 'f',
+      isHighFrequency: true,
+    })
+    expect(job.isHighFrequency).toBe(true)
+
+    const job2 = await createJob(client, {
+      type: 'f',
+    })
+
+    expect(job2.isHighFrequency).toBe(false)
+  })
+
+  it('List the jobs with and without highFrequency', async () => {
+    const responseList = await request(server)
+      .post('/graphql')
+      .send(
+        jobList({
+          where: { isHighFrequency: true },
+        })
+      )
+    expect(responseList.body.errors).toBeUndefined()
+    expect(responseList.body.data).toMatchSnapshot()
+
+    const responseList2 = await request(server)
+      .post('/graphql')
+      .send(
+        jobList({
+          where: { isHighFrequency: false },
+        })
+      )
+
+    expect(responseList2.body.errors).toBeUndefined()
+    expect(responseList2.body.data).toMatchSnapshot()
   })
 })

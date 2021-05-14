@@ -19,6 +19,32 @@ Object {
 }
 `;
 
+exports[`Test the job endpoint List the jobs with and without highFrequency 1`] = `
+Object {
+  "job": Array [
+    Object {
+      "id": 1,
+      "isHighFrequency": true,
+      "name": "Bla a",
+      "status": "queued",
+    },
+  ],
+}
+`;
+
+exports[`Test the job endpoint List the jobs with and without highFrequency 2`] = `
+Object {
+  "job": Array [
+    Object {
+      "id": 2,
+      "isHighFrequency": false,
+      "name": "Bla b",
+      "status": "queued",
+    },
+  ],
+}
+`;
+
 exports[`Test the job endpoint One can acquire a job of a given type. 1`] = `
 Object {
   "acquireJob": Object {
@@ -140,6 +166,7 @@ Object {
   "batchId": null,
   "id": 3,
   "input": null,
+  "isHighFrequency": false,
   "isUpdateAlreadyCalledWhileCancelRequested": false,
   "name": null,
   "output": null,
