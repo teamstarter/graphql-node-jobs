@@ -78,6 +78,8 @@ export default function JobConfiguration(
           properties.status = 'cancelled'
         }
 
+        properties.updateAt = new Date()
+
         return properties
       },
     },

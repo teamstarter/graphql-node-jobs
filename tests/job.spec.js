@@ -501,4 +501,48 @@ describe('Test the job endpoint', () => {
     expect(response.body.errors).toBeUndefined()
     expect(response.body.data).toMatchSnapshot()
   })
+
+  it('test un job', async () => {
+    const timeout = async (ms) =>
+      new Promise((resolve) => setTimeout(resolve, ms))
+
+    const job = await createJob(client, {
+      type: 'job-multi-steps',
+      status: 'queued',
+    })
+    const result = await checkForJobs({
+      typeList: ['job-multi-steps'],
+      client,
+      processingFunction: async (job, { updateProcessingInfo }) => {
+        const steps = {
+          'step-1': {
+            status: 'waiting',
+          },
+          'step-2': {
+            status: 'waiting',
+          },
+          'step-3': {
+            status: 'waiting',
+          },
+          'step-4': {
+            status: 'waiting',
+          },
+          'step-5': {
+            status: 'waiting',
+          },
+        }
+
+        for (const step of Object.keys(steps)) {
+          steps[step].status = 'done'
+          await updateProcessingInfo({ steps })
+          await timeout(1000)
+        }
+
+        return steps
+      },
+      looping: false,
+    })
+    const { createdAt, ...rest } = result
+    expect(rest).toMatchSnapshot()
+  })
 })
