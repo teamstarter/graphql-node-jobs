@@ -18,4 +18,5 @@ export type Job = {
   output: JSONValue
   status: JobStatus
   batchId: number
+  updatedAt: Date
 }
