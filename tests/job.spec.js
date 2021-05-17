@@ -502,7 +502,7 @@ describe('Test the job endpoint', () => {
     expect(response.body.data).toMatchSnapshot()
   })
 
-  it('test un job', async () => {
+  it('Step are properly timed when they are finished', async () => {
     const timeout = async (ms) =>
       new Promise((resolve) => setTimeout(resolve, ms))
 
