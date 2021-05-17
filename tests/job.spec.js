@@ -542,7 +542,13 @@ describe('Test the job endpoint', () => {
       },
       looping: false,
     })
-    const { createdAt, ...rest } = result
-    expect(rest).toMatchSnapshot()
+    const { createdAt, processingInfo } = result
+
+    const steps = processingInfo.steps
+    Object.keys(steps).forEach((step) => {
+      expect(steps[step].status).toBe('done')
+      expect(steps[step].elapsedTime).toBeGreaterThanOrEqual(1000)
+      expect(steps[step].elapsedTime).toBeLessThan(1100)
+    })
   })
 })
