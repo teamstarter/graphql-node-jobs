@@ -78,6 +78,35 @@ export default function JobConfiguration(
           properties.status = 'cancelled'
         }
 
+        let newProcessingInfo = null
+        if (
+          typeof args.job.processingInfo !== 'string' &&
+          typeof args.job.processingInfo !== 'number' &&
+          typeof args.job.processingInfo !== 'boolean' &&
+          !Array.isArray(args.job.processingInfo) &&
+          typeof args.job.processingInfo?.steps !== 'undefined' &&
+          typeof args.job.processingInfo.steps !== null
+        ) {
+          const steps: any = args.job.processingInfo.steps
+          newProcessingInfo = Object.keys(steps as Object).reduce(
+            (acc: any, stepName: string) => {
+              const newStep = steps[stepName]
+
+              if (newStep.status === 'done' && newStep?.doneAt === undefined) {
+                const time = new Date()
+                const prevTime = new Date(job.updatedAt)
+                newStep.doneAt = time
+                newStep.elapsedTime = time.getTime() - prevTime.getTime()
+              }
+
+              acc[stepName] = newStep
+              return acc
+            },
+            {}
+          )
+
+          properties.steps = newProcessingInfo
+        }
         return properties
       },
     },
