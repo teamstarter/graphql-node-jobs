@@ -10,6 +10,7 @@ const acquireJobQuery = gql`
       name
       type
       status
+      isHighFrequency
       isUpdateAlreadyCalledWhileCancelRequested
       input
       output

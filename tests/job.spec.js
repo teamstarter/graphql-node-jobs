@@ -72,6 +72,21 @@ const jobUpdate = (variables) => ({
   operationName: null,
 })
 
+const jobList = (variables) => ({
+  query: `query($where: SequelizeJSON!) {
+    job(
+      where: $where
+    ) {
+      id
+      name
+      status
+      isHighFrequency
+    }
+  }`,
+  variables,
+  operationName: null,
+})
+
 const customAcquire = (variables) => ({
   query: `mutation($typeList: [String!]!) {
     customAcquire(
