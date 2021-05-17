@@ -2,6 +2,18 @@
 
 exports[`Test the job endpoint Acquiring a job require a type 1`] = `"Variable \\"$typeList\\" of required type \\"[String!]!\\" was not provided."`;
 
+exports[`Test the job endpoint Check if you cannot duplicate job according to jobUniqueId 1`] = `
+Object {
+  "jobCreate": Object {
+    "id": 3,
+    "jobUniqueId": "job-unique-1",
+    "name": "c",
+    "output": null,
+    "status": "queued",
+  },
+}
+`;
+
 exports[`Test the job endpoint List the jobs 1`] = `
 Object {
   "data": Object {
