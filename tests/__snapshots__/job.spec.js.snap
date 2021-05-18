@@ -1,5 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Test the job endpoint A job failed can be recover  1`] = `"[TypeError: steps.error is not a function] Stack: TypeError: steps.error is not a function"`;
+
+exports[`Test the job endpoint A job failed can be recover  2`] = `"queued"`;
+
 exports[`Test the job endpoint Acquiring a job require a type 1`] = `"Variable \\"$typeList\\" of required type \\"[String!]!\\" was not provided."`;
 
 exports[`Test the job endpoint List the jobs 1`] = `

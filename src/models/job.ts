@@ -69,6 +69,11 @@ export default function Job(sequelize: any) {
         allowNull: false,
         defaultValue: false,
       },
+      isRecoverable: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
       startedAt: {
         type: DataTypes.DATE,
         allowNull: true,
