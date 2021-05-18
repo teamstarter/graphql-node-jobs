@@ -32,6 +32,16 @@ module.exports = {
           output: '{}',
           batchId: null,
         },
+        {
+          id: 3,
+          type: 'b',
+          name: 'Bla b',
+          status: 'failed',
+          isHighFrequency: false,
+          input: '{}',
+          output: '{}',
+          batchId: null,
+        },
       ].map(timestamp),
       {}
     )

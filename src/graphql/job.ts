@@ -6,6 +6,7 @@ import {
 
 import acquireJob from './job/acquire'
 import recoverJob from './job/recover'
+import retryJob from './job/retry'
 
 // You will throw a CancelRequestedError in your application to set the job status to 'cancelled'
 export class CancelRequestedError extends Error {
@@ -26,6 +27,7 @@ export default function JobConfiguration(
     additionalMutations: {
       acquireJob: acquireJob(graphqlTypes, models),
       recover: recoverJob(graphqlTypes, models),
+      retryJob: retryJob(graphqlTypes, models),
     },
     list: {
       before: (findOptions) => {

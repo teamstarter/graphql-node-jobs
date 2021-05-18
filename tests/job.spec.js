@@ -110,6 +110,19 @@ const recoverJob = (variables) => ({
   operationName: null,
 })
 
+const retryJob = (variables) => ({
+  query: `mutation retryJob($id: Int!){
+    retryJob(id: $id) {
+      id
+      name
+      type
+      status
+    }
+  }`,
+  variables,
+  operationName: null,
+})
+
 /**
  * Starting the tests
  */
@@ -528,32 +541,51 @@ describe('Test the job endpoint', () => {
     expect(response.body.data).toMatchSnapshot()
   })
 
-  it('Create a job with the flag "isHighFrequency"', async () => {
-    const job = await createJob(client, {
-      type: 'f',
-      isHighFrequency: true,
-    })
-    expect(job.isHighFrequency).toBe(true)
+  it('The job can be restarted if it fails', async () => {
+    const responseRetryJob = await request(server)
+      .post('/graphql')
+      .send(
+        retryJob({
+          id: 3,
+        })
+      )
 
-    const job2 = await createJob(client, {
-      type: 'f',
-    })
+    expect(responseRetryJob.body.errors).toBeUndefined()
+    expect(responseRetryJob.body.data).toMatchSnapshot()
+  })
 
-    expect(job2.isHighFrequency).toBe(false)
+  it('You cannot retry a job if this one is not failed', async () => {
+    const responseRetryJob = await request(server)
+      .post('/graphql')
+      .send(
+        retryJob({
+          id: 1,
+        })
+      )
+
+    expect(responseRetryJob.body.errors).toHaveLength(1)
+    expect(responseRetryJob.body.errors[0].message).toBe(
+      'The job must be failed.'
+    )
+  })
+
+  it('You cannot retry a job that does not exist', async () => {
+    const responseRetryJob = await request(server)
+      .post('/graphql')
+      .send(
+        retryJob({
+          id: 100,
+        })
+      )
+
+    expect(responseRetryJob.body.errors).toHaveLength(1)
+    expect(responseRetryJob.body.errors[0].message).toBe(
+      'The job does not exist.'
+    )
   })
 
   it('List the jobs with and without highFrequency', async () => {
-    const responseList = await request(server)
-      .post('/graphql')
-      .send(
-        jobList({
-          where: { isHighFrequency: true },
-        })
-      )
-    expect(responseList.body.errors).toBeUndefined()
-    expect(responseList.body.data).toMatchSnapshot()
-
-    const responseList2 = await request(server)
+    const response = await request(server)
       .post('/graphql')
       .send(
         jobList({
@@ -561,8 +593,19 @@ describe('Test the job endpoint', () => {
         })
       )
 
-    expect(responseList2.body.errors).toBeUndefined()
-    expect(responseList2.body.data).toMatchSnapshot()
+    expect(response.body.errors).toBeUndefined()
+    expect(response.body.data).toMatchSnapshot()
+
+    const response2 = await request(server)
+      .post('/graphql')
+      .send(
+        jobList({
+          where: { isHighFrequency: true },
+        })
+      )
+
+    expect(response2.body.errors).toBeUndefined()
+    expect(response2.body.data).toMatchSnapshot()
   })
 
   it('A job failed can be recover ', async () => {
