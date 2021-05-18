@@ -572,4 +572,28 @@ describe('Test the job endpoint', () => {
       'The job does not exist.'
     )
   })
+
+  it('List the jobs with and without highFrequency', async () => {
+    const response = await request(server)
+      .post('/graphql')
+      .send(
+        jobList({
+          where: { isHighFrequency: false },
+        })
+      )
+
+    expect(response.body.errors).toBeUndefined()
+    expect(response.body.data).toMatchSnapshot()
+
+    const response2 = await request(server)
+      .post('/graphql')
+      .send(
+        jobList({
+          where: { isHighFrequency: true },
+        })
+      )
+
+    expect(response2.body.errors).toBeUndefined()
+    expect(response2.body.data).toMatchSnapshot()
+  })
 })

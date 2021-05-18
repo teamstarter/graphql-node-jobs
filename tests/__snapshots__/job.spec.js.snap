@@ -27,10 +27,16 @@ exports[`Test the job endpoint List the jobs with and without highFrequency 1`] 
 Object {
   "job": Array [
     Object {
-      "id": 1,
-      "isHighFrequency": true,
-      "name": "Bla a",
+      "id": 2,
+      "isHighFrequency": false,
+      "name": "Bla b",
       "status": "queued",
+    },
+    Object {
+      "id": 3,
+      "isHighFrequency": false,
+      "name": "Bla b",
+      "status": "failed",
     },
   ],
 }
@@ -40,9 +46,9 @@ exports[`Test the job endpoint List the jobs with and without highFrequency 2`] 
 Object {
   "job": Array [
     Object {
-      "id": 2,
-      "isHighFrequency": false,
-      "name": "Bla b",
+      "id": 1,
+      "isHighFrequency": true,
+      "name": "Bla a",
       "status": "queued",
     },
   ],

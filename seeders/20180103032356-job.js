@@ -35,6 +35,7 @@ module.exports = {
           type: 'b',
           name: 'Bla b',
           status: 'failed',
+          isHighFrequency: false,
           input: '{}',
           output: '{}',
           batchId: null,
