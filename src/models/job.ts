@@ -49,6 +49,11 @@ export default function Job(sequelize: any) {
           ],
         },
       },
+      retryOfJobId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        defaultValue: null,
+      },
       isUpdateAlreadyCalledWhileCancelRequested: {
         type: DataTypes.BOOLEAN,
         allowNull: false,

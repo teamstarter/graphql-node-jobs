@@ -2,8 +2,8 @@ module.exports = {
   up: async function (queryInterface, Sequelize) {
     await queryInterface.addColumn('job', 'isHighFrequency', {
       type: Sequelize.BOOLEAN,
-      allowNull: true,
-      defaultValue: null,
+      allowNull: false,
+      defaultValue: false,
     })
   },
 
