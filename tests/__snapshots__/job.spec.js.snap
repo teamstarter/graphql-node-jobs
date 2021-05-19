@@ -1,6 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Test the job endpoint ==== test ===== 1`] = `
+exports[`Test the job endpoint Acquiring a job require a type 1`] = `"Variable \\"$typeList\\" of required type \\"[String!]!\\" was not provided."`;
+
+exports[`Test the job endpoint Be able to hold a type of job and toggle it 1`] = `
 Object {
   "toggleHoldJobType": Object {
     "id": 1,
@@ -8,8 +10,6 @@ Object {
   },
 }
 `;
-
-exports[`Test the job endpoint Acquiring a job require a type 1`] = `"Variable \\"$typeList\\" of required type \\"[String!]!\\" was not provided."`;
 
 exports[`Test the job endpoint List the jobs 1`] = `
 Object {
