@@ -18,6 +18,7 @@ program
     }
     const models = getModels(config)
     await migrate(models)
+    await models.sequelize.close()
   })
 
 program.command('help', 'Display the help')
