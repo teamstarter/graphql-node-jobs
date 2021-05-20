@@ -99,6 +99,17 @@ const customAcquire = (variables) => ({
   operationName: null,
 })
 
+const toggleHoldJobType = (variables) => ({
+  query: `mutation($type: String!) {
+    toggleHoldJobType(type: $type) {
+      id
+      type
+    }
+  }`,
+  variables,
+  operationName: null,
+})
+
 const retryJob = (variables) => ({
   query: `mutation retryJob($id: Int!){
     retryJob(id: $id) {
@@ -595,5 +606,92 @@ describe('Test the job endpoint', () => {
 
     expect(response2.body.errors).toBeUndefined()
     expect(response2.body.data).toMatchSnapshot()
+  })
+
+  it('Be able to hold a type of job and toggle it', async () => {
+    const responseToggleHoldJob = await request(server)
+      .post('/graphql')
+      .send(
+        toggleHoldJobType({
+          type: 'type-1',
+        })
+      )
+    expect(responseToggleHoldJob.body.errors).toBeUndefined()
+    expect(responseToggleHoldJob.body.data).toMatchSnapshot()
+
+    const job1 = await createJob(client, {
+      type: 'type-1',
+      status: 'queued',
+    })
+    const job2 = await createJob(client, {
+      type: 'type-2',
+      status: 'queued',
+    })
+    const job3 = await createJob(client, {
+      type: 'type-2',
+      status: 'queued',
+    })
+
+    const responseCheck1 = await checkForJobs({
+      typeList: ['type-1', 'type-2'],
+      client,
+      processingFunction: async (job) => {
+        return { data: 'my data' }
+      },
+      looping: false,
+    })
+
+    expect(responseCheck1).not.toBeUndefined()
+    expect(responseCheck1).not.toBe(null)
+    expect(responseCheck1.type).toBe('type-2')
+
+    const responseCheck2 = await checkForJobs({
+      typeList: ['type-1', 'type-2'],
+      client,
+      processingFunction: async (job) => {
+        return { data: 'my data' }
+      },
+      looping: false,
+    })
+
+    expect(responseCheck2).not.toBeUndefined()
+    expect(responseCheck2).not.toBe(null)
+    expect(responseCheck2.type).toBe('type-2')
+
+    const responseCheck3 = await checkForJobs({
+      typeList: ['type-1', 'type-2'],
+      client,
+      processingFunction: async (job) => {
+        return { data: 'my data' }
+      },
+      looping: false,
+    })
+
+    expect(responseCheck3).not.toBeUndefined()
+    expect(responseCheck3).toBe(null)
+
+    const responseToggleHoldJob2 = await request(server)
+      .post('/graphql')
+      .send(
+        toggleHoldJobType({
+          type: 'type-1',
+        })
+      )
+
+    expect(responseToggleHoldJob2.body.errors).toBeUndefined()
+    expect(responseToggleHoldJob2.body.data.toggleHoldJobType).toBe(null)
+
+    const responseCheck4 = await checkForJobs({
+      typeList: ['type-1', 'type-2'],
+      client,
+      processingFunction: async (job) => {
+        return { data: 'my data' }
+      },
+      looping: false,
+    })
+
+    expect(responseCheck4).not.toBeUndefined()
+    expect(responseCheck4).not.toBe(null)
+    expect(responseCheck4.type).toBe('type-1')
   })
 })
