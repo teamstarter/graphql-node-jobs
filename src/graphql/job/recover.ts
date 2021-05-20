@@ -11,7 +11,8 @@ export default function recoverJobDefinition(
 ): CustomMutationConfiguration {
   return {
     type: graphqlTypes.outputTypes.job,
-    description: 'Allows a job to be recoverable',
+    description:
+      'Recover a job by putting it back in the queue with the processing information already acquired',
     args: {
       id: {
         type: new GraphQLNonNull(GraphQLInt),
