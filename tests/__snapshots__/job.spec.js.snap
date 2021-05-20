@@ -26,8 +26,44 @@ Object {
         "id": 2,
         "name": "Bla b",
       },
+      Object {
+        "id": 3,
+        "name": "Bla b",
+      },
     ],
   },
+}
+`;
+
+exports[`Test the job endpoint List the jobs with and without highFrequency 1`] = `
+Object {
+  "job": Array [
+    Object {
+      "id": 2,
+      "isHighFrequency": false,
+      "name": "Bla b",
+      "status": "queued",
+    },
+    Object {
+      "id": 3,
+      "isHighFrequency": false,
+      "name": "Bla b",
+      "status": "failed",
+    },
+  ],
+}
+`;
+
+exports[`Test the job endpoint List the jobs with and without highFrequency 2`] = `
+Object {
+  "job": Array [
+    Object {
+      "id": 1,
+      "isHighFrequency": true,
+      "name": "Bla a",
+      "status": "queued",
+    },
+  ],
 }
 `;
 
@@ -65,7 +101,7 @@ Object {
 exports[`Test the job endpoint One can request a job cancel 1`] = `
 Object {
   "__typename": "job",
-  "id": 3,
+  "id": 4,
   "input": null,
   "name": null,
   "output": Object {
@@ -82,7 +118,7 @@ Object {
 exports[`Test the job endpoint The job can be cancelled on cancel request 1`] = `
 Object {
   "__typename": "job",
-  "id": 3,
+  "id": 4,
   "input": null,
   "name": null,
   "output": Object {
@@ -96,10 +132,21 @@ Object {
 }
 `;
 
+exports[`Test the job endpoint The job can be restarted if it fails 1`] = `
+Object {
+  "retryJob": Object {
+    "id": 4,
+    "name": "Bla b",
+    "status": "queued",
+    "type": "b",
+  },
+}
+`;
+
 exports[`Test the job endpoint The job is instantly cancelled when not already started 1`] = `
 Object {
   "jobUpdate": Object {
-    "id": 3,
+    "id": 4,
     "isUpdateAlreadyCalledWhileCancelRequested": false,
     "name": null,
     "status": "cancelled",
@@ -133,7 +180,7 @@ Object {
 exports[`Test the job endpoint When a job is cancel-requeted an updateProcessingInfo call makes it fail 1`] = `
 Object {
   "__typename": "job",
-  "id": 3,
+  "id": 4,
   "input": null,
   "name": null,
   "output": Object {
@@ -151,8 +198,9 @@ exports[`Test the job endpoint Workers can easily create jobs. 1`] = `
 Object {
   "__typename": "job",
   "batchId": null,
-  "id": 3,
+  "id": 4,
   "input": null,
+  "isHighFrequency": false,
   "isUpdateAlreadyCalledWhileCancelRequested": false,
   "name": null,
   "output": null,
@@ -175,6 +223,14 @@ Array [
   Object {
     "__typename": "job",
     "id": 2,
+    "input": Object {},
+    "name": "Bla b",
+    "output": Object {},
+    "type": "b",
+  },
+  Object {
+    "__typename": "job",
+    "id": 3,
     "input": Object {},
     "name": "Bla b",
     "output": Object {},

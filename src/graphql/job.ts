@@ -5,6 +5,7 @@ import {
 } from 'graphql-sequelize-generator/types'
 
 import acquireJob from './job/acquire'
+import retryJob from './job/retry'
 
 // You will throw a CancelRequestedError in your application to set the job status to 'cancelled'
 export class CancelRequestedError extends Error {
@@ -24,6 +25,7 @@ export default function JobConfiguration(
     subscriptions: ['create', 'update', 'delete'],
     additionalMutations: {
       acquireJob: acquireJob(graphqlTypes, models),
+      retryJob: retryJob(graphqlTypes, models),
     },
     list: {
       before: (findOptions) => {

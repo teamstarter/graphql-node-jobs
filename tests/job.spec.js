@@ -73,12 +73,40 @@ const jobUpdate = (variables) => ({
   operationName: null,
 })
 
+const jobList = (variables) => ({
+  query: `query($where: SequelizeJSON!) {
+    job(
+      where: $where
+    ) {
+      id
+      name
+      status
+      isHighFrequency
+    }
+  }`,
+  variables,
+  operationName: null,
+})
+
 const customAcquire = (variables) => ({
   query: `mutation($typeList: [String!]!) {
     customAcquire(
       typeList: $typeList
     ) {
       id
+    }
+  }`,
+  variables,
+  operationName: null,
+})
+
+const retryJob = (variables) => ({
+  query: `mutation retryJob($id: Int!){
+    retryJob(id: $id) {
+      id
+      name
+      type
+      status
     }
   }`,
   variables,
@@ -526,5 +554,71 @@ describe('Test the job endpoint', () => {
     expect(responseSameCreateJob.body.data).toStrictEqual(
       responseCreateJob.body.data
     )
+  })
+  it('The job can be restarted if it fails', async () => {
+    const responseRetryJob = await request(server)
+      .post('/graphql')
+      .send(
+        retryJob({
+          id: 3,
+        })
+      )
+
+    expect(responseRetryJob.body.errors).toBeUndefined()
+    expect(responseRetryJob.body.data).toMatchSnapshot()
+  })
+
+  it('You cannot retry a job if this one is not failed', async () => {
+    const responseRetryJob = await request(server)
+      .post('/graphql')
+      .send(
+        retryJob({
+          id: 1,
+        })
+      )
+
+    expect(responseRetryJob.body.errors).toHaveLength(1)
+    expect(responseRetryJob.body.errors[0].message).toBe(
+      'The job must be failed.'
+    )
+  })
+
+  it('You cannot retry a job that does not exist', async () => {
+    const responseRetryJob = await request(server)
+      .post('/graphql')
+      .send(
+        retryJob({
+          id: 100,
+        })
+      )
+
+    expect(responseRetryJob.body.errors).toHaveLength(1)
+    expect(responseRetryJob.body.errors[0].message).toBe(
+      'The job does not exist.'
+    )
+  })
+
+  it('List the jobs with and without highFrequency', async () => {
+    const response = await request(server)
+      .post('/graphql')
+      .send(
+        jobList({
+          where: { isHighFrequency: false },
+        })
+      )
+
+    expect(response.body.errors).toBeUndefined()
+    expect(response.body.data).toMatchSnapshot()
+
+    const response2 = await request(server)
+      .post('/graphql')
+      .send(
+        jobList({
+          where: { isHighFrequency: true },
+        })
+      )
+
+    expect(response2.body.errors).toBeUndefined()
+    expect(response2.body.data).toMatchSnapshot()
   })
 })

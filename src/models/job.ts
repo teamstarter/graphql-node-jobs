@@ -53,6 +53,11 @@ export default function Job(sequelize: any) {
           ],
         },
       },
+      retryOfJobId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        defaultValue: null,
+      },
       isUpdateAlreadyCalledWhileCancelRequested: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
@@ -67,6 +72,11 @@ export default function Job(sequelize: any) {
         type: DataTypes.STRING,
         allowNull: true,
         defaultValue: null,
+      },
+      isHighFrequency: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
       },
       startedAt: {
         type: DataTypes.DATE,
