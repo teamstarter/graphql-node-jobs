@@ -2,6 +2,15 @@
 
 exports[`Test the job endpoint Acquiring a job require a type 1`] = `"Variable \\"$typeList\\" of required type \\"[String!]!\\" was not provided."`;
 
+exports[`Test the job endpoint Be able to hold a type of job and toggle it 1`] = `
+Object {
+  "toggleHoldJobType": Object {
+    "id": 1,
+    "type": "type-1",
+  },
+}
+`;
+
 exports[`Test the job endpoint Check if you cannot duplicate job according to jobUniqueId 1`] = `
 Object {
   "jobCreate": Object {
@@ -10,15 +19,6 @@ Object {
     "name": "Bla a",
     "output": Object {},
     "status": "queued",
-     },
-   }
-`;
-
-exports[`Test the job endpoint Be able to hold a type of job and toggle it 1`] = `
-Object {
-  "toggleHoldJobType": Object {
-    "id": 1,
-    "type": "type-1",
   },
 }
 `;
@@ -98,7 +98,7 @@ Object {
 exports[`Test the job endpoint One can create a job of a given type. 1`] = `
 Object {
   "jobCreate": Object {
-    "id": 3,
+    "id": 4,
     "jobUniqueId": null,
     "name": "c",
     "output": null,
