@@ -5,10 +5,10 @@ exports[`Test the job endpoint Acquiring a job require a type 1`] = `"Variable \
 exports[`Test the job endpoint Check if you cannot duplicate job according to jobUniqueId 1`] = `
 Object {
   "jobCreate": Object {
-    "id": 3,
+    "id": 1,
     "jobUniqueId": "job-unique-1",
-    "name": "c",
-    "output": null,
+    "name": "Bla a",
+    "output": Object {},
     "status": "queued",
   },
 }
@@ -54,6 +54,7 @@ exports[`Test the job endpoint One can create a job of a given type. 1`] = `
 Object {
   "jobCreate": Object {
     "id": 3,
+    "jobUniqueId": null,
     "name": "c",
     "output": null,
     "status": "queued",
