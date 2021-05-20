@@ -24,13 +24,23 @@ export default function AcquireJobDefinition(
     },
     resolve: async (source, args, context) => {
       const transaction = await models.sequelize.transaction()
+      const allJobHoldType = await models.jobHoldType.findAll({ transaction })
+      const heldTypes = allJobHoldType.map((heldType) => heldType.type)
+
       const job = await models.job.findOne({
         where: {
-          type: args.typeList,
-          status: 'queued',
-          [Op.or]: [
-            { startAfter: null },
-            { startAfter: { [Op.lt]: new Date() } },
+          [Op.and]: [
+            {
+              type: args.typeList,
+              status: 'queued',
+              [Op.or]: [
+                { startAfter: null },
+                { startAfter: { [Op.lt]: new Date() } },
+              ],
+            },
+            heldTypes.length && {
+              type: { [Op.ne]: heldTypes },
+            },
           ],
         },
         order: [['id', 'ASC']],

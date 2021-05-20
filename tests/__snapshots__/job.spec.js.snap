@@ -10,6 +10,15 @@ Object {
     "name": "Bla a",
     "output": Object {},
     "status": "queued",
+     },
+   }
+`;
+
+exports[`Test the job endpoint Be able to hold a type of job and toggle it 1`] = `
+Object {
+  "toggleHoldJobType": Object {
+    "id": 1,
+    "type": "type-1",
   },
 }
 `;
