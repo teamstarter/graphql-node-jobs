@@ -670,8 +670,7 @@ describe('Test the job endpoint', () => {
       processingFunction: async (job, { updateProcessingInfo }) => {
         for (const step of Object.keys(steps)) {
           if ('step-5' === step) {
-            // Create a error
-            steps.error()
+            throw new Error('step-5 failed')
           }
           steps[step].status = 'done'
           await updateProcessingInfo({ steps })

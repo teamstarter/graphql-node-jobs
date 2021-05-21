@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Test the job endpoint A job failed can be recover  1`] = `"[TypeError: steps.error is not a function] Stack: TypeError: steps.error is not a function"`;
+exports[`Test the job endpoint A job failed can be recover  1`] = `"[Error: step-5 failed] Stack: Error: step-5 failed"`;
 
 exports[`Test the job endpoint A job failed can be recover  2`] = `"queued"`;
 
