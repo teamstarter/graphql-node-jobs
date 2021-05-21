@@ -3,6 +3,7 @@ import {
   SequelizeModels,
   InAndOutTypes,
 } from 'graphql-sequelize-generator/types'
+import debounce from 'debounce'
 
 import acquireJob from './job/acquire'
 import recoverJob from './job/recover'
@@ -14,6 +15,27 @@ export class CancelRequestedError extends Error {
     super(message)
     this.name = 'CancelRequestedError'
   }
+}
+
+const allInstanceOfDebounceBatch: any = []
+
+function getInstanceOfDebounceBatch(batchId: number) {
+  const instance = allInstanceOfDebounceBatch.filter(
+    (instance: any) => instance.batchId === batchId
+  )
+
+  if (!instance.length) {
+    allInstanceOfDebounceBatch.push({
+      batchId: batchId,
+      debounce: debounce((callback: Function) => callback(), 50),
+    })
+
+    return allInstanceOfDebounceBatch.filter(
+      (instance: any) => instance.batchId === batchId
+    )[0].debounce
+  }
+
+  return instance[0].debounce
 }
 
 export default function JobConfiguration(
@@ -83,6 +105,40 @@ export default function JobConfiguration(
         }
 
         return properties
+      },
+      after: async (job, oldJob) => {
+        if (!job.batchId) {
+          return job
+        }
+
+        const debounceBatch = getInstanceOfDebounceBatch(job.batchId)
+
+        debounceBatch(async () => {
+          const batch = await models.batch.findOne({
+            where: { id: job.batchId },
+          })
+          const jobs = await models.job.findAll({
+            where: {
+              batchId: job.batchId,
+            },
+          })
+          const jobsStatus = jobs.map((job) => job.status)
+          const allJobsAreSuccessful = jobsStatus.every(
+            (status) => status === 'successful'
+          )
+
+          if (allJobsAreSuccessful) {
+            await batch.update({
+              status: 'successful',
+            })
+          } else if (jobsStatus.includes('failed')) {
+            await batch.update({
+              status: 'failed',
+            })
+          }
+        })
+
+        return job
       },
     },
   }
