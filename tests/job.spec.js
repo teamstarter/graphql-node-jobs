@@ -26,6 +26,8 @@ const client = getNewClient(
   `http://localhost:${process.env.PORT || 8080}/graphql`
 )
 
+const wait = (time) => new Promise((resolve) => setTimeout(resolve, time))
+
 const acquireJob = (variables) => ({
   query: `mutation($typeList: [String!]!, $workerId: String) {
     acquireJob(
@@ -608,6 +610,119 @@ describe('Test the job endpoint', () => {
     expect(response2.body.data).toMatchSnapshot()
   })
 
+  it('If job fail the associated batch fail', async () => {
+    const batch = await models.batch.create({
+      status: 'planned',
+      pipelineId: 1,
+    })
+
+    const job1 = await createJob(client, {
+      type: 'd',
+      status: 'queued',
+      batchId: batch.id,
+    })
+    const job2 = await createJob(client, {
+      type: 'd',
+      status: 'queued',
+      name: 'test',
+      batchId: batch.id,
+    })
+    const job3 = await createJob(client, {
+      type: 'd',
+      status: 'queued',
+      batchId: batch.id,
+    })
+
+    const jobChecked1 = await checkForJobs({
+      typeList: ['d'],
+      client,
+      processingFunction: (job) => {
+        return { total: 125 }
+      },
+      looping: false,
+    })
+    
+    expect(jobChecked1.status).toBe('successful')
+
+    const jobChecked2 = await checkForJobs({
+      typeList: ['d'],
+      client,
+      processingFunction: (job) => {
+        const a = {}
+        a.awd()
+
+        return { total: 125 }
+      },
+      looping: false,
+    })
+    expect(jobChecked2.status).toBe('failed')
+
+    const jobChecked3 = await checkForJobs({
+      typeList: ['d'],
+      client,
+      processingFunction: (job) => {
+        return { total: 125 }
+      },
+      looping: false,
+    })
+
+    expect(jobChecked3.status).toBe('successful')
+
+    await wait(500)
+
+    const batchUpdated = await models.batch.findOne({
+      where: { id: batch.id },
+    })
+
+    expect(batchUpdated.status).toBe('failed')
+  })
+
+  it('Batch can be successful if all jobs associated are successful', async () => {
+    const batch = await models.batch.create({
+      status: 'planned',
+      pipelineId: 2,
+    })
+
+    const job1 = await createJob(client, {
+      type: 'd',
+      status: 'queued',
+      batchId: batch.id,
+    })
+
+    const job2 = await createJob(client, {
+      type: 'd',
+      status: 'queued',
+      batchId: batch.id,
+    })
+
+    const jobChecked1 = await checkForJobs({
+      typeList: ['d'],
+      client,
+      processingFunction: (job) => {
+        return { total: 125 }
+      },
+      looping: false,
+    })
+    expect(jobChecked1.status).toBe('successful')
+
+    const jobChecked2 = await checkForJobs({
+      typeList: ['d'],
+      client,
+      processingFunction: (job) => {
+        return { total: 125 }
+      },
+      looping: false,
+    })
+    expect(jobChecked2.status).toBe('successful')
+
+    await wait(500)
+
+    const batchUpdated = await models.batch.findOne({
+      where: { id: batch.id },
+    })
+    expect(batchUpdated.status).toBe('successful')
+  })
+
   it('Be able to hold a type of job and toggle it', async () => {
     const responseToggleHoldJob = await request(server)
       .post('/graphql')
@@ -640,7 +755,6 @@ describe('Test the job endpoint', () => {
       },
       looping: false,
     })
-
     expect(responseCheck1).not.toBeUndefined()
     expect(responseCheck1).not.toBe(null)
     expect(responseCheck1.type).toBe('type-2')
@@ -653,7 +767,6 @@ describe('Test the job endpoint', () => {
       },
       looping: false,
     })
-
     expect(responseCheck2).not.toBeUndefined()
     expect(responseCheck2).not.toBe(null)
     expect(responseCheck2.type).toBe('type-2')
@@ -665,8 +778,7 @@ describe('Test the job endpoint', () => {
         return { data: 'my data' }
       },
       looping: false,
-    })
-
+    })      
     expect(responseCheck3).not.toBeUndefined()
     expect(responseCheck3).toBe(null)
 
