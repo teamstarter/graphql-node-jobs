@@ -6,6 +6,7 @@ import {
 import debounce from 'debounce'
 
 import acquireJob from './job/acquire'
+import recoverJob from './job/recover'
 import retryJob from './job/retry'
 
 // You will throw a CancelRequestedError in your application to set the job status to 'cancelled'
@@ -47,6 +48,7 @@ export default function JobConfiguration(
     subscriptions: ['create', 'update', 'delete'],
     additionalMutations: {
       acquireJob: acquireJob(graphqlTypes, models),
+      recover: recoverJob(graphqlTypes, models),
       retryJob: retryJob(graphqlTypes, models),
     },
     list: {
