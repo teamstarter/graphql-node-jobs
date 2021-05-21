@@ -12,6 +12,7 @@ export type JobStatus =
   | 'cancelled'
 export type Job = {
   id?: number
+  jobUniqueId: string
   type: string
   name: string
   input: JSONValue

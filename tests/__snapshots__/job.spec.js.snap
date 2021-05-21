@@ -11,6 +11,18 @@ Object {
 }
 `;
 
+exports[`Test the job endpoint Check if you cannot duplicate job according to jobUniqueId 1`] = `
+Object {
+  "jobCreate": Object {
+    "id": 1,
+    "jobUniqueId": "job-unique-1",
+    "name": "Bla a",
+    "output": Object {},
+    "status": "queued",
+  },
+}
+`;
+
 exports[`Test the job endpoint List the jobs 1`] = `
 Object {
   "data": Object {
@@ -87,6 +99,7 @@ exports[`Test the job endpoint One can create a job of a given type. 1`] = `
 Object {
   "jobCreate": Object {
     "id": 4,
+    "jobUniqueId": null,
     "name": "c",
     "output": null,
     "status": "queued",

@@ -139,5 +139,8 @@ export default function JobConfiguration(
         return job
       },
     },
+    create: {
+      preventDuplicateOnAttributes: ['jobUniqueId'],
+    },
   }
 }

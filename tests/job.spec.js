@@ -53,6 +53,7 @@ const jobCreate = (variables) => ({
       name
       status
       output
+      jobUniqueId
     }
   }`,
   variables,
@@ -543,6 +544,30 @@ describe('Test the job endpoint', () => {
     expect(response.body.data).toMatchSnapshot()
   })
 
+  it('Check if you cannot duplicate job according to jobUniqueId', async () => {
+    const responseCreateJob = await request(server)
+      .post('/graphql')
+      .send(
+        jobCreate({
+          job: { name: 'c', type: 'c', jobUniqueId: 'job-unique-1' },
+        })
+      )
+    expect(responseCreateJob.body.errors).toBeUndefined()
+    expect(responseCreateJob.body.data).toMatchSnapshot()
+
+    const responseSameCreateJob = await request(server)
+      .post('/graphql')
+      .send(
+        jobCreate({
+          job: { name: 'c', type: 'c', jobUniqueId: 'job-unique-1' },
+        })
+      )
+
+    expect(responseCreateJob.body.errors).toBeUndefined()
+    expect(responseSameCreateJob.body.data).toStrictEqual(
+      responseCreateJob.body.data
+    )
+  })
   it('The job can be restarted if it fails', async () => {
     const responseRetryJob = await request(server)
       .post('/graphql')
