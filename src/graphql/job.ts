@@ -142,7 +142,7 @@ export default function JobConfiguration(
       },
     },
     create: {
-      // preventDuplicateOnAttributes: ['jobUniqueId'],
+      preventDuplicateOnAttributes: ['jobUniqueId'],
     },
   }
 }
