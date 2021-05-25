@@ -25,15 +25,5 @@ export default function PipelineStep(sequelize: any) {
       paranoid: true,
     }
   )
-  PipelineStep.associate = function (models: any) {
-    models.job.belongsTo(models.job, {
-      foreignKey: 'jobId',
-      sourceKey: 'id',
-    })
-    models.job.belongsTo(models.batch, {
-      foreignKey: 'batchId',
-      sourceKey: 'id',
-    })
-  }
   return PipelineStep
 }
