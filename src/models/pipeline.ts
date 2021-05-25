@@ -9,6 +9,14 @@ export default function Pipeline(sequelize: any) {
         primaryKey: true,
         autoIncrement: true,
       },
+      status: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'planned',
+        validate: {
+          isIn: [['planned', 'processing', 'failed', 'successful']],
+        },
+      },
       name: {
         type: DataTypes.STRING,
       },
