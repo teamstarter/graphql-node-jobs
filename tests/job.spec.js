@@ -561,17 +561,15 @@ describe('Test the job endpoint', () => {
       .post('/graphql')
       .send(
         jobCreate({
-          job: { name: 'c', type: 'c', jobUniqueId: 'job-unique-1' },
+          job: { name: 'c', type: 'c', jobUniqueId: 'job-unique-10' },
         })
       )
     expect(responseCreateJob.body.errors).toBeUndefined()
-    expect(responseCreateJob.body.data).toMatchSnapshot()
-
     const responseSameCreateJob = await request(server)
       .post('/graphql')
       .send(
         jobCreate({
-          job: { name: 'c', type: 'c', jobUniqueId: 'job-unique-1' },
+          job: { name: 'c', type: 'c', jobUniqueId: 'job-unique-10' },
         })
       )
 
@@ -765,7 +763,7 @@ describe('Test the job endpoint', () => {
     expect(response.body.errors).toHaveLength(1)
     expect(response.body.errors[0].message).toBe('The job must be failed')
   })
-    
+
   it('If job fail the associated batch fail', async () => {
     const batch = await models.batch.create({
       status: 'planned',
@@ -797,7 +795,7 @@ describe('Test the job endpoint', () => {
       },
       looping: false,
     })
-    
+
     expect(jobChecked1.status).toBe('successful')
 
     const jobChecked2 = await checkForJobs({
@@ -934,7 +932,7 @@ describe('Test the job endpoint', () => {
         return { data: 'my data' }
       },
       looping: false,
-    })      
+    })
     expect(responseCheck3).not.toBeUndefined()
     expect(responseCheck3).toBe(null)
 
