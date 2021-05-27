@@ -8,7 +8,6 @@ import debounce from 'debounce'
 import acquireJob from './job/acquire'
 import recoverJob from './job/recover'
 import retryJob from './job/retry'
-import pipeline from '../../lib/graphql/pipeline'
 
 // You will throw a CancelRequestedError in your application to set the job status to 'cancelled'
 export class CancelRequestedError extends Error {
