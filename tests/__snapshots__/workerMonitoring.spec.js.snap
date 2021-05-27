@@ -1,27 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Test the workerMonitoring endpoint List the jobs 1`] = `
-Object {
-  "acquireJob": Object {
-    "id": 4,
-    "name": null,
-    "output": null,
-    "status": "processing",
-  },
-}
-`;
-
-exports[`Test the workerMonitoring endpoint List the jobs 2`] = `
-Object {
-  "acquireJob": Object {
-    "id": 5,
-    "name": null,
-    "output": null,
-    "status": "processing",
-  },
-}
-`;
-
 exports[`Test the workerMonitoring endpoint WorkerMonitoring is updated when a new job is acquired 1`] = `
 Object {
   "acquireJob": Object {
