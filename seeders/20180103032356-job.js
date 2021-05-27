@@ -45,6 +45,28 @@ module.exports = {
           output: '{}',
           batchId: null,
         },
+        {
+          id: 4,
+          type: 'b',
+          name: 'job-unique-3',
+          status: 'planned',
+          isHighFrequency: false,
+          isRecoverable: false,
+          input: '{}',
+          output: '{}',
+          batchId: null,
+        },
+        {
+          id: 5,
+          type: 'b',
+          name: 'job-unique-4',
+          status: 'planned',
+          isHighFrequency: false,
+          isRecoverable: false,
+          input: '{}',
+          output: '{}',
+          batchId: null,
+        },
       ].map(timestamp),
       {}
     )

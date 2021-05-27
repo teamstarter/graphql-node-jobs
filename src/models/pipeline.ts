@@ -36,6 +36,16 @@ export default function Pipeline(sequelize: any) {
       foreignKey: 'pipelineId',
       sourceKey: 'id',
     })
+    models.pipeline.hasMany(models.job, {
+      as: 'jobs',
+      foreignKey: 'pipelineId',
+      sourceKey: 'id',
+    })
+    models.pipeline.hasMany(models.pipelineStep, {
+      as: 'steps',
+      foreignKey: 'pipelineId',
+      sourceKey: 'id',
+    })
   }
   return Pipeline
 }

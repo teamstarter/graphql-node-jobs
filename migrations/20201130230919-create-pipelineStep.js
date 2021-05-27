@@ -14,8 +14,23 @@ module.exports = {
       batchId: {
         type: Sequelize.INTEGER,
       },
+      pipelineId: {
+        type: Sequelize.INTEGER,
+      },
       index: {
         type: Sequelize.INTEGER,
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+      },
+      deletedAt: {
+        allowNull: true,
+        type: Sequelize.DATE,
       },
     })
   },

@@ -15,8 +15,32 @@ export default function PipelineStep(sequelize: any) {
       batchId: {
         type: DataTypes.INTEGER,
       },
+      pipelineId: {
+        type: DataTypes.INTEGER,
+      },
       index: {
         type: DataTypes.INTEGER,
+      },
+      status: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'planned',
+        validate: {
+          isIn: [['planned', 'done']],
+        },
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
+      deletedAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
+        defaultValue: null,
       },
     },
     {
@@ -25,5 +49,12 @@ export default function PipelineStep(sequelize: any) {
       paranoid: true,
     }
   )
+  PipelineStep.associate = function (models: any) {
+    models.pipelineStep.belongsTo(models.pipeline, {
+      foreignKey: 'pipelineId',
+      sourceKey: 'id',
+    })
+  }
+
   return PipelineStep
 }
