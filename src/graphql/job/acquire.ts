@@ -60,6 +60,30 @@ export default function AcquireJobDefinition(
         { transaction }
       )
 
+      if (args.workerId) {
+        const workerMonitoring = await models.workerMonitoring.findOne({
+          where: { workerId: args.workerId },
+          transaction,
+        })
+
+        if (workerMonitoring) {
+          await workerMonitoring.update(
+            {
+              lastCalledAt: new Date(),
+            },
+            { transaction }
+          )
+        } else {
+          await models.workerMonitoring.create(
+            {
+              workerId: args.workerId,
+              lastCalledAt: new Date(),
+            },
+            { transaction }
+          )
+        }
+      }
+
       await transaction.commit()
       return job
     },

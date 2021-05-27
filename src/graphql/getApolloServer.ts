@@ -8,6 +8,7 @@ import job from './job'
 import batch from './batch'
 import pipeline from './pipeline'
 import jobHoldType from './jobHoldType'
+import workerMonitoring from './workerMonitoring'
 
 /**
  * @param dbConfig Sequelize database configuration object
@@ -27,6 +28,7 @@ export default function getApolloServer(
     batch: batch(types, models),
     pipeline: pipeline(types, models),
     jobHoldType: jobHoldType(types, models),
+    workerMonitoring: workerMonitoring(types, models),
   }
 
   return generateApolloServer({
