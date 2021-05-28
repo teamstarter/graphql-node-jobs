@@ -10,32 +10,14 @@ module.exports = {
       },
       jobId: {
         type: Sequelize.INTEGER,
-        references: {
-          model: 'job',
-          key: 'id',
-          onDelete: 'cascade',
-          onUpdate: 'cascade',
-        },
         allowNull: true,
       },
       batchId: {
         type: Sequelize.INTEGER,
-        references: {
-          model: 'batch',
-          key: 'id',
-          onDelete: 'cascade',
-          onUpdate: 'cascade',
-        },
         allowNull: true,
       },
       pipelineId: {
         type: Sequelize.INTEGER,
-        references: {
-          model: 'pipeline',
-          key: 'id',
-          onDelete: 'cascade',
-          onUpdate: 'cascade',
-        },
         allowNull: false,
       },
       index: {

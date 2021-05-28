@@ -60,6 +60,14 @@ export default function PipelineStep(sequelize: any) {
       foreignKey: 'pipelineId',
       sourceKey: 'id',
     })
+    models.pipelineStep.belongsTo(models.batch, {
+      foreignKey: 'batchId',
+      sourceKey: 'id',
+    })
+    models.pipelineStep.belongsTo(models.job, {
+      foreignKey: 'jobId',
+      sourceKey: 'id',
+    })
   }
 
   return PipelineStep
