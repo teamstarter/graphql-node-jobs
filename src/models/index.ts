@@ -12,7 +12,7 @@ let db: any = null
  * It must be noted that NJ does not support changing the models configuration
  * once the models are fetched.
  */
-async function initDb(config: any) {
+function initDb(config: any) {
   const basename = path.basename(module.filename)
   db = {}
 
@@ -54,20 +54,6 @@ async function initDb(config: any) {
 
   db.sequelize = sequelize
   db.Sequelize = Sequelize
-
-  await updateJobInProcessingToFailed(db)
-}
-
-async function updateJobInProcessingToFailed(db: any) {
-  const jobs = await db.job.findAll({
-    where: { status: 'processing' },
-  })
-
-  if (jobs) {
-    for (const job of jobs) {
-      await job.update({ status: 'failed' })
-    }
-  }
 }
 
 export default function getModels(dbConfig: any) {
