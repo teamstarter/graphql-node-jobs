@@ -68,6 +68,15 @@ async function updatePipelineStatus(
     },
   })
 
+  const stepsStatus = steps.map((step) => step.status)
+  const allStepsAreDone = stepsStatus.every(
+    (status: string) => status === 'done'
+  )
+
+  if (!allStepsAreDone) {
+    return
+  }
+
   let status = 'successful'
   for (const step of steps) {
     if (step.jobId) {
