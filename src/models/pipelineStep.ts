@@ -11,15 +11,21 @@ export default function PipelineStep(sequelize: any) {
       },
       jobId: {
         type: DataTypes.INTEGER,
+        allowNull: true,
+        defaultValue: null,
       },
       batchId: {
         type: DataTypes.INTEGER,
+        allowNull: true,
+        defaultValue: null,
       },
       pipelineId: {
         type: DataTypes.INTEGER,
+        allowNull: false,
       },
       index: {
         type: DataTypes.INTEGER,
+        allowNull: false,
       },
       status: {
         type: DataTypes.STRING,
