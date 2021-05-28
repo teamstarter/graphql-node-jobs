@@ -5,6 +5,8 @@ import {
   SequelizeModels,
 } from 'graphql-sequelize-generator/types'
 
+import putNextStepJobsInTheQueued from '../utils/putNextStepJobsInTheQueued'
+
 export default function StartPipeline(
   graphqlTypes: InAndOutTypes,
   models: SequelizeModels
@@ -38,19 +40,7 @@ export default function StartPipeline(
 
       await pipeline.update({ status: 'processing' })
 
-      if (step.jobId) {
-        const job = await models.job.findOne({
-          where: { id: step.jobId },
-        })
-        job.update({ status: 'queued' })
-      } else if (step.batchId) {
-        const jobs = await models.job.findAll({
-          where: { batchId: step.batchId },
-        })
-        jobs.forEach((job) => {
-          job.update({ status: 'queued' })
-        })
-      }
+      await putNextStepJobsInTheQueued(step, models)
 
       return pipeline
     },

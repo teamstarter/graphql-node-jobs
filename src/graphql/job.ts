@@ -5,6 +5,9 @@ import {
 } from 'graphql-sequelize-generator/types'
 import debounce from 'debounce'
 
+import putNextStepJobsInTheQueued from './utils/putNextStepJobsInTheQueued'
+import updatePipelineStatus from './utils/updatePipelineStatus'
+
 import acquireJob from './job/acquire'
 import recoverJob from './job/recover'
 import retryJob from './job/retry'
@@ -36,64 +39,6 @@ function getInstanceOfDebounceBatch(batchId: number) {
   }
 
   return instance[0].debounce
-}
-
-async function putNextStepJobsInTheQueued(
-  nextStep: any,
-  models: SequelizeModels
-) {
-  if (nextStep.jobId) {
-    const job = await models.job.findOne({
-      where: { id: nextStep.jobId },
-    })
-    job.update({ status: 'queued' })
-  }
-  if (nextStep.batchId) {
-    const jobs = await models.job.findAll({
-      where: { batchId: nextStep.batchId },
-    })
-    jobs.forEach((job) => {
-      job.update({ status: 'queued' })
-    })
-  }
-}
-
-async function updatePipelineStatus(
-  pipelineId: number,
-  models: SequelizeModels
-) {
-  const steps = await models.pipelineStep.findAll({
-    where: {
-      pipelineId,
-    },
-  })
-
-  const stepsStatus = steps.map((step) => step.status)
-  const allStepsAreDone = stepsStatus.every(
-    (status: string) => status === 'done'
-  )
-
-  if (!allStepsAreDone) {
-    return
-  }
-
-  let status = 'successful'
-  for (const step of steps) {
-    if (step.jobId) {
-      const job = await models.job.findByPk(step.jobId)
-      if (job.status !== 'successful') {
-        status = 'failed'
-      }
-    } else {
-      const batch = await models.batch.findByPk(step.batchId)
-      if (batch.status !== 'successful') {
-        status = 'failed'
-      }
-    }
-  }
-
-  const pipeline = await models.pipeline.findByPk(pipelineId)
-  await pipeline.update({ status })
 }
 
 export default function JobConfiguration(
