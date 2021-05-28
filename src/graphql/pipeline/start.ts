@@ -4,7 +4,6 @@ import {
   InAndOutTypes,
   SequelizeModels,
 } from 'graphql-sequelize-generator/types'
-import Pipeline from '../../models/pipeline'
 
 export default function StartPipeline(
   graphqlTypes: InAndOutTypes,
@@ -28,8 +27,6 @@ export default function StartPipeline(
         throw new Error('The pipeline has already been started')
       }
 
-      await pipeline.update({ status: 'processing' })
-
       const step = await models.pipelineStep.findOne({
         where: { pipelineId, status: 'planned' },
         order: [['index', 'ASC']],
@@ -38,6 +35,8 @@ export default function StartPipeline(
       if (!step) {
         throw new Error('No steps related to this pipeline were found')
       }
+
+      await pipeline.update({ status: 'processing' })
 
       if (step.jobId) {
         const job = await models.job.findOne({
