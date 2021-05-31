@@ -10,15 +10,27 @@ module.exports = {
       },
       jobId: {
         type: Sequelize.INTEGER,
+        references: {
+          model: 'job',
+          key: 'id',
+        },
         allowNull: true,
       },
       batchId: {
         type: Sequelize.INTEGER,
+        references: {
+          model: 'batch',
+          key: 'id',
+        },
         allowNull: true,
       },
       pipelineId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        references: {
+          model: 'pipeline',
+          key: 'id',
+        },
+        allowNull: true,
       },
       index: {
         type: Sequelize.INTEGER,
