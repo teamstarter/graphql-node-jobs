@@ -122,8 +122,7 @@ export default function JobConfiguration(
                 batchId: job.batchId,
               },
             })
-            const jobsStatus = jobs.map((job) => job.status)
-            const allJobsAreSuccessful = jobsStatus.every(
+            const allJobsAreSuccessful = jobs.every(
               (status) => status === 'successful'
             )
 
@@ -155,7 +154,7 @@ export default function JobConfiguration(
               } else {
                 await updatePipelineStatus(batch.pipelineId, models)
               }
-            } else if (jobsStatus.includes('failed')) {
+            } else if (!allJobsAreSuccessful) {
               await batch.update({
                 status: 'failed',
               })
