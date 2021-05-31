@@ -137,6 +137,7 @@ exports.getNewServer = () => {
           return job
         },
       },
-    }
+    },
+    async (job) => {}
   )
 }

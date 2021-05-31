@@ -3,6 +3,7 @@ import {
   generateModelTypes,
 } from 'graphql-sequelize-generator'
 import getModels from '../models'
+import { Job } from '../types'
 
 import job from './job'
 import batch from './batch'
@@ -16,14 +17,15 @@ import jobHoldType from './jobHoldType'
 export default function getApolloServer(
   dbConfig: any,
   gsgParams: any = {},
-  customMutations: any = {}
+  customMutations: any = {},
+  onJobFail?: (job: Job) => Promise<any>
 ) {
   const models = getModels(dbConfig)
 
   const types = generateModelTypes(models)
 
   const graphqlSchemaDeclaration = {
-    job: job(types, models),
+    job: job(types, models, onJobFail),
     batch: batch(types, models),
     pipeline: pipeline(types, models),
     jobHoldType: jobHoldType(types, models),

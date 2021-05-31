@@ -29,7 +29,6 @@ export default async function checkForJobs(args: {
     job: Job,
     facilities: { updateProcessingInfo: Function }
   ) => Promise<any>
-  onFail?: (job: Job) => Promise<any>
   client: ApolloClient<any>
   typeList: Array<String>
   workerId?: string
@@ -39,7 +38,6 @@ export default async function checkForJobs(args: {
 }): Promise<any> {
   let {
     processingFunction,
-    onFail,
     client,
     typeList,
     workerId = undefined,
@@ -118,9 +116,6 @@ export default async function checkForJobs(args: {
           },
         },
       })
-      if (onFail) {
-        await onFail(job)
-      }
     }
 
     if (looping) {

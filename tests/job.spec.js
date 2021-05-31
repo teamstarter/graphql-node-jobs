@@ -962,28 +962,4 @@ describe('Test the job endpoint', () => {
     expect(responseCheck4).not.toBe(null)
     expect(responseCheck4.type).toBe('type-1')
   })
-
-  it('test callback onFail', async () => {
-    const job = await createJob(client, {
-      name: 'A job failed',
-      type: 'type-1',
-      status: 'queued',
-    })
-
-    let responseOnFail
-    const responseCheckForJob = await checkForJobs({
-      typeList: ['type-1'],
-      client,
-      onFail: async (job) => {
-        responseOnFail = job.name
-      },
-      processingFunction: async (job) => {
-        throw new Error('Error !')
-        return { data: 'my data' }
-      },
-      looping: false,
-    })
-
-    expect(responseOnFail).toBe(job.name)
-  })
 })

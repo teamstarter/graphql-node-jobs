@@ -5,6 +5,8 @@ import {
 } from 'graphql-sequelize-generator/types'
 import debounce from 'debounce'
 
+import { Job } from '../types'
+
 import acquireJob from './job/acquire'
 import recoverJob from './job/recover'
 import retryJob from './job/retry'
@@ -40,7 +42,8 @@ function getInstanceOfDebounceBatch(batchId: number) {
 
 export default function JobConfiguration(
   graphqlTypes: InAndOutTypes,
-  models: SequelizeModels
+  models: SequelizeModels,
+  onFail?: (job: Job) => Promise<any>
 ): ModelDeclarationType {
   return {
     model: models.job,
@@ -107,6 +110,10 @@ export default function JobConfiguration(
         return properties
       },
       after: async (job, oldJob) => {
+        if (job.status === 'failed' && onFail) {
+          await onFail(job)
+        }
+
         if (!job.batchId) {
           return job
         }
