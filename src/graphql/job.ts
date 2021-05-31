@@ -211,17 +211,21 @@ export default function JobConfiguration(
       },
       after: async (job, source, args, context, info) => {
         if (job.pipelineId) {
-          const indexCount = await models.pipelineStep.count({
-            where: {
-              pipelineId: job.pipelineId,
-            },
-          })
+          const pipeline = await models.pipeline.findByPk(job.pipelineId)
 
-          await models.pipelineStep.create({
-            jobId: job.id,
-            pipelineId: job.pipelineId,
-            index: indexCount + 1,
-          })
+          if (!['successful', 'failed'].includes(pipeline.status)) {
+            const indexCount = await models.pipelineStep.count({
+              where: {
+                pipelineId: job.pipelineId,
+              },
+            })
+
+            await models.pipelineStep.create({
+              jobId: job.id,
+              pipelineId: job.pipelineId,
+              index: indexCount + 1,
+            })
+          }
         }
 
         return job
