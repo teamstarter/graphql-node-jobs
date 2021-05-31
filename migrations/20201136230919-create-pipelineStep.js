@@ -13,6 +13,8 @@ module.exports = {
         references: {
           model: 'job',
           key: 'id',
+          onDelete: 'cascade',
+          onUpdate: 'cascade',
         },
         allowNull: true,
       },
@@ -21,6 +23,8 @@ module.exports = {
         references: {
           model: 'batch',
           key: 'id',
+          onDelete: 'cascade',
+          onUpdate: 'cascade',
         },
         allowNull: true,
       },
@@ -29,6 +33,8 @@ module.exports = {
         references: {
           model: 'pipeline',
           key: 'id',
+          onDelete: 'cascade',
+          onUpdate: 'cascade',
         },
         allowNull: true,
       },
