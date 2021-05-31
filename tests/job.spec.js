@@ -765,7 +765,7 @@ describe('Test the job endpoint', () => {
     expect(response.body.errors).toHaveLength(1)
     expect(response.body.errors[0].message).toBe('The job must be failed')
   })
-    
+
   it('If job fail the associated batch fail', async () => {
     const batch = await models.batch.create({
       status: 'planned',
@@ -797,7 +797,7 @@ describe('Test the job endpoint', () => {
       },
       looping: false,
     })
-    
+
     expect(jobChecked1.status).toBe('successful')
 
     const jobChecked2 = await checkForJobs({
@@ -934,7 +934,7 @@ describe('Test the job endpoint', () => {
         return { data: 'my data' }
       },
       looping: false,
-    })      
+    })
     expect(responseCheck3).not.toBeUndefined()
     expect(responseCheck3).toBe(null)
 
@@ -961,5 +961,29 @@ describe('Test the job endpoint', () => {
     expect(responseCheck4).not.toBeUndefined()
     expect(responseCheck4).not.toBe(null)
     expect(responseCheck4.type).toBe('type-1')
+  })
+
+  it('test callback onFail', async () => {
+    const job = await createJob(client, {
+      name: 'A job failed',
+      type: 'type-1',
+      status: 'queued',
+    })
+
+    let responseOnFail
+    const responseCheckForJob = await checkForJobs({
+      typeList: ['type-1'],
+      client,
+      onFail: async (job) => {
+        responseOnFail = job.name
+      },
+      processingFunction: async (job) => {
+        throw new Error('Error !')
+        return { data: 'my data' }
+      },
+      looping: false,
+    })
+
+    expect(responseOnFail).toBe(job.name)
   })
 })
