@@ -18,6 +18,8 @@ const {
   CancelRequestedError,
 } = require('./../lib/index')
 
+const { cleanupTestsEnv } = require('./tools')
+
 // This is the maximum amount of time the band of test can run before timing-out
 jest.setTimeout(600000)
 
@@ -146,6 +148,7 @@ describe('Test the job endpoint', () => {
     await migrateDatabase()
     await seedDatabase()
     server = await getNewServer()
+    cleanupTestsEnv()
   })
 
   beforeEach(async () => {
