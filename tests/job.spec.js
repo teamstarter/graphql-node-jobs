@@ -580,6 +580,56 @@ describe('Test the job endpoint', () => {
     expect(response.body.data).toMatchSnapshot()
   })
 
+  it('Step are properly timed when they are finished', async () => {
+    const timeout = async (ms) =>
+      new Promise((resolve) => setTimeout(resolve, ms))
+
+    const job = await createJob(client, {
+      type: 'job-multi-steps',
+      status: 'queued',
+    })
+    const result = await checkForJobs({
+      typeList: ['job-multi-steps'],
+      client,
+      processingFunction: async (job, { updateProcessingInfo }) => {
+        const steps = {
+          'step-1': {
+            status: 'waiting',
+          },
+          'step-2': {
+            status: 'waiting',
+          },
+          'step-3': {
+            status: 'waiting',
+          },
+          'step-4': {
+            status: 'waiting',
+          },
+          'step-5': {
+            status: 'waiting',
+          },
+        }
+
+        for (const step of Object.keys(steps)) {
+          steps[step].status = 'done'
+          await updateProcessingInfo({ steps })
+          await timeout(1000)
+        }
+
+        return steps
+      },
+      looping: false,
+    })
+    const { createdAt, processingInfo } = result
+
+    const steps = processingInfo.steps
+    Object.keys(steps).forEach((step) => {
+      expect(steps[step].status).toBe('done')
+      expect(steps[step].elapsedTime).toBeGreaterThanOrEqual(1000)
+      expect(steps[step].elapsedTime).toBeLessThan(1100)
+    })
+  })
+
   it('Check if you cannot duplicate job according to jobUniqueId', async () => {
     const responseCreateJob = await request(server)
       .post('/graphql')
@@ -702,7 +752,6 @@ describe('Test the job endpoint', () => {
         status: 'waiting',
       },
     }
-
     const timeout = async (ms) =>
       new Promise((resolve) => setTimeout(resolve, ms))
 
@@ -719,6 +768,7 @@ describe('Test the job endpoint', () => {
           if ('step-5' === step) {
             throw new Error('step-5 failed')
           }
+
           steps[step].status = 'done'
           await updateProcessingInfo({ steps })
           await timeout(1000)
