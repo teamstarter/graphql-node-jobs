@@ -24,9 +24,20 @@ export default async function getApolloServer(
 
   const types = generateModelTypes(models)
 
-  await models.sequelize.query(
-    "UPDATE job SET status = 'failed' WHERE status = 'processing'"
-  )
+  const jobsFail = await models.job.findAll({
+    where: { status: 'processing' },
+  })
+
+  if (jobsFail.length > 0) {
+    await models.sequelize.query(
+      "UPDATE job SET status = 'failed' WHERE status = 'processing'"
+    )
+    if (onJobFail) {
+      for (const job of jobsFail) {
+        onJobFail(job)
+      }
+    }
+  }
 
   const graphqlSchemaDeclaration = {
     job: job(types, models, onJobFail),
