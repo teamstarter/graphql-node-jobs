@@ -11,7 +11,12 @@ export default async function getStandAloneServer(
   onJobFail?: (job: Job) => Promise<any>
 ) {
   const app = express()
-  const server = getApolloServer(config, gsgParams, customMutations, onJobFail)
+  const server = await getApolloServer(
+    config,
+    gsgParams,
+    customMutations,
+    onJobFail
+  )
 
   server.applyMiddleware({
     app,

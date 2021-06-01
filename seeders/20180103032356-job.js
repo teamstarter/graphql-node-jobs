@@ -45,6 +45,17 @@ module.exports = {
           output: '{}',
           batchId: null,
         },
+        {
+          id: 4,
+          type: 'job-processing',
+          name: 'A job processing',
+          status: 'processing',
+          isHighFrequency: false,
+          isRecoverable: false,
+          input: '{}',
+          output: '{}',
+          batchId: null,
+        },
       ].map(timestamp),
       {}
     )
