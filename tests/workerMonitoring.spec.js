@@ -90,6 +90,9 @@ describe('Test the workerMonitoring endpoint', () => {
       )
     expect(responseJob1.body.errors).toBeUndefined()
     expect(responseJob1.body.data).toMatchSnapshot()
+
+    await wait(500)
+
     const responseWorkerMonitoring = await request(server)
       .post('/graphql')
       .send(
@@ -115,6 +118,9 @@ describe('Test the workerMonitoring endpoint', () => {
       )
     expect(responseJob2.body.errors).toBeUndefined()
     expect(responseJob2.body.data).toMatchSnapshot()
+
+    await wait(500)
+
     const responseWorkerMonitoring2 = await request(server)
       .post('/graphql')
       .send(

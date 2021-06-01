@@ -5,6 +5,28 @@ import {
   SequelizeModels,
 } from 'graphql-sequelize-generator/types'
 import { Op } from 'sequelize'
+import debounce from 'debounce'
+
+const allInstanceOfDebounceWorker: any = []
+
+function getInstanceOfDebounceWorker(workerId: number) {
+  const instance = allInstanceOfDebounceWorker.filter(
+    (instance: any) => instance.workerId === workerId
+  )
+
+  if (!instance.length) {
+    allInstanceOfDebounceWorker.push({
+      workerId: workerId,
+      debounce: debounce((callback: Function) => callback(), 50),
+    })
+
+    return allInstanceOfDebounceWorker.filter(
+      (instance: any) => instance.workerId === workerId
+    )[0].debounce
+  }
+
+  return instance[0].debounce
+}
 
 export default function AcquireJobDefinition(
   graphqlTypes: InAndOutTypes,
@@ -61,27 +83,24 @@ export default function AcquireJobDefinition(
       )
 
       if (args.workerId) {
-        const workerMonitoring = await models.workerMonitoring.findOne({
-          where: { workerId: args.workerId },
-          transaction,
-        })
+        const debounceWorker = getInstanceOfDebounceWorker(args.workerId)
 
-        if (workerMonitoring) {
-          await workerMonitoring.update(
-            {
+        debounceWorker(async () => {
+          const workerMonitoring = await models.workerMonitoring.findOne({
+            where: { workerId: args.workerId },
+          })
+
+          if (workerMonitoring) {
+            await workerMonitoring.update({
               lastCalledAt: new Date(),
-            },
-            { transaction }
-          )
-        } else {
-          await models.workerMonitoring.create(
-            {
+            })
+          } else {
+            await models.workerMonitoring.create({
               workerId: args.workerId,
               lastCalledAt: new Date(),
-            },
-            { transaction }
-          )
-        }
+            })
+          }
+        })
       }
 
       await transaction.commit()

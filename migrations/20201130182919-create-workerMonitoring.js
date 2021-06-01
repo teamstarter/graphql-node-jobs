@@ -9,10 +9,12 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       workerId: {
+        allowNull: false,
         type: Sequelize.STRING,
       },
       lastCalledAt: {
-        type: Sequelize.STRING,
+        allowNull: false,
+        type: Sequelize.DATE,
       },
       createdAt: {
         allowNull: false,
