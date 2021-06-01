@@ -2186,6 +2186,11 @@ dayjs@~1.8.24, dayjs@~1.8.25:
   resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.8.36.tgz#be36e248467afabf8f5a86bae0de0cdceecced50"
   integrity sha512-3VmRXEtw7RZKAf+4Tv1Ym9AGeo8r8+CjDi26x+7SYQil1UqtqdaokhzoEJohqlzt0m5kacJSDhJQkG/LWhpRBw==
 
+debounce@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/debounce/-/debounce-1.2.1.tgz#38881d8f4166a5c5848020c11827b834bcb3e0a5"
+  integrity sha512-XRRe6Glud4rd/ZGQfiV1ruXSfbvfJedlV9Y6zOlP+2K04vBYiJEte6stfFkCP03aMnY5tsipamumUjL14fofug==
+
 debug@2, debug@2.6.9, debug@^2.2.0, debug@^2.3.3:
   version "2.6.9"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.9.tgz#5d128515df134ff327e90a4c93f4e077a536341f"
@@ -3202,10 +3207,10 @@ graphql-relay@^0.5.5:
   resolved "https://registry.yarnpkg.com/graphql-relay/-/graphql-relay-0.5.5.tgz#d6815e6edd618e878d5d921c13fc66033ec867e2"
   integrity sha1-1oFebt1hjoeNXZIcE/xmAz7IZ+I=
 
-graphql-sequelize-generator@^7.3.1:
-  version "7.3.1"
-  resolved "https://registry.yarnpkg.com/graphql-sequelize-generator/-/graphql-sequelize-generator-7.3.1.tgz#b29ffbc3e52833312d8fe818eaf29d8649a3426a"
-  integrity sha512-eg4U9z1rIlUfTyjjQoXwbmKBKiEMS3eZbvtVqReLWHafHmbLQWFRf4OSdrwPXCiUe+24OOWEV0j9FTjRhVWAHg==
+graphql-sequelize-generator@^7.3.5:
+  version "7.3.5"
+  resolved "https://registry.yarnpkg.com/graphql-sequelize-generator/-/graphql-sequelize-generator-7.3.5.tgz#10f4d16ea78de963cdf289e9009c467da04b26fc"
+  integrity sha512-lnP1jyMGnWK9PZpoY2AbdKXOnHRcUO1a9rFaPiAJt5FKwz6hOXeiXeJn6YoVAoRzRJ5O+8Bn0vYt+dXx1BdStg==
   dependencies:
     "@types/debug" "^4.1.5"
     "@types/express-serve-static-core" "^4.17.13"

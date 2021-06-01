@@ -4,18 +4,13 @@ import {
   SequelizeModels,
 } from 'graphql-sequelize-generator/types'
 
-import startPipeline from './pipeline/start'
-
-export default function PipelineConfiguration(
-  graphqlTypes: InAndOutTypes,
+export default function PipelineStepConfiguration(
+  types: InAndOutTypes,
   models: SequelizeModels
 ): ModelDeclarationType {
   return {
-    model: models.pipeline,
+    model: models.pipelineStep,
     actions: ['list', 'update', 'create', 'count'],
-    additionalMutations: {
-      startPipeline: startPipeline(graphqlTypes, models),
-    },
     list: {
       before: (findOptions) => {
         return findOptions

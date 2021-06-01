@@ -9,6 +9,10 @@ export default function Job(sequelize: any) {
         primaryKey: true,
         autoIncrement: true,
       },
+      jobUniqueId: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
       type: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -49,6 +53,11 @@ export default function Job(sequelize: any) {
           ],
         },
       },
+      retryOfJobId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        defaultValue: null,
+      },
       isUpdateAlreadyCalledWhileCancelRequested: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
@@ -59,10 +68,25 @@ export default function Job(sequelize: any) {
         allowNull: true,
         defaultValue: null,
       },
+      pipelineId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        defaultValue: null,
+      },
       workerId: {
         type: DataTypes.STRING,
         allowNull: true,
         defaultValue: null,
+      },
+      isHighFrequency: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
+      isRecoverable: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
       },
       startedAt: {
         type: DataTypes.DATE,
@@ -107,6 +131,10 @@ export default function Job(sequelize: any) {
   Job.associate = function (models: any) {
     models.job.belongsTo(models.batch, {
       foreignKey: 'batchId',
+      sourceKey: 'id',
+    })
+    models.job.belongsTo(models.pipeline, {
+      foreignKey: 'pipelineId',
       sourceKey: 'id',
     })
   }

@@ -1,6 +1,19 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Test the job endpoint A job failed can be recover  1`] = `"[Error: step-5 failed] Stack: Error: step-5 failed"`;
+
+exports[`Test the job endpoint A job failed can be recover  2`] = `"queued"`;
+
 exports[`Test the job endpoint Acquiring a job require a type 1`] = `"Variable \\"$typeList\\" of required type \\"[String!]!\\" was not provided."`;
+
+exports[`Test the job endpoint Be able to hold a type of job and toggle it 1`] = `
+Object {
+  "toggleHoldJobType": Object {
+    "id": 1,
+    "type": "type-1",
+  },
+}
+`;
 
 exports[`Test the job endpoint List the jobs 1`] = `
 Object {
@@ -14,8 +27,64 @@ Object {
         "id": 2,
         "name": "Bla b",
       },
+      Object {
+        "id": 3,
+        "name": "Bla b",
+      },
+      Object {
+        "id": 4,
+        "name": "job-unique-3",
+      },
+      Object {
+        "id": 5,
+        "name": "job-unique-4",
+      },
     ],
   },
+}
+`;
+
+exports[`Test the job endpoint List the jobs with and without highFrequency 1`] = `
+Object {
+  "job": Array [
+    Object {
+      "id": 2,
+      "isHighFrequency": false,
+      "name": "Bla b",
+      "status": "queued",
+    },
+    Object {
+      "id": 3,
+      "isHighFrequency": false,
+      "name": "Bla b",
+      "status": "failed",
+    },
+    Object {
+      "id": 4,
+      "isHighFrequency": false,
+      "name": "job-unique-3",
+      "status": "planned",
+    },
+    Object {
+      "id": 5,
+      "isHighFrequency": false,
+      "name": "job-unique-4",
+      "status": "planned",
+    },
+  ],
+}
+`;
+
+exports[`Test the job endpoint List the jobs with and without highFrequency 2`] = `
+Object {
+  "job": Array [
+    Object {
+      "id": 1,
+      "isHighFrequency": true,
+      "name": "Bla a",
+      "status": "queued",
+    },
+  ],
 }
 `;
 
@@ -41,7 +110,8 @@ Object {
 exports[`Test the job endpoint One can create a job of a given type. 1`] = `
 Object {
   "jobCreate": Object {
-    "id": 3,
+    "id": 6,
+    "jobUniqueId": null,
     "name": "c",
     "output": null,
     "status": "queued",
@@ -52,7 +122,7 @@ Object {
 exports[`Test the job endpoint One can request a job cancel 1`] = `
 Object {
   "__typename": "job",
-  "id": 3,
+  "id": 6,
   "input": null,
   "name": null,
   "output": Object {
@@ -69,7 +139,7 @@ Object {
 exports[`Test the job endpoint The job can be cancelled on cancel request 1`] = `
 Object {
   "__typename": "job",
-  "id": 3,
+  "id": 6,
   "input": null,
   "name": null,
   "output": Object {
@@ -83,10 +153,21 @@ Object {
 }
 `;
 
+exports[`Test the job endpoint The job can be restarted if it fails 1`] = `
+Object {
+  "retryJob": Object {
+    "id": 6,
+    "name": "Bla b",
+    "status": "queued",
+    "type": "b",
+  },
+}
+`;
+
 exports[`Test the job endpoint The job is instantly cancelled when not already started 1`] = `
 Object {
   "jobUpdate": Object {
-    "id": 3,
+    "id": 6,
     "isUpdateAlreadyCalledWhileCancelRequested": false,
     "name": null,
     "status": "cancelled",
@@ -120,7 +201,7 @@ Object {
 exports[`Test the job endpoint When a job is cancel-requeted an updateProcessingInfo call makes it fail 1`] = `
 Object {
   "__typename": "job",
-  "id": 3,
+  "id": 6,
   "input": null,
   "name": null,
   "output": Object {
@@ -138,8 +219,9 @@ exports[`Test the job endpoint Workers can easily create jobs. 1`] = `
 Object {
   "__typename": "job",
   "batchId": null,
-  "id": 3,
+  "id": 6,
   "input": null,
+  "isHighFrequency": false,
   "isUpdateAlreadyCalledWhileCancelRequested": false,
   "name": null,
   "output": null,
@@ -164,6 +246,30 @@ Array [
     "id": 2,
     "input": Object {},
     "name": "Bla b",
+    "output": Object {},
+    "type": "b",
+  },
+  Object {
+    "__typename": "job",
+    "id": 3,
+    "input": Object {},
+    "name": "Bla b",
+    "output": Object {},
+    "type": "b",
+  },
+  Object {
+    "__typename": "job",
+    "id": 4,
+    "input": Object {},
+    "name": "job-unique-3",
+    "output": Object {},
+    "type": "b",
+  },
+  Object {
+    "__typename": "job",
+    "id": 5,
+    "input": Object {},
+    "name": "job-unique-4",
     "output": Object {},
     "type": "b",
   },
