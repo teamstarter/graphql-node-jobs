@@ -20,12 +20,16 @@ function getInstanceOfDebounceWorker(workerId: number) {
       debounce: debounce((callback: Function) => callback(), 50),
     })
 
-    return allInstanceOfDebounceWorker.filter(
-      (instance: any) => instance.workerId === workerId
-    )[0].debounce
+    return process.env.NO_ASYNC === 'true'
+      ? async (callback: Function) => callback()
+      : allInstanceOfDebounceWorker.filter(
+          (instance: any) => instance.workerId === workerId
+        )[0].debounce
   }
 
-  return instance[0].debounce
+  return process.env.NO_ASYNC === 'true'
+    ? async (callback: Function) => callback()
+    : instance[0].debounce
 }
 
 export default function AcquireJobDefinition(
@@ -82,10 +86,11 @@ export default function AcquireJobDefinition(
         { transaction }
       )
 
+      await transaction.commit()
+
       if (args.workerId) {
         const debounceWorker = getInstanceOfDebounceWorker(args.workerId)
-
-        debounceWorker(async () => {
+        await debounceWorker(async () => {
           const workerMonitoring = await models.workerMonitoring.findOne({
             where: { workerId: args.workerId },
           })
@@ -103,7 +108,6 @@ export default function AcquireJobDefinition(
         })
       }
 
-      await transaction.commit()
       return job
     },
   }
