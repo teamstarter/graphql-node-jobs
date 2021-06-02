@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Test the job endpoint The processingFunction expose . 1`] = `
+exports[`Test the checkForJob function The processingFunction expose . 1`] = `
 Object {
   "__typename": "job",
   "id": 1,
@@ -15,15 +15,15 @@ Object {
 }
 `;
 
-exports[`Test the job endpoint The processingFunction expose . 2`] = `Object {}`;
+exports[`Test the checkForJob function The processingFunction expose . 2`] = `Object {}`;
 
-exports[`Test the job endpoint The processingFunction expose . 3`] = `
+exports[`Test the checkForJob function The processingFunction expose . 3`] = `
 Object {
   "percent": 10,
 }
 `;
 
-exports[`Test the job endpoint checkForJobs allows to asynchronous processing functions. 1`] = `
+exports[`Test the checkForJob function checkForJobs allows to asynchronous processing functions. 1`] = `
 Object {
   "__typename": "job",
   "id": 1,
@@ -38,7 +38,7 @@ Object {
 }
 `;
 
-exports[`Test the job endpoint checkForJobs allows to simply acquire and update jobs. 1`] = `
+exports[`Test the checkForJob function checkForJobs allows to simply acquire and update jobs. 1`] = `
 Object {
   "__typename": "job",
   "id": 1,
@@ -53,7 +53,7 @@ Object {
 }
 `;
 
-exports[`Test the job endpoint checkForJobs allows to simply acquire multiple types of jobs at the same time. 1`] = `
+exports[`Test the checkForJob function checkForJobs allows to simply acquire multiple types of jobs at the same time. 1`] = `
 Object {
   "__typename": "job",
   "id": 1,
@@ -68,7 +68,7 @@ Object {
 }
 `;
 
-exports[`Test the job endpoint checkForJobs allows to simply acquire multiple types of jobs at the same time. 2`] = `
+exports[`Test the checkForJob function checkForJobs allows to simply acquire multiple types of jobs at the same time. 2`] = `
 Object {
   "__typename": "job",
   "id": 2,
@@ -83,9 +83,9 @@ Object {
 }
 `;
 
-exports[`Test the job endpoint checkForJobs declare jobs as failed when an error is raised. 1`] = `"[TypeError: a.awd is not a function] Stack: TypeError: a.awd is not a function"`;
+exports[`Test the checkForJob function checkForJobs declare jobs as failed when an error is raised. 1`] = `"[TypeError: a.awd is not a function] Stack: TypeError: a.awd is not a function"`;
 
-exports[`Test the job endpoint checkForJobs processing function can return nothing if needed. 1`] = `
+exports[`Test the checkForJob function checkForJobs processing function can return nothing if needed. 1`] = `
 Object {
   "__typename": "job",
   "id": 1,
@@ -98,4 +98,4 @@ Object {
 }
 `;
 
-exports[`Test the job endpoint checkForJobs processing function can return nothing if needed. 2`] = `Object {}`;
+exports[`Test the checkForJob function checkForJobs processing function can return nothing if needed. 2`] = `Object {}`;

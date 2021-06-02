@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Test the job endpoint One can request a job cancel 1`] = `
+exports[`Test to cancel job logic One can request a job cancel 1`] = `
 Object {
   "__typename": "job",
   "id": 5,
@@ -17,7 +17,7 @@ Object {
 }
 `;
 
-exports[`Test the job endpoint The job can be cancelled on cancel request 1`] = `
+exports[`Test to cancel job logic The job can be cancelled on cancel request 1`] = `
 Object {
   "__typename": "job",
   "id": 5,
@@ -34,7 +34,7 @@ Object {
 }
 `;
 
-exports[`Test the job endpoint The job is instantly cancelled when not already started 1`] = `
+exports[`Test to cancel job logic The job is instantly cancelled when not already started 1`] = `
 Object {
   "jobUpdate": Object {
     "id": 5,
@@ -45,7 +45,7 @@ Object {
 }
 `;
 
-exports[`Test the job endpoint When a job is cancel-requeted an updateProcessingInfo call makes it fail 1`] = `
+exports[`Test to cancel job logic When a job is cancel-requeted an updateProcessingInfo call makes it fail 1`] = `
 Object {
   "__typename": "job",
   "id": 5,

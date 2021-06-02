@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Test the job endpoint List the jobs with and without highFrequency 1`] = `
+exports[`Test the highFrequency field of job entity List the jobs with and without highFrequency 1`] = `
 Object {
   "job": Array [
     Object {
@@ -25,7 +25,7 @@ Object {
 }
 `;
 
-exports[`Test the job endpoint List the jobs with and without highFrequency 2`] = `
+exports[`Test the highFrequency field of job entity List the jobs with and without highFrequency 2`] = `
 Object {
   "job": Array [
     Object {
