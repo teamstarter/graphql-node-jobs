@@ -35,7 +35,7 @@ export default async function getApolloServer(
     )
     if (onJobFail) {
       for (const job of jobsFail) {
-        onJobFail(job)
+        await onJobFail(job)
       }
     }
   }
