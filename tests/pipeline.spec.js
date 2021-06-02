@@ -111,15 +111,16 @@ describe('Test the pipeline', () => {
   })
 
   it('A pipeline can be successful', async () => {
+    console.log('start')
     const job1 = await createJob(client, {
       name: 'job-1',
-      type: 'a',
+      type: 'pipeline-successful',
       pipelineId: 1,
     })
 
     const job2 = await createJob(client, {
       name: 'job-2',
-      type: 'a',
+      type: 'pipeline-successful',
       pipelineId: 1,
     })
 
@@ -144,6 +145,7 @@ describe('Test the pipeline', () => {
     await wait(100)
     const pipeline = await models.pipeline.findByPk(1)
     expect(pipeline.status).toBe('successful')
+    console.log('end')
   })
 
   it('A pipeline can be failed', async () => {

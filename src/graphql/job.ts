@@ -145,9 +145,6 @@ export default function JobConfiguration(
           await onFail(job)
         }
 
-        if (!job.batchId) {
-          return job
-        }
         if (
           (job.status === 'successful' || job.status === 'failed') &&
           job.batchId

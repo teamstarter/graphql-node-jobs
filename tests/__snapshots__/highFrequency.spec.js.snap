@@ -18,8 +18,14 @@ Object {
     Object {
       "id": 4,
       "isHighFrequency": false,
-      "name": "A job processing",
-      "status": "failed",
+      "name": "job-unique-3",
+      "status": "planned",
+    },
+    Object {
+      "id": 5,
+      "isHighFrequency": false,
+      "name": "job-unique-4",
+      "status": "planned",
     },
   ],
 }
