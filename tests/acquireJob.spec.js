@@ -16,7 +16,7 @@ const {
   getNewClient,
   createJob,
   CancelRequestedError,
-} = require('./../lib/index')
+} = require('../lib/index')
 
 // This is the maximum amount of time the band of test can run before timing-out
 jest.setTimeout(600000)
@@ -141,7 +141,7 @@ const retryJob = (variables) => ({
 /**
  * Starting the tests
  */
-describe('Test the job endpoint', () => {
+describe('Test acquireJob mutation', () => {
   beforeAll(async () => {
     await migrateDatabase()
     await seedDatabase()
@@ -160,115 +160,65 @@ describe('Test the job endpoint', () => {
     await closeEverything(server, models, done)
   })
 
-  it('List the jobs', async () => {
-    const response = await request(server).get(
-      `/graphql?query=query getJobs {
-          job(order:"id") {
-            id
-            name
-          }
-        }
-        &operationName=getJobs`
-    )
+  it('Acquiring a job require a type', async () => {
+    const response = await request(server).post('/graphql').send(acquireJob({}))
 
-    expect(response.body).toMatchSnapshot()
+    expect(response.body.errors).toHaveLength(1)
+    expect(response.body.errors[0].message).toMatchSnapshot()
   })
 
-  it('One can create a job of a given type.', async () => {
+  it('One can acquire a job of a given type.', async () => {
     const response = await request(server)
       .post('/graphql')
       .send(
-        jobCreate({
-          job: { name: 'c', type: 'c' },
+        acquireJob({
+          typeList: ['a'],
         })
       )
 
     expect(response.body.errors).toBeUndefined()
     expect(response.body.data).toMatchSnapshot()
-    // By default a created job is always in queued state.
-    expect(response.body.data.jobCreate.status).toBe('queued')
+
+    const response2 = await request(server)
+      .post('/graphql')
+      .send(
+        acquireJob({
+          typeList: ['a'],
+        })
+      )
+
+    expect(response2.body.errors).toBeUndefined()
+    expect(response2.body.data.acquireJob).toBe(null)
   })
 
-  it('One cannot create a job without a type.', async () => {
+  it('When a job is planified to be run in the future, it cannot be acquired.', async () => {
+    const date = new Date()
+    const job = await models.job.findByPk(1)
+    await job.update({ startAfter: addMinutes(date, 5) })
+
     const response = await request(server)
       .post('/graphql')
       .send(
-        jobCreate({
-          job: { name: 'c' },
+        acquireJob({
+          typeList: ['a'],
         })
       )
-
-    expect(response.body.errors).not.toBeUndefined()
-  })
-
-  it('One can query the timefields', async () => {
-    const response = await request(server).get(
-      `/graphql?query=query getJobs {
-          job(order:"id") {
-            id
-            startedAt
-            endedAt
-            createdAt
-            deletedAt
-          }
-          jobCount
-        }
-        &operationName=getJobs`
-    )
 
     expect(response.body.errors).toBeUndefined()
-  })
+    expect(response.body.data.acquireJob).toBe(null)
 
-  it('Workers can easily query jobs.', async () => {
-    const jobs = await listJobs(client)
-
-    expect(jobs).toMatchSnapshot()
-
-    const jobsWhereType = await listJobs(client, { where: { type: 'a' } })
-
-    expect(jobsWhereType).toMatchSnapshot()
-
-    const date = new Date()
-    const job = await models.job.findByPk(1)
+    // A few milli-seconds passed, so the job should be returned
     await job.update({ startAfter: date })
 
-    const jobsStartAfter = await listJobs(client, {
-      where: { startAfter: date },
-    })
-
-    expect(jobsStartAfter[0].id).toBe(1)
-    expect(jobsStartAfter.length).toBe(1)
-  })
-
-  it('Workers can easily create jobs.', async () => {
-    const response = await createJob(client, { type: 'c' })
-
-    const { createdAt, ...rest } = response
-    expect(rest).toMatchSnapshot()
-  })
-
-  it('Check if you cannot duplicate job according to jobUniqueId', async () => {
-    const responseCreateJob = await request(server)
+    const response2 = await request(server)
       .post('/graphql')
       .send(
-        jobCreate({
-          job: { name: 'c', type: 'c', jobUniqueId: 'job-unique-1' },
-        })
-      )
-    expect(responseCreateJob.body.errors).toBeUndefined()
-    expect(responseCreateJob.body.data).toMatchSnapshot()
-
-    const responseSameCreateJob = await request(server)
-      .post('/graphql')
-      .send(
-        jobCreate({
-          job: { name: 'c', type: 'c', jobUniqueId: 'job-unique-1' },
+        acquireJob({
+          typeList: ['a'],
         })
       )
 
-    expect(responseCreateJob.body.errors).toBeUndefined()
-    expect(responseSameCreateJob.body.data).toStrictEqual(
-      responseCreateJob.body.data
-    )
+    expect(response2.body.errors).toBeUndefined()
+    expect(response2.body.data.acquireJob).not.toBe(null)
   })
 })

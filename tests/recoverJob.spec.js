@@ -16,7 +16,7 @@ const {
   getNewClient,
   createJob,
   CancelRequestedError,
-} = require('./../lib/index')
+} = require('../lib/index')
 
 // This is the maximum amount of time the band of test can run before timing-out
 jest.setTimeout(600000)
@@ -141,7 +141,7 @@ const retryJob = (variables) => ({
 /**
  * Starting the tests
  */
-describe('Test the job endpoint', () => {
+describe('Test the recoverJob mutation', () => {
   beforeAll(async () => {
     await migrateDatabase()
     await seedDatabase()
@@ -159,116 +159,122 @@ describe('Test the job endpoint', () => {
   afterAll(async (done) => {
     await closeEverything(server, models, done)
   })
+  it('A job failed can be recover ', async () => {
+    const steps = {
+      'step-1': {
+        status: 'waiting',
+      },
+      'step-2': {
+        status: 'waiting',
+      },
+      'step-3': {
+        status: 'waiting',
+      },
+      'step-4': {
+        status: 'waiting',
+      },
+      'step-5': {
+        status: 'waiting',
+      },
+      'step-6': {
+        status: 'waiting',
+      },
+      'step-7': {
+        status: 'waiting',
+      },
+      'step-8': {
+        status: 'waiting',
+      },
+      'step-9': {
+        status: 'waiting',
+      },
+      'step-10': {
+        status: 'waiting',
+      },
+    }
 
-  it('List the jobs', async () => {
-    const response = await request(server).get(
-      `/graphql?query=query getJobs {
-          job(order:"id") {
-            id
-            name
+    const timeout = async (ms) =>
+      new Promise((resolve) => setTimeout(resolve, ms))
+
+    const job = await createJob(client, {
+      type: 'job-multi-steps',
+      status: 'queued',
+      isRecoverable: true,
+    })
+    const result = await checkForJobs({
+      typeList: ['job-multi-steps'],
+      client,
+      processingFunction: async (job, { updateProcessingInfo }) => {
+        for (const step of Object.keys(steps)) {
+          if ('step-5' === step) {
+            throw new Error('step-5 failed')
           }
+          steps[step].status = 'done'
+          await updateProcessingInfo({ steps })
+          await timeout(1000)
         }
-        &operationName=getJobs`
-    )
 
-    expect(response.body).toMatchSnapshot()
-  })
-
-  it('One can create a job of a given type.', async () => {
-    const response = await request(server)
-      .post('/graphql')
-      .send(
-        jobCreate({
-          job: { name: 'c', type: 'c' },
-        })
-      )
-
-    expect(response.body.errors).toBeUndefined()
-    expect(response.body.data).toMatchSnapshot()
-    // By default a created job is always in queued state.
-    expect(response.body.data.jobCreate.status).toBe('queued')
-  })
-
-  it('One cannot create a job without a type.', async () => {
-    const response = await request(server)
-      .post('/graphql')
-      .send(
-        jobCreate({
-          job: { name: 'c' },
-        })
-      )
-
-    expect(response.body.errors).not.toBeUndefined()
-  })
-
-  it('One can query the timefields', async () => {
-    const response = await request(server).get(
-      `/graphql?query=query getJobs {
-          job(order:"id") {
-            id
-            startedAt
-            endedAt
-            createdAt
-            deletedAt
-          }
-          jobCount
-        }
-        &operationName=getJobs`
-    )
-
-    expect(response.body.errors).toBeUndefined()
-  })
-
-  it('Workers can easily query jobs.', async () => {
-    const jobs = await listJobs(client)
-
-    expect(jobs).toMatchSnapshot()
-
-    const jobsWhereType = await listJobs(client, { where: { type: 'a' } })
-
-    expect(jobsWhereType).toMatchSnapshot()
-
-    const date = new Date()
-    const job = await models.job.findByPk(1)
-    await job.update({ startAfter: date })
-
-    const jobsStartAfter = await listJobs(client, {
-      where: { startAfter: date },
+        return steps
+      },
+      looping: false,
     })
 
-    expect(jobsStartAfter[0].id).toBe(1)
-    expect(jobsStartAfter.length).toBe(1)
-  })
+    const error = result.output.error.split('\n')[0]
+    expect(result).not.toBeUndefined()
+    expect(result).not.toBe(null)
+    expect(error).toMatchSnapshot()
 
-  it('Workers can easily create jobs.', async () => {
-    const response = await createJob(client, { type: 'c' })
+    const jobEntity = await models.job.findOne({ where: { id: job.id } })
+    expect(jobEntity.status).toBe('failed')
 
-    const { createdAt, ...rest } = response
-    expect(rest).toMatchSnapshot()
-  })
-
-  it('Check if you cannot duplicate job according to jobUniqueId', async () => {
-    const responseCreateJob = await request(server)
+    const responseRecoverJob = await request(server)
       .post('/graphql')
       .send(
-        jobCreate({
-          job: { name: 'c', type: 'c', jobUniqueId: 'job-unique-1' },
-        })
-      )
-    expect(responseCreateJob.body.errors).toBeUndefined()
-    expect(responseCreateJob.body.data).toMatchSnapshot()
-
-    const responseSameCreateJob = await request(server)
-      .post('/graphql')
-      .send(
-        jobCreate({
-          job: { name: 'c', type: 'c', jobUniqueId: 'job-unique-1' },
+        recoverJob({
+          id: jobEntity.id,
         })
       )
 
-    expect(responseCreateJob.body.errors).toBeUndefined()
-    expect(responseSameCreateJob.body.data).toStrictEqual(
-      responseCreateJob.body.data
-    )
+    expect(responseRecoverJob.body.errors).toBeUndefined()
+    expect(responseRecoverJob.body.data.recover.status).toMatchSnapshot()
+  })
+
+  it('A job must exist to be recovered ', async () => {
+    const response = await request(server)
+      .post('/graphql')
+      .send(
+        recoverJob({
+          id: 100,
+        })
+      )
+
+    expect(response.body.errors).toHaveLength(1)
+    expect(response.body.errors[0].message).toBe('The job does not exist')
+  })
+
+  it('A job must have flag isRecoverable to be recovered', async () => {
+    const response = await request(server)
+      .post('/graphql')
+      .send(
+        recoverJob({
+          id: 1,
+        })
+      )
+
+    expect(response.body.errors).toHaveLength(1)
+    expect(response.body.errors[0].message).toBe('The job must be recoverable')
+  })
+
+  it('A job must be failed to be recovered', async () => {
+    const response = await request(server)
+      .post('/graphql')
+      .send(
+        recoverJob({
+          id: 2,
+        })
+      )
+
+    expect(response.body.errors).toHaveLength(1)
+    expect(response.body.errors[0].message).toBe('The job must be failed')
   })
 })

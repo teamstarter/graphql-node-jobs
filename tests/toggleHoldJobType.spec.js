@@ -16,7 +16,7 @@ const {
   getNewClient,
   createJob,
   CancelRequestedError,
-} = require('./../lib/index')
+} = require('../lib/index')
 
 // This is the maximum amount of time the band of test can run before timing-out
 jest.setTimeout(600000)
@@ -160,115 +160,87 @@ describe('Test the job endpoint', () => {
     await closeEverything(server, models, done)
   })
 
-  it('List the jobs', async () => {
-    const response = await request(server).get(
-      `/graphql?query=query getJobs {
-          job(order:"id") {
-            id
-            name
-          }
-        }
-        &operationName=getJobs`
-    )
-
-    expect(response.body).toMatchSnapshot()
-  })
-
-  it('One can create a job of a given type.', async () => {
-    const response = await request(server)
+  it('Be able to hold a type of job and toggle it', async () => {
+    const responseToggleHoldJob = await request(server)
       .post('/graphql')
       .send(
-        jobCreate({
-          job: { name: 'c', type: 'c' },
+        toggleHoldJobType({
+          type: 'type-1',
         })
       )
+    expect(responseToggleHoldJob.body.errors).toBeUndefined()
+    expect(responseToggleHoldJob.body.data).toMatchSnapshot()
 
-    expect(response.body.errors).toBeUndefined()
-    expect(response.body.data).toMatchSnapshot()
-    // By default a created job is always in queued state.
-    expect(response.body.data.jobCreate.status).toBe('queued')
-  })
-
-  it('One cannot create a job without a type.', async () => {
-    const response = await request(server)
-      .post('/graphql')
-      .send(
-        jobCreate({
-          job: { name: 'c' },
-        })
-      )
-
-    expect(response.body.errors).not.toBeUndefined()
-  })
-
-  it('One can query the timefields', async () => {
-    const response = await request(server).get(
-      `/graphql?query=query getJobs {
-          job(order:"id") {
-            id
-            startedAt
-            endedAt
-            createdAt
-            deletedAt
-          }
-          jobCount
-        }
-        &operationName=getJobs`
-    )
-
-    expect(response.body.errors).toBeUndefined()
-  })
-
-  it('Workers can easily query jobs.', async () => {
-    const jobs = await listJobs(client)
-
-    expect(jobs).toMatchSnapshot()
-
-    const jobsWhereType = await listJobs(client, { where: { type: 'a' } })
-
-    expect(jobsWhereType).toMatchSnapshot()
-
-    const date = new Date()
-    const job = await models.job.findByPk(1)
-    await job.update({ startAfter: date })
-
-    const jobsStartAfter = await listJobs(client, {
-      where: { startAfter: date },
+    const job1 = await createJob(client, {
+      type: 'type-1',
+      status: 'queued',
+    })
+    const job2 = await createJob(client, {
+      type: 'type-2',
+      status: 'queued',
+    })
+    const job3 = await createJob(client, {
+      type: 'type-2',
+      status: 'queued',
     })
 
-    expect(jobsStartAfter[0].id).toBe(1)
-    expect(jobsStartAfter.length).toBe(1)
-  })
+    const responseCheck1 = await checkForJobs({
+      typeList: ['type-1', 'type-2'],
+      client,
+      processingFunction: async (job) => {
+        return { data: 'my data' }
+      },
+      looping: false,
+    })
+    expect(responseCheck1).not.toBeUndefined()
+    expect(responseCheck1).not.toBe(null)
+    expect(responseCheck1.type).toBe('type-2')
 
-  it('Workers can easily create jobs.', async () => {
-    const response = await createJob(client, { type: 'c' })
+    const responseCheck2 = await checkForJobs({
+      typeList: ['type-1', 'type-2'],
+      client,
+      processingFunction: async (job) => {
+        return { data: 'my data' }
+      },
+      looping: false,
+    })
+    expect(responseCheck2).not.toBeUndefined()
+    expect(responseCheck2).not.toBe(null)
+    expect(responseCheck2.type).toBe('type-2')
 
-    const { createdAt, ...rest } = response
-    expect(rest).toMatchSnapshot()
-  })
+    const responseCheck3 = await checkForJobs({
+      typeList: ['type-1', 'type-2'],
+      client,
+      processingFunction: async (job) => {
+        return { data: 'my data' }
+      },
+      looping: false,
+    })
+    expect(responseCheck3).not.toBeUndefined()
+    expect(responseCheck3).toBe(null)
 
-  it('Check if you cannot duplicate job according to jobUniqueId', async () => {
-    const responseCreateJob = await request(server)
+    const responseToggleHoldJob2 = await request(server)
       .post('/graphql')
       .send(
-        jobCreate({
-          job: { name: 'c', type: 'c', jobUniqueId: 'job-unique-1' },
-        })
-      )
-    expect(responseCreateJob.body.errors).toBeUndefined()
-    expect(responseCreateJob.body.data).toMatchSnapshot()
-
-    const responseSameCreateJob = await request(server)
-      .post('/graphql')
-      .send(
-        jobCreate({
-          job: { name: 'c', type: 'c', jobUniqueId: 'job-unique-1' },
+        toggleHoldJobType({
+          type: 'type-1',
         })
       )
 
-    expect(responseCreateJob.body.errors).toBeUndefined()
-    expect(responseSameCreateJob.body.data).toStrictEqual(
-      responseCreateJob.body.data
-    )
+    expect(responseToggleHoldJob2.body.errors).toBeUndefined()
+    expect(responseToggleHoldJob2.body.data.toggleHoldJobType).toBe(null)
+
+    const responseCheck4 = await checkForJobs({
+      typeList: ['type-1', 'type-2'],
+      client,
+      processingFunction: async (job) => {
+        return { data: 'my data' }
+      },
+      looping: false,
+    })
+
+    expect(responseCheck4).not.toBeUndefined()
+    expect(responseCheck4).not.toBe(null)
+    expect(responseCheck4.type).toBe('type-1')
   })
 })

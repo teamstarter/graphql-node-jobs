@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test the job endpoint One can add his own mutations to the schema 1`] = `
+Object {
+  "customAcquire": Object {
+    "id": 1,
+  },
+}
+`;

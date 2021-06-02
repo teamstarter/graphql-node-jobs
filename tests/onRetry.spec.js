@@ -16,7 +16,7 @@ const {
   getNewClient,
   createJob,
   CancelRequestedError,
-} = require('./../lib/index')
+} = require('../lib/index')
 
 // This is the maximum amount of time the band of test can run before timing-out
 jest.setTimeout(600000)
@@ -141,7 +141,7 @@ const retryJob = (variables) => ({
 /**
  * Starting the tests
  */
-describe('Test the job endpoint', () => {
+describe('Test the onRetry mutation', () => {
   beforeAll(async () => {
     await migrateDatabase()
     await seedDatabase()
@@ -159,116 +159,46 @@ describe('Test the job endpoint', () => {
   afterAll(async (done) => {
     await closeEverything(server, models, done)
   })
+  it('The job can be restarted if it fails', async () => {
+    const responseRetryJob = await request(server)
+      .post('/graphql')
+      .send(
+        retryJob({
+          id: 3,
+        })
+      )
 
-  it('List the jobs', async () => {
-    const response = await request(server).get(
-      `/graphql?query=query getJobs {
-          job(order:"id") {
-            id
-            name
-          }
-        }
-        &operationName=getJobs`
+    expect(responseRetryJob.body.errors).toBeUndefined()
+    expect(responseRetryJob.body.data).toMatchSnapshot()
+  })
+
+  it('You cannot retry a job if this one is not failed', async () => {
+    const responseRetryJob = await request(server)
+      .post('/graphql')
+      .send(
+        retryJob({
+          id: 1,
+        })
+      )
+
+    expect(responseRetryJob.body.errors).toHaveLength(1)
+    expect(responseRetryJob.body.errors[0].message).toBe(
+      'The job must be failed.'
     )
-
-    expect(response.body).toMatchSnapshot()
   })
 
-  it('One can create a job of a given type.', async () => {
-    const response = await request(server)
+  it('You cannot retry a job that does not exist', async () => {
+    const responseRetryJob = await request(server)
       .post('/graphql')
       .send(
-        jobCreate({
-          job: { name: 'c', type: 'c' },
+        retryJob({
+          id: 100,
         })
       )
 
-    expect(response.body.errors).toBeUndefined()
-    expect(response.body.data).toMatchSnapshot()
-    // By default a created job is always in queued state.
-    expect(response.body.data.jobCreate.status).toBe('queued')
-  })
-
-  it('One cannot create a job without a type.', async () => {
-    const response = await request(server)
-      .post('/graphql')
-      .send(
-        jobCreate({
-          job: { name: 'c' },
-        })
-      )
-
-    expect(response.body.errors).not.toBeUndefined()
-  })
-
-  it('One can query the timefields', async () => {
-    const response = await request(server).get(
-      `/graphql?query=query getJobs {
-          job(order:"id") {
-            id
-            startedAt
-            endedAt
-            createdAt
-            deletedAt
-          }
-          jobCount
-        }
-        &operationName=getJobs`
-    )
-
-    expect(response.body.errors).toBeUndefined()
-  })
-
-  it('Workers can easily query jobs.', async () => {
-    const jobs = await listJobs(client)
-
-    expect(jobs).toMatchSnapshot()
-
-    const jobsWhereType = await listJobs(client, { where: { type: 'a' } })
-
-    expect(jobsWhereType).toMatchSnapshot()
-
-    const date = new Date()
-    const job = await models.job.findByPk(1)
-    await job.update({ startAfter: date })
-
-    const jobsStartAfter = await listJobs(client, {
-      where: { startAfter: date },
-    })
-
-    expect(jobsStartAfter[0].id).toBe(1)
-    expect(jobsStartAfter.length).toBe(1)
-  })
-
-  it('Workers can easily create jobs.', async () => {
-    const response = await createJob(client, { type: 'c' })
-
-    const { createdAt, ...rest } = response
-    expect(rest).toMatchSnapshot()
-  })
-
-  it('Check if you cannot duplicate job according to jobUniqueId', async () => {
-    const responseCreateJob = await request(server)
-      .post('/graphql')
-      .send(
-        jobCreate({
-          job: { name: 'c', type: 'c', jobUniqueId: 'job-unique-1' },
-        })
-      )
-    expect(responseCreateJob.body.errors).toBeUndefined()
-    expect(responseCreateJob.body.data).toMatchSnapshot()
-
-    const responseSameCreateJob = await request(server)
-      .post('/graphql')
-      .send(
-        jobCreate({
-          job: { name: 'c', type: 'c', jobUniqueId: 'job-unique-1' },
-        })
-      )
-
-    expect(responseCreateJob.body.errors).toBeUndefined()
-    expect(responseSameCreateJob.body.data).toStrictEqual(
-      responseCreateJob.body.data
+    expect(responseRetryJob.body.errors).toHaveLength(1)
+    expect(responseRetryJob.body.errors[0].message).toBe(
+      'The job does not exist.'
     )
   })
 })
