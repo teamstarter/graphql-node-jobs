@@ -8,6 +8,7 @@ import { Job } from '../types'
 import job from './job'
 import batch from './batch'
 import pipeline from './pipeline'
+import pipelineStep from './pipelineStep'
 import jobHoldType from './jobHoldType'
 
 /**
@@ -43,6 +44,7 @@ export default async function getApolloServer(
     job: job(types, models, onJobFail),
     batch: batch(types, models),
     pipeline: pipeline(types, models),
+    pipelineStep: pipelineStep(types, models),
     jobHoldType: jobHoldType(types, models),
   }
 

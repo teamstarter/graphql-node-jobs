@@ -1,6 +1,6 @@
 {
   "name": "graphql-node-jobs",
-  "version": "0.3.8",
+  "version": "0.3.9",
   "private": false,
   "author": {
     "email": "vincent.desmares@gmail.com",
@@ -66,7 +66,7 @@
     "graphql-node-jobs": "node ./lib/gnj.js",
     "dev": "pm2 delete all -s; pm2 startOrReload ecosystem.dev.config.js",
     "build": "tsc --lib es2019,dom --esModuleInterop --outDir ./lib ./src/index.ts ./src/models/*.ts ./src/gnj.ts",
-    "test": "NODE_ENV=test PORT=3332 jest",
+    "test": "NODE_ENV=test PORT=3332 jest --runInBand --ci --forceExit --verbose",
     "release": "standard-version",
     "gnj": "node ./lib/gnj.js",
     "start": "node ./tests/server.js"

@@ -30,7 +30,11 @@ Object {
       },
       Object {
         "id": 4,
-        "name": "A job processing",
+        "name": "job-unique-3",
+      },
+      Object {
+        "id": 5,
+        "name": "job-unique-4",
       },
     ],
   },
@@ -40,7 +44,7 @@ Object {
 exports[`Test the job endpoint One can create a job of a given type. 1`] = `
 Object {
   "jobCreate": Object {
-    "id": 5,
+    "id": 6,
     "jobUniqueId": null,
     "name": "c",
     "output": null,
@@ -53,7 +57,7 @@ exports[`Test the job endpoint Workers can easily create jobs. 1`] = `
 Object {
   "__typename": "job",
   "batchId": null,
-  "id": 5,
+  "id": 6,
   "input": null,
   "isHighFrequency": false,
   "isUpdateAlreadyCalledWhileCancelRequested": false,
@@ -95,9 +99,17 @@ Array [
     "__typename": "job",
     "id": 4,
     "input": Object {},
-    "name": "A job processing",
+    "name": "job-unique-3",
     "output": Object {},
-    "type": "job-processing",
+    "type": "b",
+  },
+  Object {
+    "__typename": "job",
+    "id": 5,
+    "input": Object {},
+    "name": "job-unique-4",
+    "output": Object {},
+    "type": "b",
   },
 ]
 `;
