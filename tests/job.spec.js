@@ -962,4 +962,32 @@ describe('Test the job endpoint', () => {
     expect(responseCheck4).not.toBe(null)
     expect(responseCheck4.type).toBe('type-1')
   })
+
+  it('Test callback on fail', async () => {
+    await new Promise((resolve) => server.close(() => resolve()))
+    await migrateDatabase()
+    await seedDatabase()
+    let isCalled = false
+    server = await getNewServer(() => (isCalled = true))
+
+    const job = await createJob(client, {
+      type: 'type-1',
+      status: 'queued',
+    })
+
+    const responseCheck = await checkForJobs({
+      typeList: ['type-1'],
+      client,
+      processingFunction: async (job) => {
+        throw new Error('plop')
+        return { data: 'my data' }
+      },
+      looping: false,
+    })
+    expect(responseCheck).not.toBeUndefined()
+    expect(responseCheck).not.toBe(null)
+    expect(responseCheck.type).toBe('type-1')
+
+    expect(isCalled).toBe(true)
+  })
 })
