@@ -68,6 +68,11 @@ export default function Job(sequelize: any) {
         allowNull: true,
         defaultValue: null,
       },
+      pipelineId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        defaultValue: null,
+      },
       workerId: {
         type: DataTypes.STRING,
         allowNull: true,
@@ -126,6 +131,10 @@ export default function Job(sequelize: any) {
   Job.associate = function (models: any) {
     models.job.belongsTo(models.batch, {
       foreignKey: 'batchId',
+      sourceKey: 'id',
+    })
+    models.job.belongsTo(models.pipeline, {
+      foreignKey: 'pipelineId',
       sourceKey: 'id',
     })
   }

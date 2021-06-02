@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.9](https://github.com/teamstarter/graphql-node-jobs/compare/v0.3.8...v0.3.9) (2021-06-01)
+
+
+### Features
+
+* **job:** added the update of batch ([6285585](https://github.com/teamstarter/graphql-node-jobs/commit/628558591c58a851b7c9d4f40af1a39d4b263a2b))
+* **pipeline:** add field status to model pipeline ([454647c](https://github.com/teamstarter/graphql-node-jobs/commit/454647c20a21003d5824d5617c170616fb454987))
+* **pipeline:** add logic for dispatch job ([20d4a61](https://github.com/teamstarter/graphql-node-jobs/commit/20d4a61d58adc9b80a12582b7e502809fdfe9ffe))
+* **pipeline:** add model pipelineStep ([3460423](https://github.com/teamstarter/graphql-node-jobs/commit/34604239659d83e5201a607fa59a3efc763158a9))
+* **recover:** update description ([299749d](https://github.com/teamstarter/graphql-node-jobs/commit/299749d18736bef14488e5af20d7828b301d2006))
+
+### [0.3.8](https://github.com/teamstarter/graphql-node-jobs/compare/v0.3.7...v0.3.8) (2021-05-21)
+
 ### [0.3.7](https://github.com/teamstarter/graphql-node-jobs/compare/v0.3.6...v0.3.7) (2020-11-30)
 
 
