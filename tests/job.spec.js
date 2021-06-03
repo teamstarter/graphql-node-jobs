@@ -140,6 +140,30 @@ const retryJob = (variables) => ({
   operationName: null,
 })
 
+const batchCreate = (variables) => ({
+  query: `mutation batchCreate($batch: batchInput!){
+    batchCreate(batch: $batch) {
+      id
+      pipelineId
+      status
+    }
+  }`,
+  variables,
+  operationName: null,
+})
+
+const batch = (variables) => ({
+  query: `query batch($where: SequelizeJSON!){
+    batch(where: $where) {
+      id
+      pipelineId
+      status
+    }
+  }`,
+  variables,
+  operationName: null,
+})
+
 /**
  * Starting the tests
  */
@@ -614,17 +638,15 @@ describe('Test the job endpoint', () => {
       .post('/graphql')
       .send(
         jobCreate({
-          job: { name: 'c', type: 'c', jobUniqueId: 'job-unique-1' },
+          job: { name: 'c', type: 'c', jobUniqueId: 'job-unique-10' },
         })
       )
     expect(responseCreateJob.body.errors).toBeUndefined()
-    expect(responseCreateJob.body.data).toMatchSnapshot()
-
     const responseSameCreateJob = await request(server)
       .post('/graphql')
       .send(
         jobCreate({
-          job: { name: 'c', type: 'c', jobUniqueId: 'job-unique-1' },
+          job: { name: 'c', type: 'c', jobUniqueId: 'job-unique-10' },
         })
       )
 
@@ -750,6 +772,7 @@ describe('Test the job endpoint', () => {
           if ('step-5' === step) {
             throw new Error('step-5 failed')
           }
+
           steps[step].status = 'done'
           await updateProcessingInfo({ steps })
           await timeout(1000)
@@ -1014,5 +1037,179 @@ describe('Test the job endpoint', () => {
     expect(responseCheck4).not.toBeUndefined()
     expect(responseCheck4).not.toBe(null)
     expect(responseCheck4.type).toBe('type-1')
+  })
+
+  it('When job is create he have a status queued', async () => {
+    const job = await createJob(client, {
+      type: 'a',
+    })
+
+    expect(job.status).toBe('queued')
+  })
+
+  it('Job add to a pipeline have a status planned', async () => {
+    const job = await createJob(client, {
+      type: 'a',
+      pipelineId: 2,
+    })
+
+    expect(job.status).toBe('planned')
+  })
+
+  it('Job add to a pipeline create a new pipelineStep', async () => {
+    const job = await createJob(client, {
+      type: 'a',
+      pipelineId: 2,
+    })
+
+    const step = await models.pipelineStep.findOne({
+      where: { jobId: job.id },
+    })
+
+    expect(step).not.toBeUndefined()
+  })
+
+  it('When a job linked to a step is successful the status of the next step job are switched to queued', async () => {
+    const job1 = await createJob(client, {
+      name: 'job-1',
+      type: 'a',
+      pipelineId: 1,
+    })
+    expect(job1.status).toBe('planned')
+
+    const job2 = await createJob(client, {
+      name: 'job-2',
+      type: 'a',
+      pipelineId: 1,
+    })
+    expect(job2.status).toBe('planned')
+
+    const updated = await request(server)
+      .post('/graphql')
+      .send(
+        jobUpdate({
+          job: { id: job1.id, status: 'successful' },
+        })
+      )
+
+    const job2Updated = await models.job.findByPk(job2.id)
+
+    expect(job2Updated.status).toBe('queued')
+  })
+
+  it('When a job linked to a step is successful the status of all jobs of batch of the next step are switched to queued', async () => {
+    const job1 = await createJob(client, {
+      name: 'job-1',
+      type: 'a',
+      pipelineId: 1,
+    })
+    expect(job1.status).toBe('planned')
+
+    const responseBatchCreate = await request(server)
+      .post('/graphql')
+      .send(
+        batchCreate({
+          batch: { pipelineId: 1 },
+        })
+      )
+
+    const batchId = responseBatchCreate.body.data.batchCreate.id
+
+    const job2 = await createJob(client, {
+      name: 'job-2',
+      type: 'a',
+      batchId,
+    })
+    expect(job2.status).toBe('planned')
+
+    const job3 = await createJob(client, {
+      name: 'job-3',
+      type: 'a',
+      batchId,
+    })
+    expect(job3.status).toBe('planned')
+
+    const updated = await request(server)
+      .post('/graphql')
+      .send(
+        jobUpdate({
+          job: { id: job1.id, status: 'successful' },
+        })
+      )
+
+    const job2Updated = await models.job.findByPk(job2.id)
+    const job3Updated = await models.job.findByPk(job3.id)
+
+    expect(job2Updated.status).toBe('queued')
+    expect(job3Updated.status).toBe('queued')
+  })
+
+  it('Batch will be successful when all his job are successful', async () => {
+    const job1 = await createJob(client, {
+      name: 'job-1',
+      type: 'a',
+      pipelineId: 1,
+    })
+
+    const responseBatchCreate = await request(server)
+      .post('/graphql')
+      .send(
+        batchCreate({
+          batch: { pipelineId: 1 },
+        })
+      )
+    const batchId = responseBatchCreate.body.data.batchCreate.id
+
+    const job2 = await createJob(client, {
+      name: 'job-2',
+      type: 'a',
+      batchId,
+    })
+
+    const job3 = await createJob(client, {
+      name: 'job-3',
+      type: 'a',
+      batchId,
+    })
+
+    await request(server)
+      .post('/graphql')
+      .send(
+        jobUpdate({
+          job: { id: job1.id, status: 'successful' },
+        })
+      )
+
+    await request(server)
+      .post('/graphql')
+      .send(
+        jobUpdate({
+          job: { id: job2.id, status: 'successful' },
+        })
+      )
+
+    const updatedJob3 = await request(server)
+      .post('/graphql')
+      .send(
+        jobUpdate({
+          job: { id: job3.id, status: 'successful' },
+        })
+      )
+
+    await wait(100)
+
+    const responseBatchUpdated = await request(server)
+      .post('/graphql')
+      .send(
+        batch({
+          where: { id: batchId },
+        })
+      )
+
+    expect(responseBatchUpdated.body.errors).toBeUndefined()
+    expect(responseBatchUpdated.body.data.batch[0].status).toBe('successful')
+
+    const pipeline = await models.pipeline.findByPk(1)
+    expect(pipeline.status).toBe('successful')
   })
 })

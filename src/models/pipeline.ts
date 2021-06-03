@@ -9,6 +9,14 @@ export default function Pipeline(sequelize: any) {
         primaryKey: true,
         autoIncrement: true,
       },
+      status: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'planned',
+        validate: {
+          isIn: [['planned', 'processing', 'failed', 'successful']],
+        },
+      },
       name: {
         type: DataTypes.STRING,
       },
@@ -25,6 +33,16 @@ export default function Pipeline(sequelize: any) {
   Pipeline.associate = function (models: any) {
     models.pipeline.hasMany(models.batch, {
       as: 'batches',
+      foreignKey: 'pipelineId',
+      sourceKey: 'id',
+    })
+    models.pipeline.hasMany(models.job, {
+      as: 'jobs',
+      foreignKey: 'pipelineId',
+      sourceKey: 'id',
+    })
+    models.pipeline.hasMany(models.pipelineStep, {
+      as: 'steps',
       foreignKey: 'pipelineId',
       sourceKey: 'id',
     })

@@ -8,16 +8,20 @@ const timestamp = (entry) =>
 module.exports = {
   up: function (queryInterface) {
     return queryInterface.bulkInsert(
-      'pipeline',
+      'pipelineStep',
       [
         {
           id: 1,
-          name: 'Build fact table',
+          jobId: 4,
+          pipelineId: 2,
+          index: 1,
           status: 'planned',
         },
         {
           id: 2,
-          name: 'pipeline-2',
+          jobId: 5,
+          pipelineId: 2,
+          index: 2,
           status: 'planned',
         },
       ].map(timestamp),
@@ -26,6 +30,6 @@ module.exports = {
   },
 
   down: function (queryInterface) {
-    return queryInterface.bulkDelete('pipeline', null, {})
+    return queryInterface.bulkDelete('pipelineStep', null, {})
   },
 }

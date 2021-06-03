@@ -7,6 +7,7 @@ import getModels from '../models'
 import job from './job'
 import batch from './batch'
 import pipeline from './pipeline'
+import pipelineStep from './pipelineStep'
 import jobHoldType from './jobHoldType'
 import workerMonitoring from './workerMonitoring'
 
@@ -14,7 +15,7 @@ import workerMonitoring from './workerMonitoring'
  * @param dbConfig Sequelize database configuration object
  * @param gsgParams Params from graphql-sequelize-generator that overwrite the default ones.
  */
-export default function getApolloServer(
+export default async function getApolloServer(
   dbConfig: any,
   gsgParams: any = {},
   customMutations: any = {}
@@ -23,10 +24,15 @@ export default function getApolloServer(
 
   const types = generateModelTypes(models)
 
+  await models.sequelize.query(
+    "UPDATE job SET status = 'failed' WHERE status = 'processing'"
+  )
+
   const graphqlSchemaDeclaration = {
     job: job(types, models),
     batch: batch(types, models),
     pipeline: pipeline(types, models),
+    pipelineStep: pipelineStep(types, models),
     jobHoldType: jobHoldType(types, models),
     workerMonitoring: workerMonitoring(types, models),
   }
