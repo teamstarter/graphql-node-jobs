@@ -18,7 +18,7 @@ Object {
     Object {
       "id": 4,
       "isHighFrequency": false,
-      "name": "job-unique-3",
+      "name": "A job processing",
       "status": "planned",
     },
     Object {
