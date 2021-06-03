@@ -30,7 +30,7 @@ Object {
       },
       Object {
         "id": 4,
-        "name": "job-unique-3",
+        "name": "A job processing",
       },
       Object {
         "id": 5,
@@ -99,7 +99,7 @@ Array [
     "__typename": "job",
     "id": 4,
     "input": Object {},
-    "name": "job-unique-3",
+    "name": "A job processing",
     "output": Object {},
     "type": "b",
   },

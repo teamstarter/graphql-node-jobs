@@ -51,7 +51,6 @@ module.exports = {
           name: 'A job processing',
           status: 'processing',
           type: 'b',
-          name: 'job-unique-3',
           status: 'planned',
           isHighFrequency: false,
           isRecoverable: false,
