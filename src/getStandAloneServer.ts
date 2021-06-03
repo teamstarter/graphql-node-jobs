@@ -8,7 +8,7 @@ export default async function getStandAloneServer(
   customMutations: any = {}
 ) {
   const app = express()
-  const server = getApolloServer(config, gsgParams, customMutations)
+  const server = await getApolloServer(config, gsgParams, customMutations)
 
   server.applyMiddleware({
     app,

@@ -14,7 +14,7 @@ import jobHoldType from './jobHoldType'
  * @param dbConfig Sequelize database configuration object
  * @param gsgParams Params from graphql-sequelize-generator that overwrite the default ones.
  */
-export default function getApolloServer(
+export default async function getApolloServer(
   dbConfig: any,
   gsgParams: any = {},
   customMutations: any = {}
@@ -22,6 +22,10 @@ export default function getApolloServer(
   const models = getModels(dbConfig)
 
   const types = generateModelTypes(models)
+
+  await models.sequelize.query(
+    "UPDATE job SET status = 'failed' WHERE status = 'processing'"
+  )
 
   const graphqlSchemaDeclaration = {
     job: job(types, models),

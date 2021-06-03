@@ -47,8 +47,10 @@ module.exports = {
         },
         {
           id: 4,
+          type: 'job-processing',
+          name: 'A job processing',
+          status: 'processing',
           type: 'b',
-          name: 'job-unique-3',
           status: 'planned',
           isHighFrequency: false,
           isRecoverable: false,
