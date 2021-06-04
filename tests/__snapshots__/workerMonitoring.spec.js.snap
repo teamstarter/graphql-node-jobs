@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test the workerMonitoring endpoint WorkerMonitoring is updated when a new job is acquired 1`] = `
+Object {
+  "acquireJob": Object {
+    "id": 6,
+    "name": null,
+    "output": null,
+    "status": "processing",
+  },
+}
+`;
+
+exports[`Test the workerMonitoring endpoint WorkerMonitoring is updated when a new job is acquired 2`] = `
+Object {
+  "acquireJob": Object {
+    "id": 7,
+    "name": null,
+    "output": null,
+    "status": "processing",
+  },
+}
+`;
