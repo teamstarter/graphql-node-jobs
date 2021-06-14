@@ -2,13 +2,21 @@ import { getApolloServer } from './../lib/index'
 import express from 'express'
 import http from 'spdy'
 
+import { Job } from './types'
+
 export default async function getStandAloneServer(
   config: any,
   gsgParams: any = {},
-  customMutations: any = {}
+  customMutations: any = {},
+  onJobFail?: (job: Job) => Promise<any>
 ) {
   const app = express()
-  const server = await getApolloServer(config, gsgParams, customMutations)
+  const server = await getApolloServer(
+    config,
+    gsgParams,
+    customMutations,
+    onJobFail
+  )
 
   server.applyMiddleware({
     app,

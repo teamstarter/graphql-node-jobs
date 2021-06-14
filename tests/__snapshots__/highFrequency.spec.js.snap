@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test the highFrequency field of job entity List the jobs with and without highFrequency 1`] = `
+Object {
+  "job": Array [
+    Object {
+      "id": 2,
+      "isHighFrequency": false,
+      "name": "Bla b",
+      "status": "queued",
+    },
+    Object {
+      "id": 3,
+      "isHighFrequency": false,
+      "name": "Bla b",
+      "status": "failed",
+    },
+    Object {
+      "id": 4,
+      "isHighFrequency": false,
+      "name": "A job processing",
+      "status": "planned",
+    },
+    Object {
+      "id": 5,
+      "isHighFrequency": false,
+      "name": "job-unique-4",
+      "status": "planned",
+    },
+  ],
+}
+`;
+
+exports[`Test the highFrequency field of job entity List the jobs with and without highFrequency 2`] = `
+Object {
+  "job": Array [
+    Object {
+      "id": 1,
+      "isHighFrequency": true,
+      "name": "Bla a",
+      "status": "queued",
+    },
+  ],
+}
+`;

@@ -3,6 +3,7 @@ import {
   generateModelTypes,
 } from 'graphql-sequelize-generator'
 import getModels from '../models'
+import { Job } from '../types'
 
 import job from './job'
 import batch from './batch'
@@ -18,18 +19,30 @@ import workerMonitoring from './workerMonitoring'
 export default async function getApolloServer(
   dbConfig: any,
   gsgParams: any = {},
-  customMutations: any = {}
+  customMutations: any = {},
+  onJobFail?: (job: Job) => Promise<any>
 ) {
   const models = getModels(dbConfig)
 
   const types = generateModelTypes(models)
 
-  await models.sequelize.query(
-    "UPDATE job SET status = 'failed' WHERE status = 'processing'"
-  )
+  const jobsFail = await models.job.findAll({
+    where: { status: 'processing' },
+  })
+
+  if (jobsFail.length > 0) {
+    await models.sequelize.query(
+      "UPDATE job SET status = 'failed' WHERE status = 'processing'"
+    )
+    if (onJobFail) {
+      for (const job of jobsFail) {
+        await onJobFail(job)
+      }
+    }
+  }
 
   const graphqlSchemaDeclaration = {
-    job: job(types, models),
+    job: job(types, models, onJobFail),
     batch: batch(types, models),
     pipeline: pipeline(types, models),
     pipelineStep: pipelineStep(types, models),

@@ -4,13 +4,23 @@ exports[`Test the job endpoint A job failed can be recover  1`] = `"[Error: step
 
 exports[`Test the job endpoint A job failed can be recover  2`] = `"queued"`;
 
-exports[`Test the job endpoint Acquiring a job require a type 1`] = `"Variable \\"$typeList\\" of required type \\"[String!]!\\" was not provided."`;
-
 exports[`Test the job endpoint Be able to hold a type of job and toggle it 1`] = `
 Object {
   "toggleHoldJobType": Object {
     "id": 1,
     "type": "type-1",
+  },
+}
+`;
+
+exports[`Test the job endpoint Check if you cannot duplicate job according to jobUniqueId 1`] = `
+Object {
+  "jobCreate": Object {
+    "id": 1,
+    "jobUniqueId": "job-unique-1",
+    "name": "Bla a",
+    "output": Object {},
+    "status": "queued",
   },
 }
 `;
@@ -88,25 +98,6 @@ Object {
 }
 `;
 
-exports[`Test the job endpoint One can acquire a job of a given type. 1`] = `
-Object {
-  "acquireJob": Object {
-    "id": 1,
-    "name": "Bla a",
-    "output": Object {},
-    "status": "processing",
-  },
-}
-`;
-
-exports[`Test the job endpoint One can add his own mutations to the schema 1`] = `
-Object {
-  "customAcquire": Object {
-    "id": 1,
-  },
-}
-`;
-
 exports[`Test the job endpoint One can create a job of a given type. 1`] = `
 Object {
   "jobCreate": Object {
@@ -119,40 +110,6 @@ Object {
 }
 `;
 
-exports[`Test the job endpoint One can request a job cancel 1`] = `
-Object {
-  "__typename": "job",
-  "id": 6,
-  "input": null,
-  "name": null,
-  "output": Object {
-    "cancelMessage": "No cancel message provided",
-  },
-  "processingInfo": Object {
-    "toto": false,
-  },
-  "status": "cancelled",
-  "type": "d",
-}
-`;
-
-exports[`Test the job endpoint The job can be cancelled on cancel request 1`] = `
-Object {
-  "__typename": "job",
-  "id": 6,
-  "input": null,
-  "name": null,
-  "output": Object {
-    "cancelMessage": "A job cancelation was requested !",
-  },
-  "processingInfo": Object {
-    "test": true,
-  },
-  "status": "cancelled",
-  "type": "f",
-}
-`;
-
 exports[`Test the job endpoint The job can be restarted if it fails 1`] = `
 Object {
   "retryJob": Object {
@@ -161,57 +118,6 @@ Object {
     "status": "queued",
     "type": "b",
   },
-}
-`;
-
-exports[`Test the job endpoint The job is instantly cancelled when not already started 1`] = `
-Object {
-  "jobUpdate": Object {
-    "id": 6,
-    "isUpdateAlreadyCalledWhileCancelRequested": false,
-    "name": null,
-    "status": "cancelled",
-  },
-}
-`;
-
-exports[`Test the job endpoint The processingFunction expose . 1`] = `
-Object {
-  "__typename": "job",
-  "id": 1,
-  "input": Object {},
-  "name": "Bla a",
-  "output": Object {},
-  "processingInfo": Object {
-    "percent": 10,
-  },
-  "status": "successful",
-  "type": "a",
-}
-`;
-
-exports[`Test the job endpoint The processingFunction expose . 2`] = `Object {}`;
-
-exports[`Test the job endpoint The processingFunction expose . 3`] = `
-Object {
-  "percent": 10,
-}
-`;
-
-exports[`Test the job endpoint When a job is cancel-requeted an updateProcessingInfo call makes it fail 1`] = `
-Object {
-  "__typename": "job",
-  "id": 6,
-  "input": null,
-  "name": null,
-  "output": Object {
-    "error": "[Error: GraphQL error: The job was requested to be cancelled at the previous call. Please check for the status \\"cancel-requested\\" after calling updateProcessingInfo in your worker and throw a CancelRequestedError] Stack: Error: GraphQL error: The job was requested to be cancelled at the previous call. Please check for the status \\"cancel-requested\\" after calling updateProcessingInfo in your worker and throw a CancelRequestedError",
-  },
-  "processingInfo": Object {
-    "toto": false,
-  },
-  "status": "failed",
-  "type": "e",
 }
 `;
 
@@ -288,80 +194,3 @@ Array [
   },
 ]
 `;
-
-exports[`Test the job endpoint checkForJobs allows to asynchronous processing functions. 1`] = `
-Object {
-  "__typename": "job",
-  "id": 1,
-  "input": Object {},
-  "name": "Bla a",
-  "output": Object {
-    "total": "plop",
-  },
-  "processingInfo": null,
-  "status": "successful",
-  "type": "a",
-}
-`;
-
-exports[`Test the job endpoint checkForJobs allows to simply acquire and update jobs. 1`] = `
-Object {
-  "__typename": "job",
-  "id": 1,
-  "input": Object {},
-  "name": "Bla a",
-  "output": Object {
-    "total": 125,
-  },
-  "processingInfo": null,
-  "status": "successful",
-  "type": "a",
-}
-`;
-
-exports[`Test the job endpoint checkForJobs allows to simply acquire multiple types of jobs at the same time. 1`] = `
-Object {
-  "__typename": "job",
-  "id": 1,
-  "input": Object {},
-  "name": "Bla a",
-  "output": Object {
-    "total": 125,
-  },
-  "processingInfo": null,
-  "status": "successful",
-  "type": "a",
-}
-`;
-
-exports[`Test the job endpoint checkForJobs allows to simply acquire multiple types of jobs at the same time. 2`] = `
-Object {
-  "__typename": "job",
-  "id": 2,
-  "input": Object {},
-  "name": "Bla b",
-  "output": Object {
-    "total": 125,
-  },
-  "processingInfo": null,
-  "status": "successful",
-  "type": "b",
-}
-`;
-
-exports[`Test the job endpoint checkForJobs declare jobs as failed when an error is raised. 1`] = `"[TypeError: a.awd is not a function] Stack: TypeError: a.awd is not a function"`;
-
-exports[`Test the job endpoint checkForJobs processing function can return nothing if needed. 1`] = `
-Object {
-  "__typename": "job",
-  "id": 1,
-  "input": Object {},
-  "name": "Bla a",
-  "output": Object {},
-  "processingInfo": null,
-  "status": "successful",
-  "type": "a",
-}
-`;
-
-exports[`Test the job endpoint checkForJobs processing function can return nothing if needed. 2`] = `Object {}`;

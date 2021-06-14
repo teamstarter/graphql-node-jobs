@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test the recoverJob mutation A job failed can be recover  1`] = `"[Error: step-5 failed] Stack: Error: step-5 failed"`;
+
+exports[`Test the recoverJob mutation A job failed can be recover  2`] = `"queued"`;

@@ -110,7 +110,7 @@ exports.closeEverything = async (mainServer, models, done) => {
   done()
 }
 
-exports.getNewServer = () => {
+exports.getNewServer = (onJobFail) => {
   return getStandAloneServer(
     dbConfig,
     {},
@@ -137,6 +137,7 @@ exports.getNewServer = () => {
           return job
         },
       },
-    }
+    },
+    onJobFail
   )
 }

@@ -1,0 +1,63 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test to cancel job logic One can request a job cancel 1`] = `
+Object {
+  "__typename": "job",
+  "id": 6,
+  "input": null,
+  "name": null,
+  "output": Object {
+    "cancelMessage": "No cancel message provided",
+  },
+  "processingInfo": Object {
+    "toto": false,
+  },
+  "status": "cancelled",
+  "type": "d",
+}
+`;
+
+exports[`Test to cancel job logic The job can be cancelled on cancel request 1`] = `
+Object {
+  "__typename": "job",
+  "id": 6,
+  "input": null,
+  "name": null,
+  "output": Object {
+    "cancelMessage": "A job cancelation was requested !",
+  },
+  "processingInfo": Object {
+    "test": true,
+  },
+  "status": "cancelled",
+  "type": "f",
+}
+`;
+
+exports[`Test to cancel job logic The job is instantly cancelled when not already started 1`] = `
+Object {
+  "jobUpdate": Object {
+    "id": 6,
+    "isUpdateAlreadyCalledWhileCancelRequested": false,
+    "name": null,
+    "status": "cancelled",
+  },
+}
+`;
+
+exports[`Test to cancel job logic When a job is cancel-requeted an updateProcessingInfo call makes it fail 1`] = `
+Object {
+  "__typename": "job",
+  "id": 6,
+  "input": null,
+  "name": null,
+  "output": Object {
+    "error": "[Error: GraphQL error: The job was requested to be cancelled at the previous call. Please check for the status \\"cancel-requested\\" after calling updateProcessingInfo in your worker and throw a CancelRequestedError] Stack: Error: GraphQL error: The job was requested to be cancelled at the previous call. Please check for the status \\"cancel-requested\\" after calling updateProcessingInfo in your worker and throw a CancelRequestedError",
+  },
+  "processingInfo": Object {
+    "toto": false,
+  },
+  "status": "failed",
+  "type": "e",
+}
+`;

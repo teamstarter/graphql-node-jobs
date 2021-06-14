@@ -113,13 +113,13 @@ describe('Test the pipeline', () => {
   it('A pipeline can be successful', async () => {
     const job1 = await createJob(client, {
       name: 'job-1',
-      type: 'a',
+      type: 'pipeline-successful',
       pipelineId: 1,
     })
 
     const job2 = await createJob(client, {
       name: 'job-2',
-      type: 'a',
+      type: 'pipeline-successful',
       pipelineId: 1,
     })
 
