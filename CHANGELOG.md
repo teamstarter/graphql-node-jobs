@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0](https://github.com/teamstarter/graphql-node-jobs/compare/v0.3.9...v0.4.0) (2021-06-14)
+
+
+### ⚠ BREAKING CHANGES
+
+* **job:** The getApolloServer function now returns a promise.
+
+### Features
+
+* **job:** update processing job status to failed when booting server ([#40](https://github.com/teamstarter/graphql-node-jobs/issues/40)) ([970ba94](https://github.com/teamstarter/graphql-node-jobs/commit/970ba9448ea8fe0f9ce044ff9a01fcfa7957ecb5))
+* **workerMonitoring:** add model & logic ([#39](https://github.com/teamstarter/graphql-node-jobs/issues/39)) ([6c1f25e](https://github.com/teamstarter/graphql-node-jobs/commit/6c1f25e0e99d59cef10c24b4878d323885ca6ed7))
+
 ### [0.3.9](https://github.com/teamstarter/graphql-node-jobs/compare/v0.3.8...v0.3.9) (2021-06-01)
 
 
