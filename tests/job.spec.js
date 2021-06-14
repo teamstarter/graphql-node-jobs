@@ -152,6 +152,18 @@ const batchCreate = (variables) => ({
   operationName: null,
 })
 
+const batch = (variables) => ({
+  query: `query batch($where: SequelizeJSON!){
+    batch(where: $where) {
+      id
+      status
+      pipelineId
+    }
+  }`,
+  variables,
+  operationName: null,
+})
+
 /**
  * Starting the tests
  */
