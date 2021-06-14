@@ -140,6 +140,18 @@ const retryJob = (variables) => ({
   operationName: null,
 })
 
+const batchCreate = (variables) => ({
+  query: `mutation batchCreate($batch: batchInput!){
+    batchCreate(batch: $batch) {
+      id
+      status
+      pipelineId
+    }
+  }`,
+  variables,
+  operationName: null,
+})
+
 /**
  * Starting the tests
  */

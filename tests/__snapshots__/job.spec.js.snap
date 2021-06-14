@@ -1,5 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Test the job endpoint A job failed can be recover  1`] = `"[Error: step-5 failed] Stack: Error: step-5 failed"`;
+
+exports[`Test the job endpoint A job failed can be recover  2`] = `"queued"`;
+
+exports[`Test the job endpoint Be able to hold a type of job and toggle it 1`] = `
+Object {
+  "toggleHoldJobType": Object {
+    "id": 1,
+    "type": "type-1",
+  },
+}
+`;
+
 exports[`Test the job endpoint Check if you cannot duplicate job according to jobUniqueId 1`] = `
 Object {
   "jobCreate": Object {
@@ -41,6 +54,50 @@ Object {
 }
 `;
 
+exports[`Test the job endpoint List the jobs with and without highFrequency 1`] = `
+Object {
+  "job": Array [
+    Object {
+      "id": 2,
+      "isHighFrequency": false,
+      "name": "Bla b",
+      "status": "queued",
+    },
+    Object {
+      "id": 3,
+      "isHighFrequency": false,
+      "name": "Bla b",
+      "status": "failed",
+    },
+    Object {
+      "id": 4,
+      "isHighFrequency": false,
+      "name": "A job processing",
+      "status": "planned",
+    },
+    Object {
+      "id": 5,
+      "isHighFrequency": false,
+      "name": "job-unique-4",
+      "status": "planned",
+    },
+  ],
+}
+`;
+
+exports[`Test the job endpoint List the jobs with and without highFrequency 2`] = `
+Object {
+  "job": Array [
+    Object {
+      "id": 1,
+      "isHighFrequency": true,
+      "name": "Bla a",
+      "status": "queued",
+    },
+  ],
+}
+`;
+
 exports[`Test the job endpoint One can create a job of a given type. 1`] = `
 Object {
   "jobCreate": Object {
@@ -49,6 +106,17 @@ Object {
     "name": "c",
     "output": null,
     "status": "queued",
+  },
+}
+`;
+
+exports[`Test the job endpoint The job can be restarted if it fails 1`] = `
+Object {
+  "retryJob": Object {
+    "id": 6,
+    "name": "Bla b",
+    "status": "queued",
+    "type": "b",
   },
 }
 `;
