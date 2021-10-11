@@ -35,11 +35,33 @@ export default function RetryJob(
         throw new Error('The job must be failed.')
       }
 
-      const attributesToDelete = ['id', 'createdAt', 'updateAt', 'status']
+      // Attributes related to the run of a job should not be passed.
+      const attributesToDelete = [
+        'id',
+        'createdAt',
+        'updateAt',
+        'status',
+        'startedAt',
+        'failedAt',
+        'isUpdateAlreadyCalledWhileCancelRequested',
+        'workerId',
+        'endedAt',
+        'deletedAt',
+        'cancelledAt',
+      ]
+
       const oldJobAttributes = Object.keys(job.dataValues).reduce(
-        (acc: any, flag: any) => {
-          if (!attributesToDelete.includes(flag)) {
-            acc[flag] = job.dataValues[flag]
+        (acc: any, attribute: any) => {
+          if (!attributesToDelete.includes(attribute)) {
+            if (attribute === 'output') {
+              // We do not keep errors raised by a worker.
+              if (job.dataValues[attribute].error) {
+                const { otherAttributes, ...error } = job.dataValues[attribute]
+                acc[attribute] = otherAttributes
+                return acc
+              }
+            }
+            acc[attribute] = job.dataValues[attribute]
           }
 
           return acc
