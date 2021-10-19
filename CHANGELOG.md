@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.0](https://github.com/teamstarter/graphql-node-jobs/compare/v0.4.0...v0.5.0) (2021-10-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* **dependencies:** You must add graphql-sequelize-generator as a dependency.
+
+### Features
+
+* **retry:** Avoid duplicating attributes related to the running of a job when duplicating it. ([ff013b0](https://github.com/teamstarter/graphql-node-jobs/commit/ff013b07e8459b255c5095303f134b8b991237ab))
+
+
+### Bug Fixes
+
+* **dependencies:** graphql-sequelize-generator is now peer dep. ([b0cf48b](https://github.com/teamstarter/graphql-node-jobs/commit/b0cf48b90e72e7ca228a346110ead3c37e4ccb58))
+
 ## [0.4.0](https://github.com/teamstarter/graphql-node-jobs/compare/v0.3.9...v0.4.0) (2021-06-14)
 
 
