@@ -169,58 +169,58 @@ describe('Test acquireJob mutation', () => {
     expect(response.body.errors[0].message).toMatchSnapshot()
   })
 
-  // it('One can acquire a job of a given type.', async () => {
-  //   const response = await request(server)
-  //     .post('/graphql')
-  //     .send(
-  //       acquireJob({
-  //         typeList: ['a'],
-  //       })
-  //     )
+  it('One can acquire a job of a given type.', async () => {
+    const response = await request(server)
+      .post('/graphql')
+      .send(
+        acquireJob({
+          typeList: ['a'],
+        })
+      )
 
-  //   expect(response.body.errors).toBeUndefined()
-  //   expect(response.body.data).toMatchSnapshot()
+    expect(response.body.errors).toBeUndefined()
+    expect(response.body.data).toMatchSnapshot()
 
-  //   const response2 = await request(server)
-  //     .post('/graphql')
-  //     .send(
-  //       acquireJob({
-  //         typeList: ['a'],
-  //       })
-  //     )
+    const response2 = await request(server)
+      .post('/graphql')
+      .send(
+        acquireJob({
+          typeList: ['a'],
+        })
+      )
 
-  //   expect(response2.body.errors).toBeUndefined()
-  //   expect(response2.body.data.acquireJob).toBe(null)
-  // })
+    expect(response2.body.errors).toBeUndefined()
+    expect(response2.body.data.acquireJob).toBe(null)
+  })
 
-  // it('When a job is planified to be run in the future, it cannot be acquired.', async () => {
-  //   const date = new Date()
-  //   const job = await models.job.findByPk(1)
-  //   await job.update({ startAfter: addMinutes(date, 5) })
+  it('When a job is planified to be run in the future, it cannot be acquired.', async () => {
+    const date = new Date()
+    const job = await models.job.findByPk(1)
+    await job.update({ startAfter: addMinutes(date, 5) })
 
-  //   const response = await request(server)
-  //     .post('/graphql')
-  //     .send(
-  //       acquireJob({
-  //         typeList: ['a'],
-  //       })
-  //     )
+    const response = await request(server)
+      .post('/graphql')
+      .send(
+        acquireJob({
+          typeList: ['a'],
+        })
+      )
 
-  //   expect(response.body.errors).toBeUndefined()
-  //   expect(response.body.data.acquireJob).toBe(null)
+    expect(response.body.errors).toBeUndefined()
+    expect(response.body.data.acquireJob).toBe(null)
 
-  //   // A few milli-seconds passed, so the job should be returned
-  //   await job.update({ startAfter: date })
+    // A few milli-seconds passed, so the job should be returned
+    await job.update({ startAfter: date })
 
-  //   const response2 = await request(server)
-  //     .post('/graphql')
-  //     .send(
-  //       acquireJob({
-  //         typeList: ['a'],
-  //       })
-  //     )
+    const response2 = await request(server)
+      .post('/graphql')
+      .send(
+        acquireJob({
+          typeList: ['a'],
+        })
+      )
 
-  //   expect(response2.body.errors).toBeUndefined()
-  //   expect(response2.body.data.acquireJob).not.toBe(null)
-  // })
+    expect(response2.body.errors).toBeUndefined()
+    expect(response2.body.data.acquireJob).not.toBe(null)
+  })
 })
