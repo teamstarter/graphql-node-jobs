@@ -161,7 +161,9 @@ describe('Test acquireJob mutation', () => {
   })
 
   it('Acquiring a job require a type', async () => {
+    console.log('Before')
     const response = await request(server).post('/graphql').send(acquireJob({}))
+    console.log('After')
 
     expect(response.body.errors).toHaveLength(1)
     expect(response.body.errors[0].message).toMatchSnapshot()

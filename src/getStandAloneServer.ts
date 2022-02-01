@@ -1,6 +1,4 @@
 import { getApolloServer } from './../lib/index'
-import express from 'express'
-import http from 'spdy'
 
 import { Job } from './types'
 
@@ -10,6 +8,8 @@ export default async function getStandAloneServer(
   customMutations: any = {},
   onJobFail?: (job: Job) => Promise<any>
 ) {
+  const express = require('express')
+  const http2 = require('http')
   const app = express()
   const server = await getApolloServer(
     config,
@@ -25,7 +25,7 @@ export default async function getStandAloneServer(
 
   const port = process.env.PORT || 8080
   return new Promise((resolve, reject) => {
-    const serverHttp = http
+    const serverHttp = http2
       .createServer(
         {
           spdy: {
