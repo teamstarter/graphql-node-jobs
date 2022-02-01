@@ -51,7 +51,7 @@
     "sequelize": "^6.3.5",
     "spdy": "^4.0.1",
     "sqlite3": "^4.1.1",
-    "standard-version": "^7.0.1",
+    "standard-version": "^8.0.1",
     "supertest": "^6.2.2",
     "typescript": "^4.0.3",
     "webpack-cli": "^3.3.10"
