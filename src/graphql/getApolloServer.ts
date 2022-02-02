@@ -20,7 +20,8 @@ export default async function getApolloServer(
   dbConfig: any,
   gsgParams: any = {},
   customMutations: any = {},
-  onJobFail?: (job: Job) => Promise<any>
+  onJobFail?: (job: Job) => Promise<any>,
+  hooks?: any
 ) {
   const models = getModels(dbConfig)
 
@@ -42,7 +43,7 @@ export default async function getApolloServer(
   }
 
   const graphqlSchemaDeclaration = {
-    job: job(types, models, onJobFail),
+    job: job(types, models, onJobFail, hooks?.job),
     batch: batch(types, models),
     pipeline: pipeline(types, models),
     pipelineStep: pipelineStep(types, models),

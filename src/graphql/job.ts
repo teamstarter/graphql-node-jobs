@@ -45,7 +45,8 @@ function getInstanceOfDebounceBatch(batchId: number) {
 export default function JobConfiguration(
   graphqlTypes: InAndOutTypes,
   models: SequelizeModels,
-  onFail?: (job: Job) => Promise<any>
+  onFail?: (job: Job) => Promise<any>,
+  hook?: any
 ): ModelDeclarationType {
   return {
     model: models.job,
@@ -57,8 +58,17 @@ export default function JobConfiguration(
       retryJob: retryJob(graphqlTypes, models),
     },
     list: {
-      before: (findOptions) => {
+      before: (findOptions, args, context) => {
+        if (hook?.list?.before) {
+          hook.list.before(findOptions, args, context)
+        }
         return findOptions
+      },
+      after: (result, args, context, info) => {
+        if (hook?.list?.after) {
+          hook.list.after(result, args, context, info)
+        }
+        return result
       },
     },
     update: {
@@ -138,9 +148,14 @@ export default function JobConfiguration(
 
           properties.steps = newProcessingInfo
         }
+
+        if (hook?.update?.before) {
+          hook.update.before(findOptions, args, context, info)
+        }
+
         return properties
       },
-      after: async (job, oldJob) => {
+      after: async (job, oldJob, args, context, info) => {
         if (job.status === 'failed' && onFail) {
           await onFail(job)
         }
@@ -227,6 +242,10 @@ export default function JobConfiguration(
           }
         }
 
+        if (hook?.update?.after) {
+          hook.update.after(job, oldJob, args, context, info)
+        }
+
         return job
       },
     },
@@ -239,6 +258,10 @@ export default function JobConfiguration(
           !properties.status
         ) {
           properties.status = 'planned'
+        }
+
+        if (hook?.create?.before) {
+          hook.create.before(findOptions, args, context, info)
         }
 
         return properties
@@ -260,6 +283,10 @@ export default function JobConfiguration(
               index: indexCount + 1,
             })
           }
+        }
+
+        if (hook?.create?.after) {
+          hook.create.after(job, source, args, context, info)
         }
 
         return job
