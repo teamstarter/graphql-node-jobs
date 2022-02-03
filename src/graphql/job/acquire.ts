@@ -43,7 +43,7 @@ export default function AcquireJobDefinition(
     args: {
       typeList: {
         type: new GraphQLNonNull(
-          GraphQLList(new GraphQLNonNull(GraphQLString))
+          new GraphQLList(new GraphQLNonNull(GraphQLString))
         ),
       },
       workerId: { type: GraphQLString },
