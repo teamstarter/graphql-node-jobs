@@ -4,8 +4,10 @@ import getStandAloneServer from './getStandAloneServer'
 import getModels from './models'
 import checkForJobs from './worker/checkForJobs'
 import listJobs from './worker/listJobs'
+import listJobHoldTypes from './worker/listJobHoldTypes'
 import getNewClient from './worker/getNewClient'
 import createJob from './worker/createJob'
+import toggleHoldJobType from './worker/toggleJobHoldType'
 import { CancelRequestedError } from './graphql/job'
 
 export {
@@ -17,5 +19,7 @@ export {
   listJobs,
   getNewClient,
   createJob,
+  listJobHoldTypes,
+  toggleHoldJobType,
   CancelRequestedError,
 }
