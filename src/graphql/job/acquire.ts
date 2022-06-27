@@ -70,7 +70,7 @@ export default function AcquireJobDefinition(
 
       if (heldTypes && heldTypes.length && heldTypes.length > 0) {
         conditions.push({
-          type: { [Op.ne]: heldTypes },
+          type: { [Op.notIn]: heldTypes },
         })
       }
 
