@@ -223,4 +223,21 @@ describe('Test acquireJob mutation', () => {
     expect(response2.body.errors).toBeUndefined()
     expect(response2.body.data.acquireJob).not.toBe(null)
   })
+
+  it('One cannot acquire a job of a blacklisted type.', async () => {
+    await models.job.create({ type: 'blacklisted' })
+    await models.jobHoldType.create({ type: 'blacklisted' })
+    await models.jobHoldType.create({ type: 'blacklisted2' })
+
+    const response = await request(server)
+      .post('/graphql')
+      .send(
+        acquireJob({
+          typeList: ['blacklisted'],
+        })
+      )
+
+    expect(response.body.errors).toBeUndefined()
+    expect(response.body.data).toMatchSnapshot()
+  })
 })

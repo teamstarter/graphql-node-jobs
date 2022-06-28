@@ -53,21 +53,30 @@ export default function AcquireJobDefinition(
       const allJobHoldType = await models.jobHoldType.findAll({ transaction })
       const heldTypes = allJobHoldType.map((heldType) => heldType.type)
 
+      if (heldTypes.includes('all')) {
+        return null
+      }
+
+      const conditions: any = [
+        {
+          type: args.typeList,
+          status: 'queued',
+          [Op.or]: [
+            { startAfter: null },
+            { startAfter: { [Op.lt]: new Date() } },
+          ],
+        },
+      ]
+
+      if (heldTypes && heldTypes.length && heldTypes.length > 0) {
+        conditions.push({
+          type: { [Op.notIn]: heldTypes },
+        })
+      }
+
       const job = await models.job.findOne({
         where: {
-          [Op.and]: [
-            {
-              type: args.typeList,
-              status: 'queued',
-              [Op.or]: [
-                { startAfter: null },
-                { startAfter: { [Op.lt]: new Date() } },
-              ],
-            },
-            heldTypes.length && {
-              type: { [Op.ne]: heldTypes },
-            },
-          ],
+          [Op.and]: conditions,
         },
         order: [['id', 'ASC']],
         transaction,

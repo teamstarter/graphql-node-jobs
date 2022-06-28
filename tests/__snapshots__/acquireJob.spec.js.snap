@@ -12,3 +12,9 @@ Object {
   },
 }
 `;
+
+exports[`Test acquireJob mutation One cannot acquire a job of a blacklisted type. 1`] = `
+Object {
+  "acquireJob": null,
+}
+`;
