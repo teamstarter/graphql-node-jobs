@@ -123,7 +123,9 @@ export default function JobConfiguration(
             (acc: any, stepName: string) => {
               const newStep = steps[stepName]
 
+              debugger
               if (newStep.status === 'done' && newStep?.doneAt === undefined) {
+                debugger
                 const time = new Date()
                 const prevTime = new Date(job.updatedAt)
                 newStep.doneAt = time
