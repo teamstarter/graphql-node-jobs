@@ -119,11 +119,11 @@ export default function JobConfiguration(
           typeof args.job.processingInfo.steps !== null
         ) {
           const steps: any = args.job.processingInfo.steps
-
+          debugger
           newProcessingInfo = Object.keys(steps as Object).reduce(
             (acc: any, stepName: string) => {
               let newStep = steps[stepName]
-              if (job?.processingInfo.step) {
+              if (job?.processingInfo?.step) {
                 newStep = { ...newStep, ...job.processingInfo.step[stepName] }
               }
 
