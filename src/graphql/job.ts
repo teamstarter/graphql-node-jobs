@@ -118,12 +118,14 @@ export default function JobConfiguration(
           typeof args.job.processingInfo?.steps !== 'undefined' &&
           typeof args.job.processingInfo.steps !== null
         ) {
-          const steps: any = args.job.processingInfo.steps
+          const steps: any = job?.processingInfo?.steps
+            ? job.processingInfo.steps
+            : args.job.processingInfo.steps
+
           newProcessingInfo = Object.keys(steps as Object).reduce(
             (acc: any, stepName: string) => {
               const newStep = steps[stepName]
 
-              debugger
               if (newStep.status === 'done' && newStep?.doneAt === undefined) {
                 debugger
                 const time = new Date()
