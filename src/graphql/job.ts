@@ -109,7 +109,7 @@ export default function JobConfiguration(
           properties.status = 'cancelled'
         }
 
-        let newProcessingInfo = null
+        let newSteps = null
         if (
           typeof args.job.processingInfo !== 'string' &&
           typeof args.job.processingInfo !== 'number' &&
@@ -119,29 +119,37 @@ export default function JobConfiguration(
           typeof args.job.processingInfo.steps !== null
         ) {
           const steps: any = args.job.processingInfo.steps
-          debugger
-          newProcessingInfo = Object.keys(steps as Object).reduce(
+          newSteps = Object.keys(steps as Object).reduce(
             (acc: any, stepName: string) => {
               let newStep = steps[stepName]
-              if (job?.processingInfo?.step) {
-                newStep = { ...newStep, ...job.processingInfo.step[stepName] }
-              }
+              const isStepDone =
+                job.processingInfo &&
+                job.processingInfo.steps &&
+                job.processingInfo.steps[stepName] &&
+                job.processingInfo.steps[stepName].doneAt
 
-              if (newStep.status === 'done' && newStep?.doneAt === undefined) {
-                debugger
+              if (newStep.status === 'done' && !isStepDone) {
                 const time = new Date()
                 const prevTime = new Date(job.updatedAt)
                 newStep.doneAt = time
                 newStep.elapsedTime = time.getTime() - prevTime.getTime()
+                acc[stepName] = newStep
+              } else if (
+                job.processingInfo &&
+                job.processingInfo.steps &&
+                job.processingInfo.steps[stepName]
+              ) {
+                acc[stepName] = job.processingInfo.steps[stepName]
+              } else {
+                acc[stepName] = newStep
               }
 
-              acc[stepName] = newStep
               return acc
             },
             {}
           )
 
-          properties.steps = newProcessingInfo
+          properties.processingInfo.steps = newSteps
         }
         return properties
       },
