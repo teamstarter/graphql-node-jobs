@@ -330,9 +330,9 @@ describe('Test the job endpoint', () => {
         }
 
         for (const step of Object.keys(steps)) {
+          await timeout(1000)
           steps[step].status = 'done'
           await updateProcessingInfo({ steps })
-          await timeout(1000)
         }
 
         return steps
