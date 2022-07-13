@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.5.3](https://github.com/teamstarter/graphql-node-jobs/compare/v0.5.2...v0.5.3) (2022-07-13)
+
+
+### Bug Fixes
+
+* **job:** fix elapsedTime ([#60](https://github.com/teamstarter/graphql-node-jobs/issues/60)) ([dd13071](https://github.com/teamstarter/graphql-node-jobs/commit/dd13071f675148fcd66ab875700c0b4b5b9349a0))
+
 ### [0.5.2](https://github.com/teamstarter/graphql-node-jobs/compare/v0.5.1...v0.5.2) (2022-06-29)
 
 ### [0.5.1](https://github.com/teamstarter/graphql-node-jobs/compare/v0.5.0...v0.5.1) (2022-05-20)
