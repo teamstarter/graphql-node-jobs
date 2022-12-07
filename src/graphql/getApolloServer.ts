@@ -20,9 +20,10 @@ export default async function getApolloServer(
   dbConfig: any,
   gsgParams: any = {},
   customMutations: any = {},
-  onJobFail?: (job: Job) => Promise<any>
+  onJobFail?: (job: Job) => Promise<any>,
+  wsServer: any = null
 ) {
-  const models = getModels(dbConfig)
+  const models = await getModels(dbConfig)
 
   const types = generateModelTypes(models)
 
@@ -55,6 +56,7 @@ export default async function getApolloServer(
     types,
     models,
     globalPreCallback: () => {},
+    wsServer,
     apolloServerOptions: {
       playground: true,
       //context: addDataloaderContext,

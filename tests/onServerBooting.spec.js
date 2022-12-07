@@ -5,7 +5,7 @@ const {
   migrateDatabase,
   seedDatabase,
   getNewServer,
-  models,
+  getModels,
   closeEverything,
   deleteTables,
   resetDatabase,
@@ -157,6 +157,7 @@ describe('Test when server booting', () => {
   })
 
   afterAll(async (done) => {
+    const models = await getModels()
     await closeEverything(server, models, done)
   })
 

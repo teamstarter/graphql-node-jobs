@@ -5,7 +5,7 @@ const {
   migrateDatabase,
   seedDatabase,
   getNewServer,
-  models,
+  getModels,
   closeEverything,
   deleteTables,
   resetDatabase,
@@ -157,6 +157,7 @@ describe('Test the onRetry mutation', () => {
   })
 
   afterAll(async (done) => {
+    const models = await getModels()
     await closeEverything(server, models, done)
   })
   it('The job can be restarted if it fails', async () => {

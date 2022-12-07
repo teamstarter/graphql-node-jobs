@@ -52,7 +52,7 @@ Object {
   "input": null,
   "name": null,
   "output": Object {
-    "error": "[Error: GraphQL error: The job was requested to be cancelled at the previous call. Please check for the status \\"cancel-requested\\" after calling updateProcessingInfo in your worker and throw a CancelRequestedError] Stack: Error: GraphQL error: The job was requested to be cancelled at the previous call. Please check for the status \\"cancel-requested\\" after calling updateProcessingInfo in your worker and throw a CancelRequestedError",
+    "error": "[ApolloError: The job was requested to be cancelled at the previous call. Please check for the status \\"cancel-requested\\" after calling updateProcessingInfo in your worker and throw a CancelRequestedError] Stack: ApolloError: The job was requested to be cancelled at the previous call. Please check for the status \\"cancel-requested\\" after calling updateProcessingInfo in your worker and throw a CancelRequestedError",
   },
   "processingInfo": Object {
     "toto": false,

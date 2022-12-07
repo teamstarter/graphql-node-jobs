@@ -12,7 +12,7 @@ let db: any = null
  * It must be noted that NJ does not support changing the models configuration
  * once the models are fetched.
  */
-function initDb(config: any) {
+async function initDb(config: any, dbhash?: string) {
   const basename = path.basename(module.filename)
   db = {}
 
@@ -22,6 +22,11 @@ function initDb(config: any) {
     typeof config.use_env_variable !== 'undefined' &&
     config.use_env_variable
   ) {
+    if (dbhash) {
+      throw new Error(
+        'Configuration in env variables cannot be used in db hash mode.'
+      )
+    }
     sequelize = new Sequelize()
   } else {
     const connexion =
@@ -29,7 +34,27 @@ function initDb(config: any) {
       typeof config[process.env.NODE_ENV] !== 'undefined'
         ? config[process.env.NODE_ENV]
         : config
-    sequelize = new Sequelize(connexion)
+    if (dbhash) {
+      console.log('DBHASH provided', dbhash, connexion)
+      connexion.database = null
+      const tmpConnexion = new Sequelize(
+        `${connexion.dialect}://${connexion.username}:${connexion.password}@${connexion.host}:${connexion.port}/postgres`
+      )
+      try {
+        const res = await tmpConnexion
+          .getQueryInterface()
+          .createDatabase(dbhash)
+      } catch (e) {
+        // Sadly the wrapper do not handle IF NOT EXISTS.
+        console.log(e)
+      }
+
+      connexion.database = dbhash
+      console.log(connexion)
+      sequelize = new Sequelize(connexion)
+    } else {
+      sequelize = new Sequelize(connexion)
+    }
   }
 
   fs.readdirSync(__dirname)
@@ -56,9 +81,9 @@ function initDb(config: any) {
   db.Sequelize = Sequelize
 }
 
-export default function getModels(dbConfig: any) {
+export default async function getModels(dbConfig: any, dbhash?: string) {
   if (!db) {
-    initDb(dbConfig)
+    await initDb(dbConfig, dbhash)
   }
   return db
 }

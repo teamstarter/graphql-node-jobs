@@ -5,18 +5,19 @@ import migrate from './migrate'
 import getModels from './models'
 
 program
-  .command('migrate <configPath>')
+  .command('migrate <configPath> <dbhash>')
   .description(
     'Migrate the database with the last schema of graphql-node-jobs. We advise to provide a separated schema.'
   )
-  .action(async function (configPath) {
+  .action(async function (configPath, dbhash) {
     let config = null
     try {
       config = require(configPath)
-    } catch (e) {
+    } catch (e: any) {
       throw new Error('Could not load the given config.' + e.message)
     }
-    const models = getModels(config)
+    debugger
+    const models = await getModels(config, dbhash)
     await migrate(models)
     await models.sequelize.close()
   })

@@ -5,7 +5,7 @@ const {
   migrateDatabase,
   seedDatabase,
   getNewServer,
-  models,
+  getModels,
   closeEverything,
   deleteTables,
   resetDatabase,
@@ -157,6 +157,7 @@ describe('Test acquireJob mutation', () => {
   })
 
   afterAll(async (done) => {
+    const models = await getModels()
     await closeEverything(server, models, done)
   })
 
@@ -195,6 +196,7 @@ describe('Test acquireJob mutation', () => {
 
   it('When a job is planified to be run in the future, it cannot be acquired.', async () => {
     const date = new Date()
+    const models = await getModels()
     const job = await models.job.findByPk(1)
     await job.update({ startAfter: addMinutes(date, 5) })
 
@@ -225,6 +227,7 @@ describe('Test acquireJob mutation', () => {
   })
 
   it('One cannot acquire a job of a blacklisted type.', async () => {
+    const models = await getModels()
     await models.job.create({ type: 'blacklisted' })
     await models.jobHoldType.create({ type: 'blacklisted' })
     await models.jobHoldType.create({ type: 'blacklisted2' })

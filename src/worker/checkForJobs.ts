@@ -1,7 +1,7 @@
 import { Job, JSONValue } from '../types'
 import uuidv4 from 'uuid'
 import _debug from 'debug'
-import ApolloClient from 'apollo-client'
+import { ApolloClient } from '@apollo/client'
 import gql from 'graphql-tag'
 
 import updateProcessingInfo from './updateProcessingInfo'
@@ -84,7 +84,7 @@ export default async function checkForJobs(args: {
       },
     })
     debug("Job's done", job.id)
-  } catch (err) {
+  } catch (err: any) {
     debug('Error during the job processing', err)
     let updatedErrorJob = null
     // @todo find why instanceof is not working

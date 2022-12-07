@@ -1,5 +1,5 @@
 import updateJobQuery from './updateJobQuery'
-import ApolloClient from 'apollo-client'
+import { ApolloClient } from '@apollo/client'
 import { Job, JSONValue } from './../types'
 import { CancelRequestedError } from '../graphql/job'
 

@@ -5,7 +5,7 @@ const {
   migrateDatabase,
   seedDatabase,
   getNewServer,
-  models,
+  getModels,
   closeEverything,
   deleteTables,
   resetDatabase,
@@ -157,9 +157,11 @@ describe('Test the recoverJob mutation', () => {
   })
 
   afterAll(async (done) => {
+    const models = await getModels()
     await closeEverything(server, models, done)
   })
   it('A job failed can be recover ', async () => {
+    const models = await getModels()
     const steps = {
       'step-1': {
         status: 'waiting',

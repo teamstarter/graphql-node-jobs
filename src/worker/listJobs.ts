@@ -1,4 +1,5 @@
-import ApolloClient from 'apollo-client'
+import { ApolloClient } from '@apollo/client'
+
 import gql from 'graphql-tag'
 
 import { JSONValue } from '../types'

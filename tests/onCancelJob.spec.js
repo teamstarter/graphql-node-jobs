@@ -5,7 +5,7 @@ const {
   migrateDatabase,
   seedDatabase,
   getNewServer,
-  models,
+  getModels,
   closeEverything,
   deleteTables,
   resetDatabase,
@@ -157,10 +157,12 @@ describe('Test to cancel job logic', () => {
   })
 
   afterAll(async (done) => {
+    const models = await getModels()
     await closeEverything(server, models, done)
   })
 
   it('One can request a job cancel', async () => {
+    const models = await getModels()
     const job = await createJob(client, {
       type: 'd',
       status: 'queued',
@@ -193,6 +195,7 @@ describe('Test to cancel job logic', () => {
   })
 
   it('When a job is cancel-requeted an updateProcessingInfo call makes it fail', async () => {
+    const models = await getModels()
     const job = await createJob(client, {
       type: 'e',
       status: 'queued',
@@ -225,6 +228,7 @@ describe('Test to cancel job logic', () => {
     expect(rest.status).toBe('failed')
   })
   it('The job can be cancelled on cancel request', async () => {
+    const models = await getModels()
     const job = await createJob(client, {
       type: 'f',
       status: 'queued',
