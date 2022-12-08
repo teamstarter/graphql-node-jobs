@@ -41,7 +41,7 @@
   },
   "main": "./lib/index.js",
   "engines": {
-    "node": ">=12.14.0"
+    "node": ">=16.14.0"
   },
   "devDependencies": {
     "@types/debug": "^4.1.5",
