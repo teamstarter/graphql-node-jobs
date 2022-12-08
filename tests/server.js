@@ -29,6 +29,7 @@ async function startServer() {
   })
 
   const server = await getApolloServer(config, {
+    wsServer,
     pubSubInstance,
     playground: true,
   })
