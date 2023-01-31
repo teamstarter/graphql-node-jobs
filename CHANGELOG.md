@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0](https://github.com/teamstarter/graphql-node-jobs/compare/v0.5.3...v1.0.0) (2023-01-31)
+
+
+### ⚠ BREAKING CHANGES
+
+* **tech-dept:** Upgrade to Apollo 4 and add a reference to it in the doc.
+
+### Features
+
+* **tech-dept:** Upgrade to Apollo 4 and add a reference to it in the doc. ([72b875b](https://github.com/teamstarter/graphql-node-jobs/commit/72b875ba6b02ee6642c085589db83b9f3b8e4336))
+
 ### [0.5.3](https://github.com/teamstarter/graphql-node-jobs/compare/v0.5.2...v0.5.3) (2022-07-13)
 
 
