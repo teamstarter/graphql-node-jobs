@@ -4,6 +4,8 @@
 
 'A job scheduler, a runner and an interface to manage jobs. In one lib.'
 
+[NOW COMPATIBLE WITH APOLLO 4 - NEW DOCUMENTATION INCOMING]
+
 ### What does it do?
 
 It allows you to setup many execution pipelines and run them.
