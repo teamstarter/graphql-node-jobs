@@ -28,7 +28,7 @@
     "http2": "^3.3.7",
     "node-fetch": "^2.6.0",
     "pg": "^8.8.0",
-    "sequelize": "^6.3.5",
+    "sequelize": "^6.29.0",
     "umzug": "^2.2.0",
     "uuid": "^3.3.3"
   },
@@ -58,7 +58,7 @@
     "jest": "^24.9.0",
     "pm2": "^4.2.1",
     "react": "^18.2.0",
-    "sequelize": "^6.3.5",
+    "sequelize": "^6.29.0",
     "spdy": "^4.0.1",
     "sqlite3": "^4.1.1",
     "standard-version": "^7.0.1",
@@ -71,7 +71,7 @@
     "graphql-relay": "^0.10.0",
     "graphql-sequelize": "^9.5.1",
     "graphql-sequelize-generator": "teamstarter/graphql-sequelize-generator#upgrade-apollo-10-2022",
-    "sequelize": "^6.3.5"
+    "sequelize": "^6.29.0"
   },
   "resolutions": {
     "@types/serve-static": "1.13.9"
