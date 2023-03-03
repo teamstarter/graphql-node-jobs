@@ -4,19 +4,17 @@
 
 'A job scheduler, a runner and an interface to manage jobs. In one lib.'
 
-[NOW COMPATIBLE WITH APOLLO 4 - NEW DOCUMENTATION INCOMING]
-
 ### What does it do?
 
 It allows you to setup many execution pipelines and run them.
 
 ### How it works
 
-NGJ \(graphql-node-jobs\) is available as:
+GNJ \(graphql-node-jobs\) is available as:
 
 - A standalone NodeJS application
 - A GraphQL schema plugable to your Apollo server Schema
 
 # Manual
 
-Get started with [the online documentation](https://vincent-desmares.gitbook.io/graphql-node-jobs/)
+Get started with [the online documentation](https://teamstarter.github.io/gnj-documentation/)
