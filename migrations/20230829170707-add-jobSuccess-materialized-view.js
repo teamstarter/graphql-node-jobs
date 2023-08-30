@@ -2,8 +2,8 @@ const sequelize = require('sequelize')
 
 module.exports = {
   up: async function (queryInterface, Sequelize) {
-    sequelize.query(`
-	CREATE MATERIALIZED VIEW IF NOT EXISTS ${sequelize.options.define.schema}."jobSuccess" as
+    sequelize.queryInterface.query(`
+	CREATE MATERIALIZED VIEW IF NOT EXISTS "jobSuccess" as
 	SELECT
     	TO_CHAR(DATE_TRUNC('day', j."createdAt"), 'DD/MM/YY') AS "day",
     	ROUND(
@@ -11,7 +11,7 @@ module.exports = {
         	NULLIF(SUM(CASE WHEN j."status" IN ('successful', 'failed') THEN 1 ELSE 0 END), 0)
     	)::INTEGER AS "successRating"
 	FROM
-    	public.job j
+    	job j
 	WHERE
     	j."status" IN ('successful', 'failed')
 	GROUP BY
