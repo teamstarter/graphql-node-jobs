@@ -28,12 +28,12 @@ program
   })
 
 program
-  .command('test')
-  .description('Run some test code and display logs')
-  .action(async function () {
+  .command('seed <nbDays> <nbJobsPerDay>')
+  .description('Seed the job table')
+  .action(async function (nbDays, nbJobsPerDay) {
     const configTest = require('./../tests/sqliteTestConfig.js')
     const models = await getModels(configTest, '')
-    await generateJobs(models)
+    await generateJobs(models, nbDays, nbJobsPerDay)
     console.log('Seeding Done')
   })
 

@@ -1,5 +1,4 @@
-import Job from '../models/job'
-import { addDays } from 'date-fns'
+import { addDays, addHours } from 'date-fns'
 
 // FUNCTIONS
 function getRandomInt(min: number, max: number) {
@@ -17,8 +16,20 @@ function setUpDate(startDate: Date, i: number) {
   return currentDate
 }
 
-export async function generateJobs(models: any) {
-  const status = ['success', 'failed', 'cancelled', 'queued']
+export async function generateJobs(
+  models: any,
+  nbDays: number,
+  nbJobsPerDay: number
+) {
+  const status = [
+    'successful',
+    'failed',
+    'successful',
+    'successful',
+    'cancelled',
+    'queued',
+    'successful',
+  ]
 
   let fakeJobs = []
   let jobID = 0
@@ -26,15 +37,12 @@ export async function generateJobs(models: any) {
   const startDate = new Date()
   startDate.setDate(startDate.getDate() - 370)
 
-  await models.job.truncate()
-  // 371 days
-  for (let i = 0; i < 10; i++) {
+  await models.job.destroy({ where: {}, force: true })
+  for (let i = 0; i < nbDays; i++) {
     const currentDate = setUpDate(startDate, i)
-    // 10000 jobs
-    const numberOfJobs = getRandomInt(0, 10)
 
-    for (let i = 0; i < numberOfJobs; i++) {
-      const randomStatus = status[getRandomInt(0, 3)]
+    for (let i = 0; i < nbJobsPerDay; i++) {
+      const randomStatus = status[getRandomInt(0, 6)]
 
       fakeJobs.push({
         id: jobID,
@@ -45,13 +53,14 @@ export async function generateJobs(models: any) {
         startedAt: currentDate,
         endedAt:
           randomStatus === 'failed' || randomStatus === 'successful'
-            ? currentDate.setUTCHours(2)
+            ? addHours(currentDate, 1)
             : currentDate,
         workerId: '0ab7285e-29e1-474c-889a-22891f92ab44',
         isUpdateAlreadyCalledWhileCancelRequested: false,
         isHighFrequency: false,
         isRecoverable: false,
       })
+      jobID++
     }
   }
 
