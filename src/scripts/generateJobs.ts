@@ -35,7 +35,7 @@ export async function generateJobs(
   let jobID = 0
 
   const startDate = new Date()
-  startDate.setDate(startDate.getDate() - 370)
+  startDate.setDate(startDate.getDate() - nbDays)
 
   await models.job.destroy({ where: {}, force: true })
   for (let i = 0; i < nbDays; i++) {
