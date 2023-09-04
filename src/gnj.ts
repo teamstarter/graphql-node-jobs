@@ -3,6 +3,7 @@
 import program from 'commander'
 import migrate from './migrate'
 import getModels from './models'
+import { generateJobs } from './scripts/generateJobs'
 
 program
   .command('migrate <configPath>')
@@ -24,6 +25,16 @@ program
     const models = await getModels(config, options ? options.dbhash : null)
     await migrate(models)
     await models.sequelize.close()
+  })
+
+program
+  .command('test')
+  .description('Run some test code and display logs')
+  .action(async function () {
+    const configTest = require('./../tests/sqliteTestConfig.js')
+    const models = await getModels(configTest, '')
+    await generateJobs(models)
+    console.log('Seeding Done')
   })
 
 program.command('help', 'Display the help')

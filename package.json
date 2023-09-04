@@ -60,7 +60,7 @@
     "react": "^18.2.0",
     "sequelize": "^6.3.5",
     "spdy": "^4.0.1",
-    "sqlite3": "^4.1.1",
+    "sqlite3": "^5.1.6",
     "standard-version": "^7.0.1",
     "supertest": "^6.2.2",
     "typescript": "^4.8.4",

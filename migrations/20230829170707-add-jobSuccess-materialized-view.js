@@ -2,7 +2,7 @@ const sequelize = require('sequelize')
 
 module.exports = {
   up: async function (queryInterface, Sequelize) {
-    sequelize.queryInterface.query(`
+    queryInterface.sequelize.query(`
 	CREATE MATERIALIZED VIEW IF NOT EXISTS "jobSuccess" as
 	SELECT
     	TO_CHAR(DATE_TRUNC('day', j."createdAt"), 'DD/MM/YY') AS "day",
