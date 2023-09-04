@@ -28,11 +28,19 @@ program
   })
 
 program
-  .command('seed <nbDays> <nbJobsPerDay>')
+  .command('seed <configPath> <nbDays> <nbJobsPerDay>')
   .description('Seed the job table')
-  .action(async function (nbDays, nbJobsPerDay) {
-    const configTest = require('./../tests/sqliteTestConfig.js')
-    const models = await getModels(configTest, '')
+  .action(async function (configPath, nbDays, nbJobsPerDay) {
+    if (process.env.NODE_ENV !== 'development') {
+      throw new Error('This command is only available in development mode')
+    }
+    let config = null
+    try {
+      config = require(configPath)
+    } catch (e: any) {
+      throw new Error('Could not load the given config.' + e.message)
+    }
+    const models = await getModels(config, '')
     await generateJobs(models, nbDays, nbJobsPerDay)
     console.log('Seeding Done')
   })
