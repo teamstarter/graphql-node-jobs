@@ -42,6 +42,7 @@ program
     }
     const models = await getModels(config, '')
     await generateJobs(models, nbDays, nbJobsPerDay)
+    await models.sequelize.close()
     console.log('Seeding Done')
   })
 
