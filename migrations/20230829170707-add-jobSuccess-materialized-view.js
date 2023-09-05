@@ -5,7 +5,7 @@ module.exports = {
     queryInterface.sequelize.query(`
 	CREATE MATERIALIZED VIEW IF NOT EXISTS "jobSuccess" as
 	SELECT
-    	TO_CHAR(DATE_TRUNC('day', j."createdAt"), 'DD/MM/YY') AS "day",
+    	TO_CHAR(DATE_TRUNC('day', j."createdAt"), 'YYYY/MM/DD') AS "day",
     	ROUND(
         	(SUM(CASE WHEN j."status" = 'successful' THEN 1 ELSE 0 END) * 100.0) /
         	NULLIF(SUM(CASE WHEN j."status" IN ('successful', 'failed') THEN 1 ELSE 0 END), 0)
