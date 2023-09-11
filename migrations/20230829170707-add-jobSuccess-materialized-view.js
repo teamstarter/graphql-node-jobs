@@ -1,5 +1,3 @@
-const sequelize = require('sequelize')
-
 module.exports = {
   up: async function (queryInterface, Sequelize) {
     queryInterface.sequelize.query(`
