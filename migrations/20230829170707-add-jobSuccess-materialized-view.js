@@ -4,10 +4,10 @@ module.exports = {
 	CREATE MATERIALIZED VIEW IF NOT EXISTS "jobStatsByDay" as
 	SELECT
 		TO_CHAR(DATE_TRUNC('day', j."createdAt"), 'YYYY/MM/DD') AS "day",
-		ROUND(
+		COALESCE(ROUND(
 			(SUM(CASE WHEN j."status" = 'successful' THEN 1 ELSE 0 END) * 100.0) /
 			NULLIF(SUM(CASE WHEN j."status" IN ('successful', 'failed') THEN 1 ELSE 0 END), 0)
-		)::INTEGER AS "successRating",
+		)::INTEGER, 1000) AS "successRating",
 		SUM(CASE WHEN j."status" = 'successful' THEN 1 ELSE 0 END) AS "successfulJobs",
 		SUM(CASE WHEN j."status" = 'failed' THEN 1 ELSE 0 END) AS "failedJobs",
 		COUNT(j."status") AS "totalJobs"
