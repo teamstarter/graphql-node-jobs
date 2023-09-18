@@ -31,8 +31,8 @@ export default function RetryJob(
         throw new Error('The job does not exist.')
       }
 
-      if (job.status !== 'failed' || job.status !== 'cancelled') {
-        throw new Error('The job must be failed.')
+      if (job.status !== 'failed' && job.status !== 'cancelled') {
+        throw new Error('The job must be failed or cancelled.')
       }
 
       // Attributes related to the run of a job should not be passed.
