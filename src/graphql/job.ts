@@ -4,6 +4,7 @@ import {
   InAndOutTypes,
 } from 'graphql-sequelize-generator/types'
 import debounce from 'debounce'
+import { PubSub } from 'graphql-subscriptions'
 
 import { Job } from '../types'
 import putNextStepJobsInTheQueued from './utils/putNextStepJobsInTheQueued'
@@ -45,6 +46,7 @@ function getInstanceOfDebounceBatch(batchId: number) {
 export default function JobConfiguration(
   graphqlTypes: InAndOutTypes,
   models: SequelizeModels,
+  pubSubInstance: PubSub | null = null,
   onFail?: (job: Job) => Promise<any>
 ): ModelDeclarationType {
   return {
@@ -54,7 +56,7 @@ export default function JobConfiguration(
     additionalMutations: {
       acquireJob: acquireJob(graphqlTypes, models),
       recover: recoverJob(graphqlTypes, models),
-      retryJob: retryJob(graphqlTypes, models),
+      retryJob: retryJob(graphqlTypes, models, pubSubInstance),
     },
     list: {
       before: (findOptions) => {

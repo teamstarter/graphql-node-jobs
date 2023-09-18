@@ -42,8 +42,10 @@ export default async function getApolloServer(
     }
   }
 
+  const pubSub = gsgParams.pubSubInstance
+
   const graphqlSchemaDeclaration = {
-    job: job(types, models, onJobFail),
+    job: job(types, models, pubSub, onJobFail),
     batch: batch(types, models),
     pipeline: pipeline(types, models),
     pipelineStep: pipelineStep(types, models),

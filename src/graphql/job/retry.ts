@@ -4,6 +4,7 @@ import {
   InAndOutTypes,
   SequelizeModels,
 } from 'graphql-sequelize-generator/types'
+import { PubSub } from 'graphql-subscriptions'
 
 const status = [
   'planned',
@@ -16,7 +17,8 @@ const status = [
 
 export default function RetryJob(
   graphqlTypes: InAndOutTypes,
-  models: SequelizeModels
+  models: SequelizeModels,
+  pubSubInstance: PubSub | null = null
 ): CustomMutationConfiguration {
   return {
     type: graphqlTypes.outputTypes.job,
@@ -53,7 +55,7 @@ export default function RetryJob(
       const oldJobAttributes = Object.keys(job.dataValues).reduce(
         (acc: any, attribute: any) => {
           if (!attributesToDelete.includes(attribute)) {
-            if (attribute === 'output') {
+            if (attribute === 'output' && job.status !== 'cancelled') {
               // We do not keep errors raised by a worker.
               if (job.dataValues[attribute].error) {
                 const { otherAttributes, ...error } = job.dataValues[attribute]
@@ -75,6 +77,12 @@ export default function RetryJob(
       }
 
       const newJob = await models.job.create(attributes)
+
+      if (pubSubInstance) {
+        pubSubInstance.publish(`jobCreated`, {
+          [`jobCreated`]: newJob.get(),
+        })
+      }
 
       return newJob
     },
