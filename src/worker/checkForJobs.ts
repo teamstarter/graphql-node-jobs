@@ -6,15 +6,22 @@ import gql from 'graphql-tag'
 
 import updateProcessingInfo from './updateProcessingInfo'
 import updateJobQuery from './updateJobQuery'
-import { CancelRequestedError } from '../graphql/job'
 
 const debug = _debug('graphql-node-jobs')
 
 const loopTime = 1000
 
 const acquireJobQuery = gql`
-  mutation acquireJob($typeList: [String!]!, $workerId: String) {
-    job: acquireJob(typeList: $typeList, workerId: $workerId) {
+  mutation acquireJob(
+    $typeList: [String!]!
+    $workerId: String
+    $workerType: String
+  ) {
+    job: acquireJob(
+      typeList: $typeList
+      workerId: $workerId
+      workerType: $workerType
+    ) {
       id
       type
       name
@@ -57,10 +64,25 @@ export default async function checkForJobs(args: {
   } = args
 
   console.log(workerId)
+  console.log(workerType)
+
+  client.subscribe({
+    query: gql`
+      subscription {
+        job: jobUpdate {
+          id
+          type
+          name
+          input
+          output
+        }
+      }
+    `,
+  })
 
   const { data } = await client.mutate({
     mutation: acquireJobQuery,
-    variables: { typeList, workerId },
+    variables: { typeList, workerId, workerType },
   })
 
   const { job } = data

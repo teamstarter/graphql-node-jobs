@@ -173,7 +173,7 @@ export default function JobConfiguration(
               },
             })
             const allJobsAreSuccessful = jobs.every(
-              (job) => job.status === 'successful'
+              (job: any) => job.status === 'successful'
             )
 
             if (allJobsAreSuccessful) {

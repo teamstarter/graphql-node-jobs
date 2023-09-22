@@ -50,7 +50,7 @@ export default async function getApolloServer(
     pipeline: pipeline(types, models),
     pipelineStep: pipelineStep(types, models),
     jobHoldType: jobHoldType(types, models),
-    workerMonitoring: workerMonitoring(types, models),
+    workerMonitoring: workerMonitoring(types, models, pubSub),
   }
 
   return generateApolloServer({

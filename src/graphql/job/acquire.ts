@@ -47,11 +47,12 @@ export default function AcquireJobDefinition(
         ),
       },
       workerId: { type: GraphQLString },
+      workerType: { type: GraphQLString },
     },
     resolve: async (source, args, context) => {
       const transaction = await models.sequelize.transaction()
       const allJobHoldType = await models.jobHoldType.findAll({ transaction })
-      const heldTypes = allJobHoldType.map((heldType) => heldType.type)
+      const heldTypes = allJobHoldType.map((heldType: any) => heldType.type)
 
       if (args.workerId) {
         const debounceWorker = getInstanceOfDebounceWorker(args.workerId)
@@ -67,6 +68,7 @@ export default function AcquireJobDefinition(
           } else {
             await models.workerMonitoring.create({
               workerId: args.workerId,
+              workerType: args.workerType,
               lastCalledAt: new Date(),
             })
           }

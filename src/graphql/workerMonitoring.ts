@@ -3,10 +3,13 @@ import {
   ModelDeclarationType,
   SequelizeModels,
 } from 'graphql-sequelize-generator/types'
+import { pinged } from './workerMonitoring/pinged'
+import { ponged } from './workerMonitoring/ponged'
 
 export default function WorkerMonitoringConfiguration(
   types: InAndOutTypes,
-  models: SequelizeModels
+  models: SequelizeModels,
+  pubSubInstance: any
 ): ModelDeclarationType {
   return {
     model: models.workerMonitoring,
@@ -15,6 +18,10 @@ export default function WorkerMonitoringConfiguration(
       before: (findOptions) => {
         return findOptions
       },
+    },
+    additionalSubscriptions: {
+      pinged: pinged(pubSubInstance),
+      ponged: ponged(pubSubInstance),
     },
   }
 }
