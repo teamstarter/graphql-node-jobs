@@ -32,27 +32,31 @@ export default async function checkForJobs(args: {
   client: ApolloClient<any>
   typeList: Array<String>
   workerId?: string
+  workerType: string
   looping: true
   loopTime?: number
   isCancelledOnCancelRequest?: boolean
 }): Promise<any> {
+  if (!args.typeList || args.typeList.length === 0) {
+    throw new Error('Please provide a typeList property in the configuration.')
+  }
+
+  if (!args.workerId) {
+    args.workerId = uuidv4()
+  }
+
   let {
     processingFunction,
     client,
     typeList,
     workerId = undefined,
+    workerType,
     looping = true,
     loopTime = 1000,
     isCancelledOnCancelRequest = false,
   } = args
 
-  if (!typeList || typeList.length === 0) {
-    throw new Error('Please provide a typeList property in the configuration.')
-  }
-
-  if (!workerId) {
-    workerId = uuidv4()
-  }
+  console.log(workerId)
 
   const { data } = await client.mutate({
     mutation: acquireJobQuery,

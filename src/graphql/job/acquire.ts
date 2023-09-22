@@ -53,6 +53,26 @@ export default function AcquireJobDefinition(
       const allJobHoldType = await models.jobHoldType.findAll({ transaction })
       const heldTypes = allJobHoldType.map((heldType) => heldType.type)
 
+      if (args.workerId) {
+        const debounceWorker = getInstanceOfDebounceWorker(args.workerId)
+        await debounceWorker(async () => {
+          const workerMonitoring = await models.workerMonitoring.findOne({
+            where: { workerId: args.workerId },
+          })
+
+          if (workerMonitoring) {
+            await workerMonitoring.update({
+              lastCalledAt: new Date(),
+            })
+          } else {
+            await models.workerMonitoring.create({
+              workerId: args.workerId,
+              lastCalledAt: new Date(),
+            })
+          }
+        })
+      }
+
       if (heldTypes.includes('all')) {
         return null
       }
@@ -96,26 +116,6 @@ export default function AcquireJobDefinition(
       )
 
       await transaction.commit()
-
-      if (args.workerId) {
-        const debounceWorker = getInstanceOfDebounceWorker(args.workerId)
-        await debounceWorker(async () => {
-          const workerMonitoring = await models.workerMonitoring.findOne({
-            where: { workerId: args.workerId },
-          })
-
-          if (workerMonitoring) {
-            await workerMonitoring.update({
-              lastCalledAt: new Date(),
-            })
-          } else {
-            await models.workerMonitoring.create({
-              workerId: args.workerId,
-              lastCalledAt: new Date(),
-            })
-          }
-        })
-      }
 
       return job
     },
