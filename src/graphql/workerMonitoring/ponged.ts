@@ -14,7 +14,7 @@ export function ponged(
 ): CustomSubscriptionConfiguration {
   return {
     type: pongedType,
-    description: 'Pong the server.',
+    description: 'Ponged the server.',
     args: {},
     subscribe: () => pubSubInstance.asyncIterator('Ponged'),
   }

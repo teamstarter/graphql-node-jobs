@@ -14,7 +14,7 @@ export function pinged(
 ): CustomSubscriptionConfiguration {
   return {
     type: pingedType,
-    description: 'Ping the server.',
+    description: 'Pinged the server.',
     args: {},
     subscribe: () => pubSubInstance.asyncIterator('Pinged'),
   }
