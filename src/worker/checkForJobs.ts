@@ -3,6 +3,7 @@ import uuidv4 from 'uuid'
 import _debug from 'debug'
 import { ApolloClient } from '@apollo/client'
 import gql from 'graphql-tag'
+import { parentPort } from 'worker_threads'
 
 import updateProcessingInfo from './updateProcessingInfo'
 import updateJobQuery from './updateJobQuery'
@@ -63,9 +64,6 @@ export default async function checkForJobs(args: {
     isCancelledOnCancelRequest = false,
   } = args
 
-  console.log(workerId)
-  console.log(workerType)
-
   client.subscribe({
     query: gql`
       subscription {
@@ -96,6 +94,7 @@ export default async function checkForJobs(args: {
     }
   }
 
+  parentPort?.postMessage({ status: 'PROCESSING' })
   debug('Reiceived a new job', job)
   let output = null
   try {
@@ -164,6 +163,7 @@ export default async function checkForJobs(args: {
       },
     })
 
+    parentPort?.postMessage({ status: 'AVAILABLE' })
     if (looping) {
       return checkForJobs(args)
     }

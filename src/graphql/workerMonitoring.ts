@@ -7,9 +7,10 @@ import { pinged } from './workerMonitoring/pinged'
 import { ponged } from './workerMonitoring/ponged'
 import { ping } from './workerMonitoring/ping'
 import { pong } from './workerMonitoring/pong'
+import { workerMonitoringUpdated } from './workerMonitoring/workerMonitoringUpdated'
+import { workerMonitorUpdate } from './workerMonitoring/workerMonitorUpdate'
 
-export default function WorkerMonitoringConfiguration(
-  types: InAndOutTypes,
+export function workerMonitoring(
   models: SequelizeModels,
   pubSubInstance: any
 ): ModelDeclarationType {
@@ -24,10 +25,12 @@ export default function WorkerMonitoringConfiguration(
     additionalMutations: {
       ping: ping(pubSubInstance),
       pong: pong(pubSubInstance, models),
+      workerMonitoringUpdate: workerMonitorUpdate(pubSubInstance),
     },
     additionalSubscriptions: {
       pinged: pinged(pubSubInstance),
       ponged: ponged(pubSubInstance),
+      workerMonitoringUpdated: workerMonitoringUpdated(pubSubInstance),
     },
   }
 }

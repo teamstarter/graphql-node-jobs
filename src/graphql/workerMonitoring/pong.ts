@@ -22,7 +22,6 @@ export function pong(
     args: {},
     resolve: async () => {
       try {
-        await models.workerMonitoring.create({ status: 'pong' })
         pubSubInstance.publish('Ponged', { success: true })
         return { success: true }
       } catch (error) {
