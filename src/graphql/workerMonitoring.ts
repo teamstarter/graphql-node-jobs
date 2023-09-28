@@ -3,12 +3,12 @@ import {
   ModelDeclarationType,
   SequelizeModels,
 } from 'graphql-sequelize-generator/types'
-import { pinged } from './workerMonitoring/pinged'
-import { ponged } from './workerMonitoring/ponged'
-import { ping } from './workerMonitoring/ping'
-import { pong } from './workerMonitoring/pong'
-import { workerMonitorUpdated } from './workerMonitoring/workerMonitoringUpdated'
-import { workerMonitorUpdate } from './workerMonitoring/workerMonitorUpdate'
+import { pinged } from './workerMonitoring/subscriptions/pinged'
+import { ponged } from './workerMonitoring/subscriptions/ponged'
+import { ping } from './workerMonitoring/mutations/ping'
+import { pong } from './workerMonitoring/mutations/pong'
+import { workerMonitorUpdated } from './workerMonitoring/subscriptions/workerMonitoringUpdated'
+import { workerMonitorUpdate } from './workerMonitoring/mutations/workerMonitorUpdate'
 
 export function workerMonitoring(
   models: SequelizeModels,
@@ -24,8 +24,8 @@ export function workerMonitoring(
     },
     additionalMutations: {
       ping: ping(pubSubInstance),
-      pong: pong(pubSubInstance, models),
-      workerMonitoringUpdate: workerMonitorUpdate(pubSubInstance),
+      pong: pong(pubSubInstance),
+      workerMonitoringUpdate: workerMonitorUpdate(pubSubInstance, models),
     },
     additionalSubscriptions: {
       pinged: pinged(pubSubInstance),

@@ -17,8 +17,8 @@ export default function WorkerMonitoring(sequelize: any) {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      lastCalledAt: {
-        type: DataTypes.DATE,
+      workerStatus: {
+        type: DataTypes.STRING,
         allowNull: false,
       },
       createdAt: {

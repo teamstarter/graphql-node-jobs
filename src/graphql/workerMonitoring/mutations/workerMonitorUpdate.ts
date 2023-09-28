@@ -14,6 +14,7 @@ import { PubSub } from 'graphql-subscriptions'
 export const workerInfoInputType = new GraphQLInputObjectType({
   name: 'workerInfoInput',
   fields: {
+    workerId: { type: GraphQLString },
     workerType: { type: GraphQLString },
     workerStatus: { type: GraphQLString },
   },
@@ -40,7 +41,13 @@ export function workerMonitorUpdate(
       try {
         const workers = args.workers
 
-        models
+        args.workers.map(async (worker: any) => {
+          await models.workerMonitoring.create({
+            workerId: worker.workerId,
+            workerType: worker.workerType,
+            workerStatus: worker.workerStatus,
+          })
+        })
         pubSubInstance.publish('WORKER_STATUS_CHANGED', {
           workerMonitoringUpdated: workers,
         })
