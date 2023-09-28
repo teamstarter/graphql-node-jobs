@@ -12,10 +12,7 @@ const pongType = new GraphQLObjectType({
   },
 })
 
-export function pong(
-  pubSubInstance: PubSub,
-  models: SequelizeModels
-): CustomMutationConfiguration {
+export function pong(pubSubInstance: PubSub): CustomMutationConfiguration {
   return {
     type: pongType,
     description: 'Pong the server.',

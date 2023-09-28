@@ -1,4 +1,7 @@
-import { CustomMutationConfiguration } from 'graphql-sequelize-generator/types'
+import {
+  CustomMutationConfiguration,
+  SequelizeModels,
+} from 'graphql-sequelize-generator/types'
 import {
   GraphQLBoolean,
   GraphQLObjectType,
@@ -24,7 +27,8 @@ const workerMonitorUpdateType = new GraphQLObjectType({
 })
 
 export function workerMonitorUpdate(
-  pubSubInstance: PubSub
+  pubSubInstance: PubSub,
+  models: SequelizeModels
 ): CustomMutationConfiguration {
   return {
     type: workerMonitorUpdateType,
@@ -36,6 +40,7 @@ export function workerMonitorUpdate(
       try {
         const workers = args.workers
 
+        models
         pubSubInstance.publish('WORKER_STATUS_CHANGED', {
           workerMonitoringUpdated: workers,
         })
