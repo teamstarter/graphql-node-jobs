@@ -1,6 +1,20 @@
 import { CustomMutationConfiguration } from 'graphql-sequelize-generator/types'
-import { GraphQLBoolean, GraphQLObjectType } from 'graphql'
+import {
+  GraphQLBoolean,
+  GraphQLObjectType,
+  GraphQLList,
+  GraphQLInputObjectType,
+  GraphQLString,
+} from 'graphql'
 import { PubSub } from 'graphql-subscriptions'
+
+export const workerInfoInputType = new GraphQLInputObjectType({
+  name: 'workerInfoInput',
+  fields: {
+    workerType: { type: GraphQLString },
+    workerStatus: { type: GraphQLString },
+  },
+})
 
 const workerMonitorUpdateType = new GraphQLObjectType({
   name: 'workerMonitorUpdate',
@@ -15,14 +29,15 @@ export function workerMonitorUpdate(
   return {
     type: workerMonitorUpdateType,
     description: 'Update workers status',
-    args: {},
-    resolve: async () => {
+    args: {
+      workers: { type: new GraphQLList(workerInfoInputType) },
+    },
+    resolve: async (_parent, args) => {
       try {
+        const workers = args.workers
+
         pubSubInstance.publish('WORKER_STATUS_CHANGED', {
-          workerMonitoringUpdated: {
-            workerType: 'api-heavy-worker',
-            workerStatus: 'AVAILABLE',
-          },
+          workerMonitoringUpdated: workers,
         })
         return { success: true }
       } catch (error) {

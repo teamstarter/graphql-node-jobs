@@ -1,8 +1,8 @@
 import { CustomSubscriptionConfiguration } from 'graphql-sequelize-generator/types'
-import { GraphQLObjectType, GraphQLString } from 'graphql'
+import { GraphQLObjectType, GraphQLString, GraphQLList } from 'graphql'
 import { PubSub } from 'graphql-subscriptions'
 
-const workerInfoType = new GraphQLObjectType({
+export const workerInfoType = new GraphQLObjectType({
   name: 'workerInfo',
   fields: {
     workerType: { type: GraphQLString },
@@ -10,12 +10,12 @@ const workerInfoType = new GraphQLObjectType({
   },
 })
 
-export function workerMonitoringUpdated(
+export function workerMonitorUpdated(
   pubSubInstance: PubSub
 ): CustomSubscriptionConfiguration {
   return {
-    type: workerInfoType,
-    description: 'Worker monitoring updated.',
+    type: new GraphQLList(workerInfoType),
+    description: 'Worker monitor updated.',
     args: {},
     subscribe: async () =>
       pubSubInstance.asyncIterator('WORKER_STATUS_CHANGED'),

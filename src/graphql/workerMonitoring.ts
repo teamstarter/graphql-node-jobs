@@ -7,7 +7,7 @@ import { pinged } from './workerMonitoring/pinged'
 import { ponged } from './workerMonitoring/ponged'
 import { ping } from './workerMonitoring/ping'
 import { pong } from './workerMonitoring/pong'
-import { workerMonitoringUpdated } from './workerMonitoring/workerMonitoringUpdated'
+import { workerMonitorUpdated } from './workerMonitoring/workerMonitoringUpdated'
 import { workerMonitorUpdate } from './workerMonitoring/workerMonitorUpdate'
 
 export function workerMonitoring(
@@ -30,7 +30,7 @@ export function workerMonitoring(
     additionalSubscriptions: {
       pinged: pinged(pubSubInstance),
       ponged: ponged(pubSubInstance),
-      workerMonitoringUpdated: workerMonitoringUpdated(pubSubInstance),
+      workerMonitoringUpdated: workerMonitorUpdated(pubSubInstance),
     },
   }
 }
