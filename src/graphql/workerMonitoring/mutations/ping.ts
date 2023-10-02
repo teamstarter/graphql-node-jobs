@@ -1,17 +1,10 @@
 import { CustomMutationConfiguration } from 'graphql-sequelize-generator/types'
-import { GraphQLBoolean, GraphQLObjectType } from 'graphql'
 import { PubSub } from 'graphql-subscriptions'
-
-const pingType = new GraphQLObjectType({
-  name: 'ping',
-  fields: {
-    success: { type: GraphQLBoolean },
-  },
-})
+import { successType } from '../type'
 
 export function ping(pubSubInstance: PubSub): CustomMutationConfiguration {
   return {
-    type: pingType,
+    type: successType,
     description: 'Ping the server.',
     args: {},
     resolve: async () => {

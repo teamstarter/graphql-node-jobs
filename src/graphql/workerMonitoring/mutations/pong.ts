@@ -1,25 +1,20 @@
-import {
-  CustomMutationConfiguration,
-  SequelizeModels,
-} from 'graphql-sequelize-generator/types'
-import { GraphQLBoolean, GraphQLObjectType } from 'graphql'
+import { CustomMutationConfiguration } from 'graphql-sequelize-generator/types'
 import { PubSub } from 'graphql-subscriptions'
-
-const pongType = new GraphQLObjectType({
-  name: 'pong',
-  fields: {
-    success: { type: GraphQLBoolean },
-  },
-})
+import { GraphQLList } from 'graphql'
+import { successType, workerInfoInputType } from '../type'
 
 export function pong(pubSubInstance: PubSub): CustomMutationConfiguration {
   return {
-    type: pongType,
+    type: successType,
     description: 'Pong the server.',
-    args: {},
-    resolve: async () => {
+    args: {
+      workerInfoInput: { type: new GraphQLList(workerInfoInputType) },
+    },
+    resolve: async (_parent, args) => {
       try {
-        pubSubInstance.publish('Ponged', { success: true })
+        pubSubInstance.publish('Ponged', {
+          ponged: args.workerInfoInput,
+        })
         return { success: true }
       } catch (error) {
         console.error('Une erreur est survenue lors du ping:', error)

@@ -1,19 +1,13 @@
 import { CustomSubscriptionConfiguration } from 'graphql-sequelize-generator/types'
-import { GraphQLBoolean, GraphQLObjectType } from 'graphql'
+import { GraphQLList } from 'graphql'
 import { PubSub } from 'graphql-subscriptions'
-
-const pongedType = new GraphQLObjectType({
-  name: 'ponged',
-  fields: {
-    success: { type: GraphQLBoolean },
-  },
-})
+import { workerInfoOutputType } from '../type'
 
 export function ponged(
   pubSubInstance: PubSub
 ): CustomSubscriptionConfiguration {
   return {
-    type: pongedType,
+    type: new GraphQLList(workerInfoOutputType),
     description: 'Ponged the server.',
     args: {},
     subscribe: () => pubSubInstance.asyncIterator('Ponged'),
