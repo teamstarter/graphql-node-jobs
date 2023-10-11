@@ -10,6 +10,7 @@ import batch from './batch'
 import pipeline from './pipeline'
 import pipelineStep from './pipelineStep'
 import jobHoldType from './jobHoldType'
+import { jobSuccessRating } from './jobSuccessRating'
 import { workerMonitoring } from './workerMonitoring'
 
 /**
@@ -51,6 +52,7 @@ export default async function getApolloServer(
     pipelineStep: pipelineStep(types, models),
     jobHoldType: jobHoldType(types, models),
     workerMonitoring: workerMonitoring(models, pubSub),
+    jobSuccessRating: jobSuccessRating(models),
   }
 
   return generateApolloServer({

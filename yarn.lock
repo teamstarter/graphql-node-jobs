@@ -3510,9 +3510,9 @@ graphql-relay@^0.10.0:
   resolved "https://registry.yarnpkg.com/graphql-relay/-/graphql-relay-0.10.0.tgz#3b661432edf1cb414cd4a132cf595350e524db2b"
   integrity sha512-44yBuw2/DLNEiMypbNZBt1yMDbBmyVPVesPywnteGGALiBmdyy1JP8jSg8ClLePg8ZZxk0O4BLhd1a6U/1jDOQ==
 
-"graphql-sequelize-generator@https://github.com/genouf/graphql-sequelize-generator":
-  version "8.1.0"
-  resolved "https://github.com/genouf/graphql-sequelize-generator#403b2f92ae16c868334c89c95159afb72294e78e"
+graphql-sequelize-generator@teamstarter/graphql-sequelize-generator:
+  version "8.3.0"
+  resolved "https://codeload.github.com/teamstarter/graphql-sequelize-generator/tar.gz/a432d8298ea8a944e779dc8d743246667c2586bc"
   dependencies:
     "@apollo/server" "^4.1.1"
     "@graphql-tools/schema" "^9.0.10"
