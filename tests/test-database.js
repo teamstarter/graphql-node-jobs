@@ -23,11 +23,15 @@ var dbConfig = require(path.join(__dirname, '/sqliteTestConfig.js')).test
  */
 
 // Array containing the filenames of the migrations files without extensions, sorted chronologically.
-const migrationFiles = fs
+let migrationFiles = fs
   .readdirSync('./migrations/')
   .sort()
   .map((f) => path.basename(f, '.js'))
-
+if (process.env.NODE_ENV === 'test') {
+  migrationFiles = migrationFiles.filter(
+    (f) => f !== '20230829170707-add-jobSuccessRating-materialized-view'
+  )
+}
 // Array containing the filenames of the seeders files without extensions, sorted chronologically.
 const seederFiles = fs
   .readdirSync('./seeders/')

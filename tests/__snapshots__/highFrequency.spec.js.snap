@@ -12,20 +12,20 @@ Object {
     Object {
       "id": 3,
       "isHighFrequency": false,
-      "name": "Bla b",
+      "name": "Bla c",
       "status": "failed",
     },
     Object {
       "id": 4,
       "isHighFrequency": false,
-      "name": "A job processing",
+      "name": "Bla d",
       "status": "planned",
     },
     Object {
       "id": 5,
       "isHighFrequency": false,
-      "name": "job-unique-4",
-      "status": "planned",
+      "name": "Bla e",
+      "status": "cancelled",
     },
   ],
 }
