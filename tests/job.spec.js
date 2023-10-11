@@ -397,7 +397,7 @@ describe('Test the job endpoint', () => {
 
     expect(responseRetryJob.body.errors).toHaveLength(1)
     expect(responseRetryJob.body.errors[0].message).toBe(
-      'The job must be failed.'
+      'The job must be failed or cancelled.'
     )
   })
 

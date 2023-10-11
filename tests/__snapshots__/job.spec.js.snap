@@ -39,15 +39,15 @@ Object {
       },
       Object {
         "id": 3,
-        "name": "Bla b",
+        "name": "Bla c",
       },
       Object {
         "id": 4,
-        "name": "A job processing",
+        "name": "Bla d",
       },
       Object {
         "id": 5,
-        "name": "job-unique-4",
+        "name": "Bla e",
       },
     ],
   },
@@ -66,20 +66,20 @@ Object {
     Object {
       "id": 3,
       "isHighFrequency": false,
-      "name": "Bla b",
+      "name": "Bla c",
       "status": "failed",
     },
     Object {
       "id": 4,
       "isHighFrequency": false,
-      "name": "A job processing",
+      "name": "Bla d",
       "status": "planned",
     },
     Object {
       "id": 5,
       "isHighFrequency": false,
-      "name": "job-unique-4",
-      "status": "planned",
+      "name": "Bla e",
+      "status": "cancelled",
     },
   ],
 }
@@ -114,9 +114,9 @@ exports[`Test the job endpoint The job can be restarted if it fails 1`] = `
 Object {
   "retryJob": Object {
     "id": 6,
-    "name": "Bla b",
+    "name": "Bla c",
     "status": "queued",
-    "type": "b",
+    "type": "c",
   },
 }
 `;
@@ -159,25 +159,25 @@ Array [
     "__typename": "job",
     "id": 3,
     "input": Object {},
-    "name": "Bla b",
+    "name": "Bla c",
     "output": Object {},
-    "type": "b",
+    "type": "c",
   },
   Object {
     "__typename": "job",
     "id": 4,
     "input": Object {},
-    "name": "A job processing",
+    "name": "Bla d",
     "output": Object {},
-    "type": "b",
+    "type": "d",
   },
   Object {
     "__typename": "job",
     "id": 5,
     "input": Object {},
-    "name": "job-unique-4",
+    "name": "Bla e",
     "output": Object {},
-    "type": "b",
+    "type": "e",
   },
 ]
 `;

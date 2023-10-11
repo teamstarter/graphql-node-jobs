@@ -73,7 +73,7 @@
     "graphql": "^16.6.0",
     "graphql-relay": "^0.10.0",
     "graphql-sequelize": "^9.5.1",
-    "graphql-sequelize-generator": "teamstarter/graphql-sequelize-generator#upgrade-apollo-10-2022",
+    "graphql-sequelize-generator": "teamstarter/graphql-sequelize-generator",
     "sequelize": "^6.3.5"
   },
   "resolutions": {
