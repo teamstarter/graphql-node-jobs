@@ -10,7 +10,8 @@ import batch from './batch'
 import pipeline from './pipeline'
 import pipelineStep from './pipelineStep'
 import jobHoldType from './jobHoldType'
-import workerMonitoring from './workerMonitoring'
+import { jobSuccessRating } from './jobSuccessRating'
+import { workerMonitoring } from './workerMonitoring'
 
 /**
  * @param dbConfig Sequelize database configuration object
@@ -42,13 +43,16 @@ export default async function getApolloServer(
     }
   }
 
+  const pubSub = gsgParams.pubSubInstance
+
   const graphqlSchemaDeclaration = {
-    job: job(types, models, onJobFail),
+    job: job(types, models, pubSub, onJobFail),
     batch: batch(types, models),
     pipeline: pipeline(types, models),
     pipelineStep: pipelineStep(types, models),
     jobHoldType: jobHoldType(types, models),
-    workerMonitoring: workerMonitoring(types, models),
+    workerMonitoring: workerMonitoring(models, pubSub),
+    jobSuccessRating: jobSuccessRating(models),
   }
 
   return generateApolloServer({

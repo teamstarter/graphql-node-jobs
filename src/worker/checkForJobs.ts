@@ -3,18 +3,26 @@ import uuidv4 from 'uuid'
 import _debug from 'debug'
 import { ApolloClient } from '@apollo/client'
 import gql from 'graphql-tag'
+import { parentPort } from 'worker_threads'
 
 import updateProcessingInfo from './updateProcessingInfo'
 import updateJobQuery from './updateJobQuery'
-import { CancelRequestedError } from '../graphql/job'
 
 const debug = _debug('graphql-node-jobs')
 
 const loopTime = 1000
 
 const acquireJobQuery = gql`
-  mutation acquireJob($typeList: [String!]!, $workerId: String) {
-    job: acquireJob(typeList: $typeList, workerId: $workerId) {
+  mutation acquireJob(
+    $typeList: [String!]!
+    $workerId: String
+    $workerType: String
+  ) {
+    job: acquireJob(
+      typeList: $typeList
+      workerId: $workerId
+      workerType: $workerType
+    ) {
       id
       type
       name
@@ -32,31 +40,47 @@ export default async function checkForJobs(args: {
   client: ApolloClient<any>
   typeList: Array<String>
   workerId?: string
+  workerType: string
   looping: true
   loopTime?: number
   isCancelledOnCancelRequest?: boolean
 }): Promise<any> {
+  if (!args.typeList || args.typeList.length === 0) {
+    throw new Error('Please provide a typeList property in the configuration.')
+  }
+
+  if (!args.workerId) {
+    args.workerId = uuidv4()
+  }
+
   let {
     processingFunction,
     client,
     typeList,
     workerId = undefined,
+    workerType,
     looping = true,
     loopTime = 1000,
     isCancelledOnCancelRequest = false,
   } = args
 
-  if (!typeList || typeList.length === 0) {
-    throw new Error('Please provide a typeList property in the configuration.')
-  }
-
-  if (!workerId) {
-    workerId = uuidv4()
-  }
+  client.subscribe({
+    query: gql`
+      subscription {
+        job: jobUpdate {
+          id
+          type
+          name
+          input
+          output
+        }
+      }
+    `,
+  })
 
   const { data } = await client.mutate({
     mutation: acquireJobQuery,
-    variables: { typeList, workerId },
+    variables: { typeList, workerId, workerType },
   })
 
   const { job } = data
@@ -70,6 +94,7 @@ export default async function checkForJobs(args: {
     }
   }
 
+  parentPort?.postMessage({ status: 'PROCESSING' })
   debug('Reiceived a new job', job)
   let output = null
   try {
@@ -138,6 +163,7 @@ export default async function checkForJobs(args: {
       },
     })
 
+    parentPort?.postMessage({ status: 'AVAILABLE' })
     if (looping) {
       return checkForJobs(args)
     }

@@ -160,12 +160,23 @@ describe('Test the onRetry mutation', () => {
     const models = await getModels()
     await closeEverything(server, models, done)
   })
-  it('The job can be restarted if it fails', async () => {
-    const responseRetryJob = await request(server)
+  it('The job can be restarted if it fails or it is cancelled', async () => {
+    let responseRetryJob = await request(server)
       .post('/graphql')
       .send(
         retryJob({
           id: 3,
+        })
+      )
+
+    expect(responseRetryJob.body.errors).toBeUndefined()
+    expect(responseRetryJob.body.data).toMatchSnapshot()
+
+    responseRetryJob = await request(server)
+      .post('/graphql')
+      .send(
+        retryJob({
+          id: 5,
         })
       )
 
@@ -184,7 +195,7 @@ describe('Test the onRetry mutation', () => {
 
     expect(responseRetryJob.body.errors).toHaveLength(1)
     expect(responseRetryJob.body.errors[0].message).toBe(
-      'The job must be failed.'
+      'The job must be failed or cancelled.'
     )
   })
 
