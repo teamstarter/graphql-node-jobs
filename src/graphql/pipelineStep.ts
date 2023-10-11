@@ -2,7 +2,7 @@ import {
   InAndOutTypes,
   ModelDeclarationType,
   SequelizeModels,
-} from 'graphql-sequelize-generator/types'
+} from '@teamstarter/graphql-sequelize-generator/types'
 
 export default function PipelineStepConfiguration(
   types: InAndOutTypes,

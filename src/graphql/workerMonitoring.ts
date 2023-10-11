@@ -2,7 +2,7 @@ import {
   InAndOutTypes,
   ModelDeclarationType,
   SequelizeModels,
-} from 'graphql-sequelize-generator/types'
+} from '@teamstarter/graphql-sequelize-generator/types'
 import { pinged } from './workerMonitoring/subscriptions/pinged'
 import { ponged } from './workerMonitoring/subscriptions/ponged'
 import { ping } from './workerMonitoring/mutations/ping'

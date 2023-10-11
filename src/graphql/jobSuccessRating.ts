@@ -1,4 +1,4 @@
-import { SequelizeModels } from 'graphql-sequelize-generator/types'
+import { SequelizeModels } from '@teamstarter/graphql-sequelize-generator/types'
 
 export function jobSuccessRating(models: SequelizeModels) {
   return {

@@ -2,7 +2,7 @@ import {
   InAndOutTypes,
   ModelDeclarationType,
   SequelizeModels,
-} from 'graphql-sequelize-generator/types'
+} from '@teamstarter/graphql-sequelize-generator/types'
 
 import startPipeline from './pipeline/start'
 

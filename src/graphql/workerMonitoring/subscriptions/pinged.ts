@@ -1,4 +1,4 @@
-import { CustomSubscriptionConfiguration } from 'graphql-sequelize-generator/types'
+import { CustomSubscriptionConfiguration } from '@teamstarter/graphql-sequelize-generator/types'
 import { PubSub } from 'graphql-subscriptions'
 import { successType } from '../type'
 

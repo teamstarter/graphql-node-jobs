@@ -1,7 +1,7 @@
 import path from 'path'
 import fs from 'fs'
 import Umzug from 'umzug'
-import { SequelizeModels } from 'graphql-sequelize-generator/types'
+import { SequelizeModels } from '@teamstarter/graphql-sequelize-generator/types'
 
 /**
  * This file handles an im-memory SQLite database used for test purposes.

@@ -2,7 +2,7 @@ import {
   ModelDeclarationType,
   SequelizeModels,
   InAndOutTypes,
-} from 'graphql-sequelize-generator/types'
+} from '@teamstarter/graphql-sequelize-generator/types'
 import debounce from 'debounce'
 import { PubSub } from 'graphql-subscriptions'
 

@@ -2,7 +2,7 @@ import {
   ModelDeclarationType,
   SequelizeModels,
   InAndOutTypes,
-} from 'graphql-sequelize-generator/types'
+} from '@teamstarter/graphql-sequelize-generator/types'
 
 export default function BatchConfiguration(
   graphqlTypes: InAndOutTypes,
