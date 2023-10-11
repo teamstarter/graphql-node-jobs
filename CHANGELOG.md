@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/teamstarter/graphql-node-jobs/compare/v1.1.0...v1.2.0) (2023-10-11)
+
+
+### Features
+
+* **JobSuccessV2:** snapshot updated + double migration removed + test protection ([#81](https://github.com/teamstarter/graphql-node-jobs/issues/81)) ([6bc9bb0](https://github.com/teamstarter/graphql-node-jobs/commit/6bc9bb03f63d048e0a327b31059b5720939e3de3))
+
 ## [1.1.0](https://github.com/teamstarter/graphql-node-jobs/compare/v1.0.0...v1.1.0) (2023-10-11)
 
 
