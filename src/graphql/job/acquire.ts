@@ -5,32 +5,6 @@ import {
   SequelizeModels,
 } from 'graphql-sequelize-generator/types'
 import { Op } from 'sequelize'
-import debounce from 'debounce'
-
-const allInstanceOfDebounceWorker: any = []
-
-function getInstanceOfDebounceWorker(workerId: number) {
-  const instance = allInstanceOfDebounceWorker.filter(
-    (instance: any) => instance.workerId === workerId
-  )
-
-  if (!instance.length) {
-    allInstanceOfDebounceWorker.push({
-      workerId: workerId,
-      debounce: debounce((callback: Function) => callback(), 50),
-    })
-
-    return process.env.NO_ASYNC === 'true'
-      ? async (callback: Function) => callback()
-      : allInstanceOfDebounceWorker.filter(
-          (instance: any) => instance.workerId === workerId
-        )[0].debounce
-  }
-
-  return process.env.NO_ASYNC === 'true'
-    ? async (callback: Function) => callback()
-    : instance[0].debounce
-}
 
 export default function AcquireJobDefinition(
   graphqlTypes: InAndOutTypes,
@@ -47,11 +21,12 @@ export default function AcquireJobDefinition(
         ),
       },
       workerId: { type: GraphQLString },
+      workerType: { type: GraphQLString },
     },
     resolve: async (source, args, context) => {
       const transaction = await models.sequelize.transaction()
       const allJobHoldType = await models.jobHoldType.findAll({ transaction })
-      const heldTypes = allJobHoldType.map((heldType) => heldType.type)
+      const heldTypes = allJobHoldType.map((heldType: any) => heldType.type)
 
       if (heldTypes.includes('all')) {
         return null
@@ -96,26 +71,6 @@ export default function AcquireJobDefinition(
       )
 
       await transaction.commit()
-
-      if (args.workerId) {
-        const debounceWorker = getInstanceOfDebounceWorker(args.workerId)
-        await debounceWorker(async () => {
-          const workerMonitoring = await models.workerMonitoring.findOne({
-            where: { workerId: args.workerId },
-          })
-
-          if (workerMonitoring) {
-            await workerMonitoring.update({
-              lastCalledAt: new Date(),
-            })
-          } else {
-            await models.workerMonitoring.create({
-              workerId: args.workerId,
-              lastCalledAt: new Date(),
-            })
-          }
-        })
-      }
 
       return job
     },

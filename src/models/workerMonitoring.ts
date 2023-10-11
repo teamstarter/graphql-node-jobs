@@ -13,8 +13,12 @@ export default function WorkerMonitoring(sequelize: any) {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      lastCalledAt: {
-        type: DataTypes.DATE,
+      workerType: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      workerStatus: {
+        type: DataTypes.STRING,
         allowNull: false,
       },
       createdAt: {

@@ -1,12 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Test the onRetry mutation The job can be restarted if it fails 1`] = `
+exports[`Test the onRetry mutation The job can be restarted if it fails or it is cancelled 1`] = `
 Object {
   "retryJob": Object {
     "id": 6,
-    "name": "Bla b",
+    "name": "Bla c",
     "status": "queued",
-    "type": "b",
+    "type": "c",
+  },
+}
+`;
+
+exports[`Test the onRetry mutation The job can be restarted if it fails or it is cancelled 2`] = `
+Object {
+  "retryJob": Object {
+    "id": 7,
+    "name": "Bla e",
+    "status": "queued",
+    "type": "e",
   },
 }
 `;
