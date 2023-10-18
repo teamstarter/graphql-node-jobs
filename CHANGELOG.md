@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.1](https://github.com/teamstarter/graphql-node-jobs/compare/v1.3.0...v1.3.1) (2023-10-18)
+
+
+### Bug Fixes
+
+* **wM-Migration:** worker monitoring migration fixed to match older db ([8a11186](https://github.com/teamstarter/graphql-node-jobs/commit/8a111863048f204270c916f4d5c6c2dd06a7193f))
+
 ## [1.3.0](https://github.com/teamstarter/graphql-node-jobs/compare/v1.2.0...v1.3.0) (2023-10-11)
 
 
