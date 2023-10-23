@@ -143,6 +143,7 @@ export default async function checkForJobs(args: {
       })
     }
 
+    parentPort?.postMessage({ status: 'AVAILABLE' })
     if (looping) {
       return checkForJobs(args)
     }
@@ -169,6 +170,7 @@ export default async function checkForJobs(args: {
     }
     return result.data.job
   } catch (err) {
+    parentPort?.postMessage({ status: 'FAILED' })
     debug('Failed to update the success status of the current job.', err)
   }
 }
