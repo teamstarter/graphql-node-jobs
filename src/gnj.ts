@@ -4,6 +4,7 @@ import program from 'commander'
 import migrate from './migrate'
 import getModels from './models'
 import { generateJobs } from './scripts/generateJobs'
+import { generateWorkersLogs } from './scripts/generateWorkersLogs'
 
 program
   .command('migrate <configPath>')
@@ -28,7 +29,7 @@ program
   })
 
 program
-  .command('seed <configPath> <nbDays> <nbJobsPerDay>')
+  .command('seedJobs <configPath> <nbDays> <nbJobsPerDay>')
   .description('Seed the job table')
   .action(async function (configPath, nbDays, nbJobsPerDay) {
     if (process.env.NODE_ENV !== 'development') {
@@ -42,6 +43,25 @@ program
     }
     const models = await getModels(config, '')
     await generateJobs(models, nbDays, nbJobsPerDay)
+    await models.sequelize.close()
+    console.log('Seeding Done')
+  })
+
+program
+  .command('seedWorkerLogs <configPath> <nbHours>')
+  .description('Seed the workerMonitoring table')
+  .action(async function (configPath, nbHours) {
+    if (process.env.NODE_ENV !== 'development') {
+      throw new Error('This command is only available in development mode')
+    }
+    let config = null
+    try {
+      config = require(configPath)
+    } catch (e: any) {
+      throw new Error('Could not load the given config.' + e.message)
+    }
+    const models = await getModels(config, '')
+    await generateWorkersLogs(models, nbHours)
     await models.sequelize.close()
     console.log('Seeding Done')
   })
