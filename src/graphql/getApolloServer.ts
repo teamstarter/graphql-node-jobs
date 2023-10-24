@@ -10,8 +10,9 @@ import batch from './batch'
 import pipeline from './pipeline'
 import pipelineStep from './pipelineStep'
 import jobHoldType from './jobHoldType'
-import { jobSuccessRating } from './jobSuccessRating'
 import { workerMonitoring } from './workerMonitoring'
+import { jobSuccessRating } from './jobSuccessRating'
+import { workerSuccessRating } from './workerSuccessRating'
 
 /**
  * @param dbConfig Sequelize database configuration object
@@ -53,6 +54,7 @@ export default async function getApolloServer(
     jobHoldType: jobHoldType(types, models),
     workerMonitoring: workerMonitoring(models, pubSub),
     jobSuccessRating: jobSuccessRating(models),
+    workerSuccessRating: workerSuccessRating(models),
   }
 
   return generateApolloServer({
