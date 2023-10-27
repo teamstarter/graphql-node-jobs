@@ -15,6 +15,8 @@ type Partial<T> = {
   [P in keyof T]?: T[P]
 }
 
+global.WebSocket = WebSocket as any
+
 export default function getNewClient(
   uri: string,
   wsUri: string,
@@ -25,14 +27,16 @@ export default function getNewClient(
     fetch: fetch as any,
   })
   const cache = new InMemoryCache()
+  let client: ApolloClient<any>
 
   if (typeof wsUri === 'undefined') {
-    return new ApolloClient({
+    client = new ApolloClient({
       ssrMode: true,
       link: httpLink,
       cache,
       ...apolloClientOptions,
     })
+    return client
   }
 
   const wsLink = new GraphQLWsLink(
@@ -57,10 +61,12 @@ export default function getNewClient(
     httpLink
   )
 
-  return new ApolloClient({
+  client = new ApolloClient({
     ssrMode: true,
     link,
     cache,
     ...apolloClientOptions,
   })
+
+  return client
 }
