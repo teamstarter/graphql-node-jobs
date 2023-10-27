@@ -29,7 +29,9 @@ let migrationFiles = fs
   .map((f) => path.basename(f, '.js'))
 if (process.env.NODE_ENV === 'test') {
   migrationFiles = migrationFiles.filter(
-    (f) => f !== '20230829170707-add-jobSuccessRating-materialized-view'
+    (f) =>
+      f !== '20230829170707-add-jobSuccessRating-materialized-view' &&
+      f !== '20231024111522-add-workerSuccessRating-materialized-view'
   )
 }
 // Array containing the filenames of the seeders files without extensions, sorted chronologically.
