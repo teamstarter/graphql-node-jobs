@@ -18,3 +18,7 @@ GNJ \(graphql-node-jobs\) is available as:
 # Manual
 
 Get started with [the online documentation](https://teamstarter.github.io/gnj-documentation/)
+
+# BREAKING CHANGE
+
+-> The workerMonitoring table is deprecated as of version 1.3.0 but will be reintroduced in the next major update.

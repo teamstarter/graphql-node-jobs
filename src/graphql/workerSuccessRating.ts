@@ -1,8 +1,8 @@
 import { SequelizeModels } from '@teamstarter/graphql-sequelize-generator/types'
 
-export function jobSuccessRating(models: SequelizeModels) {
+export function workerSuccessRating(models: SequelizeModels) {
   return {
-    model: models.jobSuccessRating,
+    model: models.workerSuccessRating,
     actions: ['list', 'count'],
   }
 }

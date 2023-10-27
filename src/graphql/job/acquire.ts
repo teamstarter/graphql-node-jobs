@@ -3,7 +3,7 @@ import {
   CustomMutationConfiguration,
   InAndOutTypes,
   SequelizeModels,
-} from 'graphql-sequelize-generator/types'
+} from '@teamstarter/graphql-sequelize-generator/types'
 import { Op } from 'sequelize'
 
 export default function AcquireJobDefinition(

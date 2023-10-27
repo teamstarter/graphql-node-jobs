@@ -2,7 +2,7 @@ import {
   ModelDeclarationType,
   SequelizeModels,
   InAndOutTypes,
-} from 'graphql-sequelize-generator/types'
+} from '@teamstarter/graphql-sequelize-generator/types'
 
 import { GraphQLString, GraphQLNonNull } from 'graphql'
 

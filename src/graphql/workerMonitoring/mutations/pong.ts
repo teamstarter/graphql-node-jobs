@@ -1,4 +1,4 @@
-import { CustomMutationConfiguration } from 'graphql-sequelize-generator/types'
+import { CustomMutationConfiguration } from '@teamstarter/graphql-sequelize-generator/types'
 import { PubSub } from 'graphql-subscriptions'
 import { GraphQLList } from 'graphql'
 import { successType, workerInfoInputType } from '../type'
