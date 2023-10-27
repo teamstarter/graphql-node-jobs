@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.1](https://github.com/teamstarter/graphql-node-jobs/compare/v1.4.0...v1.4.1) (2023-10-27)
+
+
+### Bug Fixes
+
+* **migration-workers:** add extension pgcrypto to pg extension ([2bf897f](https://github.com/teamstarter/graphql-node-jobs/commit/2bf897ffe7ab24451636875dcb20226060ce25d1))
+
 ## [1.4.0](https://github.com/teamstarter/graphql-node-jobs/compare/v1.3.1...v1.4.0) (2023-10-27)
 
 
