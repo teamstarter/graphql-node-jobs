@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.3](https://github.com/teamstarter/graphql-node-jobs/compare/v1.4.2...v1.4.3) (2024-02-27)
+
+
+### Bug Fixes
+
+* **updateProcessingInfo:** Fix updateProcessingInfo not updating steps when they were not move to done. ([#85](https://github.com/teamstarter/graphql-node-jobs/issues/85)) ([a770bf4](https://github.com/teamstarter/graphql-node-jobs/commit/a770bf400850648467be50125265d724e836407a)), closes [#79](https://github.com/teamstarter/graphql-node-jobs/issues/79)
+
 ### [1.4.2](https://github.com/teamstarter/graphql-node-jobs/compare/v1.4.1...v1.4.2) (2023-10-31)
 
 ### [1.4.1](https://github.com/teamstarter/graphql-node-jobs/compare/v1.4.0...v1.4.1) (2023-10-27)
