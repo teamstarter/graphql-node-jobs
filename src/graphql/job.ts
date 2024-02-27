@@ -1,7 +1,7 @@
 import {
+  InAndOutTypes,
   ModelDeclarationType,
   SequelizeModels,
-  InAndOutTypes,
 } from '@teamstarter/graphql-sequelize-generator/types'
 import debounce from 'debounce'
 import { PubSub } from 'graphql-subscriptions'
@@ -123,28 +123,23 @@ export default function JobConfiguration(
           const steps: any = args.job.processingInfo.steps
           newSteps = Object.keys(steps as Object).reduce(
             (acc: any, stepName: string) => {
-              let newStep = steps[stepName]
-              const isStepDone =
+              let newContent = steps[stepName]
+
+              const isStepAlreadySavedAsDone =
                 job.processingInfo &&
                 job.processingInfo.steps &&
                 job.processingInfo.steps[stepName] &&
                 job.processingInfo.steps[stepName].doneAt
 
-              if (newStep.status === 'done' && !isStepDone) {
+              // We set the end date when the status switch to a terminating state.
+              if (newContent.status === 'done' && !isStepAlreadySavedAsDone) {
                 const time = new Date()
                 const prevTime = new Date(job.updatedAt)
-                newStep.doneAt = time
-                newStep.elapsedTime = time.getTime() - prevTime.getTime()
-                acc[stepName] = newStep
-              } else if (
-                job.processingInfo &&
-                job.processingInfo.steps &&
-                job.processingInfo.steps[stepName]
-              ) {
-                acc[stepName] = job.processingInfo.steps[stepName]
-              } else {
-                acc[stepName] = newStep
+                newContent.doneAt = time
+                newContent.elapsedTime = time.getTime() - prevTime.getTime()
               }
+
+              acc[stepName] = newContent
 
               return acc
             },
