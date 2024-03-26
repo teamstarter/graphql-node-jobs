@@ -45,10 +45,10 @@ export default function Job(sequelize: any) {
               'planned', // Job inside a batch or a pipeline. Waits to be moved to queued.˜
               'queued', // default state for a new job without batch or pipeline
               'processing',
-              'failed',
+              'failed', // Due to an error
               'successful',
               'cancel-requested',
-              'cancelled',
+              'cancelled', // Due to a programmatic request or an user request
             ],
           ],
         },
