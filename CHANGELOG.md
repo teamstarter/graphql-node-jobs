@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.0](https://github.com/teamstarter/graphql-node-jobs/compare/v1.4.3...v1.5.0) (2024-03-26)
+
+
+### Features
+
+* **boot:** When a job is cancelled as server start it uses the status 'cancelled' and the ouput is explicit about the cancelation reason. ([50cc8c5](https://github.com/teamstarter/graphql-node-jobs/commit/50cc8c52dbeff537efbcf56c1fe4941b3aea8eeb))
+
+
+### Bug Fixes
+
+* **processingInfo:** Fix a regression on the steps elapsed time calculation. ([ac123bb](https://github.com/teamstarter/graphql-node-jobs/commit/ac123bb84f2f885ada75863c99ab761139d089a6))
+
 ### [1.4.3](https://github.com/teamstarter/graphql-node-jobs/compare/v1.4.2...v1.4.3) (2024-02-27)
 
 
