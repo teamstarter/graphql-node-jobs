@@ -10,7 +10,7 @@ import { Job } from '../types'
 import putNextStepJobsInTheQueued from './utils/putNextStepJobsInTheQueued'
 import updatePipelineStatus from './utils/updatePipelineStatus'
 
-import { isAfter, parseISO } from 'date-fns'
+import { isAfter } from 'date-fns'
 import acquireJob from './job/acquire'
 import recoverJob from './job/recover'
 import retryJob from './job/retry'
@@ -39,9 +39,9 @@ function getLastDoneStepDate(job: any) {
       }
 
       // If a step is older, we use the step value
-      const jobDoneAt = parseISO(stepContent.doneAt)
+      const jobDoneAt = new Date(stepContent.doneAt)
       if (jobDoneAt && isAfter(jobDoneAt, refDate)) {
-        return parseISO(stepContent.doneAt)
+        return jobDoneAt
       }
 
       return refDate
