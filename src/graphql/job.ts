@@ -10,6 +10,7 @@ import { Job } from '../types'
 import putNextStepJobsInTheQueued from './utils/putNextStepJobsInTheQueued'
 import updatePipelineStatus from './utils/updatePipelineStatus'
 
+import { isAfter, parseISO } from 'date-fns'
 import acquireJob from './job/acquire'
 import recoverJob from './job/recover'
 import retryJob from './job/retry'
@@ -20,6 +21,33 @@ export class CancelRequestedError extends Error {
     super(message)
     this.name = 'CancelRequestedError'
   }
+}
+
+function getLastDoneStepDate(job: any) {
+  // If there is not steps, we return the job start date.
+  if (!job.processingInfo?.steps) {
+    return job.startedAt
+  }
+
+  const steps = job.processingInfo.steps
+  return Object.keys(steps as Object).reduce(
+    (refDate: any, stepName: string) => {
+      let stepContent = steps[stepName]
+
+      if (!stepContent.doneAt) {
+        return refDate
+      }
+
+      // If a step is older, we use the step value
+      const jobDoneAt = parseISO(stepContent.doneAt)
+      if (jobDoneAt && isAfter(jobDoneAt, refDate)) {
+        return parseISO(stepContent.doneAt)
+      }
+
+      return refDate
+    },
+    job.startedAt
+  )
 }
 
 const allInstanceOfDebounceBatch: any = []
@@ -47,7 +75,7 @@ export default function JobConfiguration(
   graphqlTypes: InAndOutTypes,
   models: SequelizeModels,
   pubSubInstance: PubSub | null = null,
-  onFail?: (job: Job) => Promise<any>
+  onJobFail?: (job: Job) => Promise<any>
 ): ModelDeclarationType {
   return {
     model: models.job,
@@ -121,25 +149,32 @@ export default function JobConfiguration(
           typeof args.job.processingInfo.steps !== null
         ) {
           const steps: any = args.job.processingInfo.steps
+          let lastUpdatedDate = getLastDoneStepDate(job)
           newSteps = Object.keys(steps as Object).reduce(
             (acc: any, stepName: string) => {
-              let newContent = steps[stepName]
+              let newStepContent = steps[stepName]
+
+              let previousStepContent = job.processingInfo &&
+                job.processingInfo.steps ?
+                job.processingInfo.steps[stepName] : null
 
               const isStepAlreadySavedAsDone =
-                job.processingInfo &&
-                job.processingInfo.steps &&
-                job.processingInfo.steps[stepName] &&
-                job.processingInfo.steps[stepName].doneAt
+                previousStepContent &&
+                previousStepContent.doneAt
 
               // We set the end date when the status switch to a terminating state.
-              if (newContent.status === 'done' && !isStepAlreadySavedAsDone) {
+              if (newStepContent.status === 'done' && !isStepAlreadySavedAsDone) {
                 const time = new Date()
-                const prevTime = new Date(job.updatedAt)
-                newContent.doneAt = time
-                newContent.elapsedTime = time.getTime() - prevTime.getTime()
+                const prevTime = lastUpdatedDate
+                newStepContent.doneAt = time
+                newStepContent.elapsedTime = time.getTime() - prevTime.getTime()
               }
 
-              acc[stepName] = newContent
+              // The previous step content contains informations that only the server might have
+              // for exemple the doneAt and elapsedTime are maybe not taken in account by the client.
+              // An accepted side effect is that it is impossible to remove an attribute from the processingInfo
+              // through a client update. But it's way easier for users than have to sync the processingInfo themselves.
+              acc[stepName] = { ...previousStepContent, ...newStepContent }
 
               return acc
             },
@@ -151,8 +186,8 @@ export default function JobConfiguration(
         return properties
       },
       after: async (job, oldJob) => {
-        if (job.status === 'failed' && onFail) {
-          await onFail(job)
+        if (job.status === 'failed' && onJobFail) {
+          await onJobFail(job)
         }
 
         if (

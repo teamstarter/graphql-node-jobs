@@ -5,13 +5,13 @@ import {
 import getModels from '../models'
 import { Job } from '../types'
 
-import job from './job'
 import batch from './batch'
+import job from './job'
+import jobHoldType from './jobHoldType'
+import { jobSuccessRating } from './jobSuccessRating'
 import pipeline from './pipeline'
 import pipelineStep from './pipelineStep'
-import jobHoldType from './jobHoldType'
 import { workerMonitoring } from './workerMonitoring'
-import { jobSuccessRating } from './jobSuccessRating'
 import { workerSuccessRating } from './workerSuccessRating'
 
 /**
@@ -35,7 +35,7 @@ export default async function getApolloServer(
 
   if (jobsFail.length > 0) {
     await models.sequelize.query(
-      "UPDATE job SET status = 'failed' WHERE status = 'processing'"
+      `UPDATE job SET status = 'cancelled', output = '{"error":"Cancelled as the job was processing during the server boot."}' WHERE status = 'processing';`
     )
     if (onJobFail) {
       for (const job of jobsFail) {

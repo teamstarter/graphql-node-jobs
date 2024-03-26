@@ -181,6 +181,6 @@ describe('Test when server booting', () => {
       )
 
     expect(responseJobList.body.errors).toBeUndefined()
-    expect(responseJobList.body.data.job[0].status).toBe('failed')
+    expect(responseJobList.body.data.job[0].status).toBe('cancelled')
   })
 })
