@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.5.1](https://github.com/teamstarter/graphql-node-jobs/compare/v1.5.0...v1.5.1) (2024-03-26)
+
+
+### Bug Fixes
+
+* **date-fns:** Avoid dependency to a new function. ([f5fe261](https://github.com/teamstarter/graphql-node-jobs/commit/f5fe261d6e4cccff80a2a59cf99fc51a3f29f8fc))
+
 ## [1.5.0](https://github.com/teamstarter/graphql-node-jobs/compare/v1.4.3...v1.5.0) (2024-03-26)
 
 
