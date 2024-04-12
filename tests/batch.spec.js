@@ -5,7 +5,7 @@ const {
   migrateDatabase,
   seedDatabase,
   getNewServer,
-  getModels,
+  getModelsAndInitializeDatabase,
   closeEverything,
   deleteTables,
   resetDatabase,
@@ -157,12 +157,12 @@ describe('Test the batch endpoint', () => {
   })
 
   afterAll(async (done) => {
-    const models = await getModels()
+    const models = await getModelsAndInitializeDatabase()
     await closeEverything(server, models, done)
   })
 
   it('If job fail the associated batch fail', async () => {
-    const models = await getModels()
+    const models = await getModelsAndInitializeDatabase()
     const batch = await models.batch.create({
       status: 'planned',
       pipelineId: 1,
@@ -230,7 +230,7 @@ describe('Test the batch endpoint', () => {
   })
 
   it('Batch can be successful if all jobs associated are successful', async () => {
-    const models = await getModels()
+    const models = await getModelsAndInitializeDatabase()
     const batch = await models.batch.create({
       status: 'planned',
       pipelineId: 2,

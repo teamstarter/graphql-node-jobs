@@ -4,6 +4,32 @@ import { Sequelize } from 'sequelize'
 
 let db: any = null
 
+function importModels(sequelizeInstance: typeof Sequelize) {
+  const basename = path.basename(module.filename)
+
+  fs.readdirSync(__dirname)
+  .filter(function (file) {
+    return (
+      file.indexOf('.') !== 0 && file !== basename && file.slice(-3) === '.js'
+    )
+  })
+  .forEach(function (file) {
+    const model = require(path.join(__dirname, file)).default(
+      sequelizeInstance
+    )
+    db[model.name] = model
+  })
+
+  Object.keys(db).forEach(function (modelName) {
+    if (db[modelName].associate) {
+      db[modelName].associate(db)
+    }
+  })
+
+  db.sequelize = sequelizeInstance
+  db.Sequelize = Sequelize
+}
+
 /**
  * In a standard project the configuration is a commited file. But here
  * you can specify it if needed. So we have to expose a getter that caches
@@ -13,7 +39,7 @@ let db: any = null
  * once the models are fetched.
  */
 async function initDb(config: any, dbhash?: string) {
-  const basename = path.basename(module.filename)
+ 
   db = {}
 
   let sequelize: any = null
@@ -35,7 +61,6 @@ async function initDb(config: any, dbhash?: string) {
         ? config[process.env.NODE_ENV]
         : config
     if (dbhash) {
-      console.log('DBHASH provided', dbhash, connexion)
       connexion.database = null
       const tmpConnexion = new Sequelize(
         `${connexion.dialect}://${connexion.username}:${connexion.password}@${connexion.host}:${connexion.port}/postgres`
@@ -50,40 +75,45 @@ async function initDb(config: any, dbhash?: string) {
       }
 
       connexion.database = dbhash
-      console.log(connexion)
       sequelize = new Sequelize(connexion)
     } else {
       sequelize = new Sequelize(connexion)
     }
   }
 
-  fs.readdirSync(__dirname)
-    .filter(function (file) {
-      return (
-        file.indexOf('.') !== 0 && file !== basename && file.slice(-3) === '.js'
-      )
-    })
-    .forEach(function (file) {
-      const model = require(path.join(__dirname, file)).default(
-        sequelize,
-        sequelize.DataTypes
-      )
-      db[model.name] = model
-    })
-
-  Object.keys(db).forEach(function (modelName) {
-    if (db[modelName].associate) {
-      db[modelName].associate(db)
-    }
-  })
-
-  db.sequelize = sequelize
-  db.Sequelize = Sequelize
+  importModels(sequelize)
+  
+  return db
 }
 
-export default async function getModels(dbConfig: any, dbhash?: string) {
+export async function getModelsAndInitializeDatabase(dbConfig: any, dbhash?: string) {
   if (!db) {
     await initDb(dbConfig, dbhash)
+  }
+  return db
+}
+
+export function getModels(dbConfig: any, sequelizeInstance: any) {
+  if (!db) {
+    if(!sequelizeInstance) {
+      if (
+        typeof dbConfig.use_env_variable !== 'undefined' &&
+        dbConfig.use_env_variable
+      ) {
+        
+        sequelizeInstance = new Sequelize()
+      } else {
+        const connexion =
+          process.env.NODE_ENV &&
+          typeof dbConfig[process.env.NODE_ENV] !== 'undefined'
+            ? dbConfig[process.env.NODE_ENV]
+            : dbConfig
+        
+            sequelizeInstance = new Sequelize(connexion)
+      }
+    }
+
+    importModels(sequelizeInstance)
   }
   return db
 }

@@ -5,7 +5,7 @@ const {
   migrateDatabase,
   seedDatabase,
   getNewServer,
-  getModels,
+  getModelsAndInitializeDatabase,
   closeEverything,
   deleteTables,
   resetDatabase,
@@ -184,7 +184,7 @@ describe('Test the job endpoint', () => {
   })
 
   afterAll(async (done) => {
-    const models = await getModels()
+    const models = await getModelsAndInitializeDatabase()
     await closeEverything(server, models, done)
   })
 
@@ -248,7 +248,7 @@ describe('Test the job endpoint', () => {
   })
 
   it('Workers can easily query jobs.', async () => {
-    const models = await getModels()
+    const models = await getModelsAndInitializeDatabase()
     const jobs = await listJobs(client)
 
     expect(jobs).toMatchSnapshot()
@@ -441,7 +441,7 @@ describe('Test the job endpoint', () => {
   })
 
   it('A job failed can be recover ', async () => {
-    const models = await getModels()
+    const models = await getModelsAndInitializeDatabase()
     const steps = {
       'step-1': {
         status: 'waiting',
@@ -562,7 +562,7 @@ describe('Test the job endpoint', () => {
   })
 
   it('If job fail the associated batch fail', async () => {
-    const models = await getModels()
+    const models = await getModelsAndInitializeDatabase()
     const batch = await models.batch.create({
       status: 'planned',
       pipelineId: 1,
@@ -630,7 +630,7 @@ describe('Test the job endpoint', () => {
   })
 
   it('Batch can be successful if all jobs associated are successful', async () => {
-    const models = await getModels()
+    const models = await getModelsAndInitializeDatabase()
     const batch = await models.batch.create({
       status: 'planned',
       pipelineId: 2,
@@ -778,7 +778,7 @@ describe('Test the job endpoint', () => {
   })
 
   it('Job add to a pipeline create a new pipelineStep', async () => {
-    const models = await getModels()
+    const models = await getModelsAndInitializeDatabase()
     const job = await createJob(client, {
       type: 'a',
       pipelineId: 2,
@@ -792,7 +792,7 @@ describe('Test the job endpoint', () => {
   })
 
   it('When a job linked to a step is successful the status of the next step job are switched to queued', async () => {
-    const models = await getModels()
+    const models = await getModelsAndInitializeDatabase()
     const job1 = await createJob(client, {
       name: 'job-1',
       type: 'a',
@@ -821,7 +821,7 @@ describe('Test the job endpoint', () => {
   })
 
   it('When a job linked to a step is successful the status of all jobs of batch of the next step are switched to queued', async () => {
-    const models = await getModels()
+    const models = await getModelsAndInitializeDatabase()
     const job1 = await createJob(client, {
       name: 'job-1',
       type: 'a',
@@ -869,7 +869,7 @@ describe('Test the job endpoint', () => {
   })
 
   it('Batch will be successful when all his job are successful', async () => {
-    const models = await getModels()
+    const models = await getModelsAndInitializeDatabase()
     const job1 = await createJob(client, {
       name: 'job-1',
       type: 'a',

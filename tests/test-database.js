@@ -8,7 +8,7 @@ const {
   GraphQLList,
 } = require('graphql')
 
-const { getStandAloneServer, getModels } = require('./../lib/index')
+const { getStandAloneServer, getModelsAndInitializeDatabase } = require('./../lib/index')
 
 var dbConfig = require(path.join(__dirname, '/sqliteTestConfig.js')).test
 
@@ -44,7 +44,7 @@ const seederFiles = fs
  * Migrates the database
  */
 exports.migrateDatabase = async () => {
-  const models = await getModels(dbConfig)
+  const models = await getModelsAndInitializeDatabase(dbConfig)
   const sequelize = models.sequelize // sequelize is the instance of the db
 
   /**
@@ -82,7 +82,7 @@ exports.migrateDatabase = async () => {
  * Seeds the database with mockup data
  */
 exports.seedDatabase = async () => {
-  const models = await getModels(dbConfig)
+  const models = await getModelsAndInitializeDatabase(dbConfig)
   const sequelize = models.sequelize // sequelize is the instance of the db
 
   /**
@@ -121,7 +121,7 @@ exports.seedDatabase = async () => {
  * Deletes all the tables
  */
 exports.deleteTables = async () => {
-  const models = await exports.getModels()
+  const models = await exports.getModelsAndInitializeDatabase()
   const sequelize = models.sequelize
 
   await sequelize.getQueryInterface().dropAllTables()
@@ -137,12 +137,12 @@ exports.resetDatabase = async () => {
   }
 }
 
-exports.getModels = async () => {
-  return await getModels(dbConfig)
+exports.getModelsAndInitializeDatabase = async () => {
+  return await getModelsAndInitializeDatabase(dbConfig)
 }
 
 async function closeConnections() {
-  const models = await exports.getModels()
+  const models = await exports.getModelsAndInitializeDatabase()
   await models.sequelize.close()
 }
 
@@ -177,7 +177,7 @@ exports.getNewServer = (onJobFail) => {
           },
         },
         resolve: async (source, args, context) => {
-          const models = await exports.getModels()
+          const models = await exports.getModelsAndInitializeDatabase()
           // GNJ models can be retreived with the dbConfig if needed
           // const models = getModels(dbConfig)
           // get a job from the db

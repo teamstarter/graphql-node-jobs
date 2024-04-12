@@ -2,7 +2,7 @@
 
 import program from 'commander'
 import migrate from './migrate'
-import getModels from './models'
+import { getModelsAndInitializeDatabase } from './models'
 import { generateJobs } from './scripts/generateJobs'
 import { generateWorkersLogs } from './scripts/generateWorkersLogs'
 
@@ -23,7 +23,7 @@ program
       throw new Error('Could not load the given config.' + e.message)
     }
 
-    const models = await getModels(config, options ? options.dbhash : null)
+    const models = await getModelsAndInitializeDatabase(config, options ? options.dbhash : null)
     await migrate(models)
     await models.sequelize.close()
   })
@@ -41,7 +41,7 @@ program
     } catch (e: any) {
       throw new Error('Could not load the given config.' + e.message)
     }
-    const models = await getModels(config, '')
+    const models = await getModelsAndInitializeDatabase(config, '')
     await generateJobs(models, nbDays, nbJobsPerDay)
     await models.sequelize.close()
     console.log('Seeding Done')
@@ -60,7 +60,7 @@ program
     } catch (e: any) {
       throw new Error('Could not load the given config.' + e.message)
     }
-    const models = await getModels(config, '')
+    const models = await getModelsAndInitializeDatabase(config, '')
     await generateWorkersLogs(models, nbHours)
     await models.sequelize.close()
     console.log('Seeding Done')

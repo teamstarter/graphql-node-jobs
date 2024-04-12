@@ -5,7 +5,7 @@ const {
   migrateDatabase,
   seedDatabase,
   getNewServer,
-  getModels,
+  getModelsAndInitializeDatabase,
   closeEverything,
   deleteTables,
   resetDatabase,
@@ -74,12 +74,12 @@ describe('Test the pipeline', () => {
   })
 
   afterAll(async (done) => {
-    const models = await getModels()
+    const models = await getModelsAndInitializeDatabase()
     await closeEverything(server, models, done)
   })
 
   it('A pipeline can be started', async () => {
-    const models = await getModels()
+    const models = await getModelsAndInitializeDatabase()
     const pipeline = await models.pipeline.findByPk(2)
     expect(pipeline.status).toBe('planned')
 
@@ -113,7 +113,7 @@ describe('Test the pipeline', () => {
   })
 
   it('A pipeline can be successful', async () => {
-    const models = await getModels()
+    const models = await getModelsAndInitializeDatabase()
     const job1 = await createJob(client, {
       name: 'job-1',
       type: 'pipeline-successful',
@@ -150,7 +150,7 @@ describe('Test the pipeline', () => {
   })
 
   it('A pipeline can be failed', async () => {
-    const models = await getModels()
+    const models = await getModelsAndInitializeDatabase()
     const job1 = await createJob(client, {
       name: 'job-1',
       type: 'a',

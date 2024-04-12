@@ -5,7 +5,7 @@ const {
   migrateDatabase,
   seedDatabase,
   getNewServer,
-  getModels,
+  getModelsAndInitializeDatabase,
   closeEverything,
   deleteTables,
   resetDatabase,
@@ -157,7 +157,7 @@ describe('Test the checkForJob function', () => {
   })
 
   afterAll(async (done) => {
-    const models = await getModels()
+    const models = await getModelsAndInitializeDatabase()
     await closeEverything(server, models, done)
   })
 
@@ -202,7 +202,7 @@ describe('Test the checkForJob function', () => {
   })
 
   it('checkForJobs allows to asynchronous processing functions.', async () => {
-    const models = await getModels()
+    const models = await getModelsAndInitializeDatabase()
     const job = await checkForJobs({
       typeList: ['a', 'b'],
       client,
@@ -226,7 +226,7 @@ describe('Test the checkForJob function', () => {
   })
 
   it('checkForJobs declare jobs as failed when an error is raised.', async () => {
-    const models = await getModels()
+    const models = await getModelsAndInitializeDatabase()
     const job = await checkForJobs({
       typeList: ['a'],
       client,
@@ -250,7 +250,7 @@ describe('Test the checkForJob function', () => {
   })
 
   it('checkForJobs processing function can return nothing if needed.', async () => {
-    const models = await getModels()
+    const models = await getModelsAndInitializeDatabase()
     const job = await checkForJobs({
       typeList: ['a'],
       client,
@@ -269,7 +269,7 @@ describe('Test the checkForJob function', () => {
   })
 
   it('The processingFunction expose .', async () => {
-    const models = await getModels()
+    const models = await getModelsAndInitializeDatabase()
     const job = await checkForJobs({
       typeList: ['a'],
       client,
