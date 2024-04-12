@@ -11,6 +11,7 @@
     "lib/**/*",
     "migrations/*"
   ],
+  "types": "./src/types.d.ts",
   "dependencies": {
     "@apollo/client": "^3.7.2",
     "@teamstarter/graphql-sequelize-generator": "^8.3.0",

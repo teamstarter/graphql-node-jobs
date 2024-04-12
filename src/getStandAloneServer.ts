@@ -1,15 +1,15 @@
-import { getApolloServer } from './../lib/index'
 import { expressMiddleware } from '@apollo/server/express4'
-import cors from 'cors'
 import { json } from 'body-parser'
+import cors from 'cors'
+import { getApolloServer } from './../lib/index'
 
-import { Job } from './types'
+import { JobType } from './types'
 
 export default async function getStandAloneServer(
   config: any,
   gsgParams: any = {},
   customMutations: any = {},
-  onJobFail?: (job: Job) => Promise<any>
+  onJobFail?: (job: JobType) => Promise<any>
 ) {
   const express = require('express')
   const http2 = require('http')

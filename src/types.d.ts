@@ -10,7 +10,8 @@ export type JobStatus =
   | 'failed'
   | 'sucessful'
   | 'cancelled'
-export type Job = {
+
+export type JobType = {
   id?: number
   jobUniqueId: string
   type: string

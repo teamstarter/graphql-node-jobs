@@ -1,12 +1,12 @@
-import { Job, JSONValue } from '../types'
-import uuidv4 from 'uuid'
-import _debug from 'debug'
 import { ApolloClient } from '@apollo/client'
+import _debug from 'debug'
 import gql from 'graphql-tag'
+import uuidv4 from 'uuid'
 import { parentPort } from 'worker_threads'
+import { JobType, JSONValue } from '../types'
 
-import updateProcessingInfo from './updateProcessingInfo'
 import updateJobQuery from './updateJobQuery'
+import updateProcessingInfo from './updateProcessingInfo'
 
 const debug = _debug('graphql-node-jobs')
 
@@ -34,7 +34,7 @@ const acquireJobQuery = gql`
 
 export default async function checkForJobs(args: {
   processingFunction: (
-    job: Job,
+    job: JobType,
     facilities: { updateProcessingInfo: Function }
   ) => Promise<any>
   client: ApolloClient<any>

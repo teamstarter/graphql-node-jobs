@@ -6,7 +6,7 @@ import {
 import debounce from 'debounce'
 import { PubSub } from 'graphql-subscriptions'
 
-import { Job } from '../types'
+import { JobType } from '../types'
 import putNextStepJobsInTheQueued from './utils/putNextStepJobsInTheQueued'
 import updatePipelineStatus from './utils/updatePipelineStatus'
 
@@ -75,7 +75,7 @@ export default function JobConfiguration(
   graphqlTypes: InAndOutTypes,
   models: SequelizeModels,
   pubSubInstance: PubSub | null = null,
-  onJobFail?: (job: Job) => Promise<any>
+  onJobFail?: (job: JobType) => Promise<any>
 ): ModelDeclarationType {
   return {
     model: models.job,

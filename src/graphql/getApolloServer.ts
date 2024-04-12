@@ -1,9 +1,9 @@
 import {
-    generateApolloServer,
-    generateModelTypes,
+  generateApolloServer,
+  generateModelTypes,
 } from '@teamstarter/graphql-sequelize-generator'
 import { getModelsAndInitializeDatabase } from '../models'
-import { Job } from '../types'
+import { JobType } from '../types'
 
 import batch from './batch'
 import job from './job'
@@ -22,7 +22,7 @@ export default async function getApolloServer(
   dbConfig: any,
   gsgParams: any = {},
   customMutations: any = {},
-  onJobFail?: (job: Job) => Promise<any>,
+  onJobFail?: (job: JobType) => Promise<any>,
   wsServer: any = null
 ) {
   const models = await getModelsAndInitializeDatabase(dbConfig)
