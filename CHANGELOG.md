@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.1](https://github.com/teamstarter/graphql-node-jobs/compare/v2.0.0...v2.0.1) (2024-04-12)
+
+
+### Bug Fixes
+
+* **models:** Fix getModels signature. ([9b46d76](https://github.com/teamstarter/graphql-node-jobs/commit/9b46d768bb46b1591d125d4dfcacfbba2ce8d1b3))
+
 ## [2.0.0](https://github.com/teamstarter/graphql-node-jobs/compare/v1.5.1...v2.0.0) (2024-04-12)
 
 
