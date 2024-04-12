@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/teamstarter/graphql-node-jobs/compare/v2.0.2...v2.1.0) (2024-04-12)
+
+
+### Features
+
+* **build:** Force build before release. ([7b6cd83](https://github.com/teamstarter/graphql-node-jobs/commit/7b6cd837a64a671394b5babd294470876021e217))
+
 ### [2.0.2](https://github.com/teamstarter/graphql-node-jobs/compare/v2.0.1...v2.0.2) (2024-04-12)
 
 
