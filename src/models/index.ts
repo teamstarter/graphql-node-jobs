@@ -5,6 +5,7 @@ import { Sequelize } from 'sequelize'
 let db: any = null
 
 function importModels(sequelizeInstance: typeof Sequelize) {
+  db = {}
   const basename = path.basename(module.filename)
 
   fs.readdirSync(__dirname)
