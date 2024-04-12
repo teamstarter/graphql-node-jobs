@@ -1,6 +1,6 @@
 {
   "name": "@teamstarter/graphql-node-jobs",
-  "version": "1.5.1",
+  "version": "2.0.0",
   "private": false,
   "author": {
     "email": "vincent.desmares@gmail.com",

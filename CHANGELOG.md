@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/teamstarter/graphql-node-jobs/compare/v1.5.1...v2.0.0) (2024-04-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* **models:** getModels now returns the models synchronously.
+
+### Features
+
+* **models:** getModels now returns the models synchronously. dbhash is not anymore provided to getModels. Use async getModelsAndInitializeDatabase if needed. ([5fa7fba](https://github.com/teamstarter/graphql-node-jobs/commit/5fa7fbad346812a59468cd7cfc5b469d187919f2))
+
 ### [1.5.1](https://github.com/teamstarter/graphql-node-jobs/compare/v1.5.0...v1.5.1) (2024-03-26)
 
 
