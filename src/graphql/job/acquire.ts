@@ -1,10 +1,10 @@
-import { GraphQLString, GraphQLNonNull, GraphQLList } from 'graphql'
 import {
   CustomMutationConfiguration,
   InAndOutTypes,
   SequelizeModels,
 } from '@teamstarter/graphql-sequelize-generator/types'
-import { Op } from 'sequelize'
+import { GraphQLList, GraphQLNonNull, GraphQLString } from 'graphql'
+import { Op, Transaction } from 'sequelize'
 
 export default function AcquireJobDefinition(
   graphqlTypes: InAndOutTypes,
@@ -24,11 +24,14 @@ export default function AcquireJobDefinition(
       workerType: { type: GraphQLString },
     },
     resolve: async (source, args, context) => {
-      const transaction = await models.sequelize.transaction()
+      const transaction = await models.sequelize.transaction({
+        isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE
+      })
       const allJobHoldType = await models.jobHoldType.findAll({ transaction })
       const heldTypes = allJobHoldType.map((heldType: any) => heldType.type)
 
       if (heldTypes.includes('all')) {
+        await transaction.rollback()
         return null
       }
 
@@ -56,8 +59,9 @@ export default function AcquireJobDefinition(
         order: [['id', 'ASC']],
         transaction,
       })
+
       if (!job) {
-        await transaction.commit()
+        await transaction.rollback()
         return null
       }
 
