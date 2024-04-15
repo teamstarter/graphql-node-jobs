@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.2.1](https://github.com/teamstarter/graphql-node-jobs/compare/v2.2.0...v2.2.1) (2024-04-15)
+
+
+### Bug Fixes
+
+* **acquire:** Fix transaction allowing repeatable/uncommitted reads. the Acquire() function must work as a semaphore and always return an unique job without throwing in case of conflict. ([52cd5ed](https://github.com/teamstarter/graphql-node-jobs/commit/52cd5ed0ec5aa66a657b2b6b83c9052fe2647358))
+
 ## [2.2.0](https://github.com/teamstarter/graphql-node-jobs/compare/v2.1.0...v2.2.0) (2024-04-12)
 
 
