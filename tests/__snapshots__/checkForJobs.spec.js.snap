@@ -38,6 +38,18 @@ Object {
 }
 `;
 
+exports[`Test the checkForJob function checkForJobs allows to asynchronously process jobs. 1`] = `
+Object {
+  "__typename": "job",
+  "id": 1,
+  "input": Object {},
+  "name": "Bla a",
+  "output": Object {},
+  "status": "processing",
+  "type": "a",
+}
+`;
+
 exports[`Test the checkForJob function checkForJobs allows to simply acquire and update jobs. 1`] = `
 Object {
   "__typename": "job",

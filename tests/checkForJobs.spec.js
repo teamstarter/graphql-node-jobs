@@ -289,4 +289,33 @@ describe('Test the checkForJob function', () => {
     expect(jobEntity.output).toMatchSnapshot()
     expect(jobEntity.processingInfo).toMatchSnapshot()
   })
+
+  it('checkForJobs allows to asynchronously process jobs.', async () => {
+    const models = await getModelsAndInitializeDatabase()
+    const job = await checkForJobs({
+      typeList: ['a', 'b'],
+      nonBlocking: true,
+      client,
+      processingFunction: async (job) => {
+        const result = await new Promise((resolve, reject) =>
+          setTimeout(() => {
+            resolve('plop')
+          }, 100)
+        )
+        return { total: result }
+      },
+      looping: false,
+    })
+    expect(job).not.toBeUndefined()
+    expect(job).not.toBe(null)
+    expect(job).toMatchSnapshot()
+    expect(job.status).toBe('processing')
+
+    await new Promise((resolve) => setTimeout(resolve, 500))
+
+    const jobEntity = await models.job.findOne({ where: { id: job.id } })
+    expect(jobEntity.startedAt).not.toBe(null)
+    expect(jobEntity.endedAt).not.toBe(null)
+    expect(jobEntity.status).toBe('successful')
+  })
 })

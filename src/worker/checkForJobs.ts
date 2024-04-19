@@ -10,7 +10,7 @@ import updateProcessingInfo from './updateProcessingInfo'
 
 const debug = _debug('graphql-node-jobs')
 
-const loopTime = 1000
+const DEFAULT_LOOP_TIME = 1000
 
 const acquireJobQuery = gql`
   mutation acquireJob(
@@ -28,89 +28,39 @@ const acquireJobQuery = gql`
       name
       input
       output
+      status
     }
   }
 `
 
-export default async function checkForJobs(args: {
-  processingFunction: (
-    job: JobType,
-    facilities: { updateProcessingInfo: Function }
-  ) => Promise<any>
-  client: ApolloClient<any>
-  typeList: Array<String>
-  workerId?: string
-  workerType: string
-  looping: true
-  loopTime?: number
-  isCancelledOnCancelRequest?: boolean
-}): Promise<any> {
-  if (!args.typeList || args.typeList.length === 0) {
-    throw new Error('Please provide a typeList property in the configuration.')
-  }
+async function handleJobResult({client, job, output, looping, args}: any) {
+  debug('Updating job after successful processing.')
 
-  if (!args.workerId) {
-    args.workerId = uuidv4()
-  }
-
-  let {
-    processingFunction,
-    client,
-    typeList,
-    workerId = undefined,
-    workerType,
-    looping = true,
-    loopTime = 1000,
-    isCancelledOnCancelRequest = false,
-  } = args
-
-  client.subscribe({
-    query: gql`
-      subscription {
-        job: jobUpdate {
-          id
-          type
-          name
-          input
-          output
-        }
-      }
-    `,
-  })
-
-  const { data } = await client.mutate({
-    mutation: acquireJobQuery,
-    variables: { typeList, workerId, workerType },
-  })
-
-  const { job } = data
-
-  if (!job) {
-    if (looping) {
-      setTimeout(() => checkForJobs(args), loopTime)
-      return null
-    } else {
-      return null
-    }
-  }
-
-  parentPort?.postMessage({ status: 'PROCESSING' })
-  debug('Reiceived a new job', job)
-  let output = null
   try {
-    output = await processingFunction(job, {
-      updateProcessingInfo: (info: JSONValue) => {
-        return updateProcessingInfo(
-          client,
-          job,
-          info,
-          isCancelledOnCancelRequest
-        )
+    const result = await client.mutate({
+      mutation: updateJobQuery,
+      variables: {
+        job: {
+          id: job.id,
+          status: 'successful',
+          output,
+        },
       },
     })
-    debug("Job's done", job.id)
-  } catch (err: any) {
-    debug('Error during the job processing', err)
+
+    parentPort?.postMessage({ status: 'AVAILABLE' })
+    if (looping) {
+      return checkForJobs(args)
+    }
+    return result.data.job
+  } catch (err) {
+    parentPort?.postMessage({ status: 'FAILED' })
+    debug('Failed to update the success status of the current job.', err)
+  }
+}
+
+async function handleError({err, client, job, looping, args}: {err: any, client: ApolloClient<any>, job: JobType, looping: boolean, args: any}) {
+  debug('Error during the job processing', err)
     let updatedErrorJob = null
     // @todo find why instanceof is not working
     if (err.name === 'CancelRequestedError') {
@@ -148,29 +98,110 @@ export default async function checkForJobs(args: {
       return checkForJobs(args)
     }
     return updatedErrorJob.data.job
+}
+
+export default async function checkForJobs(args: {
+  processingFunction: (
+    job: JobType,
+    facilities: { updateProcessingInfo: Function }
+  ) => Promise<any>
+  client: ApolloClient<any>
+  typeList: Array<String>
+  workerId?: string
+  workerType: string
+  looping: true
+  loopTime?: number
+  isCancelledOnCancelRequest?: boolean
+  nonBlocking?: boolean
+}): Promise<any> {
+  if (!args.typeList || args.typeList.length === 0) {
+    throw new Error('Please provide a typeList property in the configuration.')
   }
 
-  debug('Updating job')
+  if (!args.workerId) {
+    args.workerId = uuidv4()
+  }
 
+  let {
+    processingFunction,
+    client,
+    typeList,
+    workerId = undefined,
+    workerType,
+    looping = true,
+    loopTime = DEFAULT_LOOP_TIME,
+    isCancelledOnCancelRequest = false,
+    nonBlocking = false
+  } = args
+
+  client.subscribe({
+    query: gql`
+      subscription {
+        job: jobUpdate {
+          id
+          type
+          name
+          input
+          output
+          status
+        }
+      }
+    `,
+  })
+
+  const { data } = await client.mutate({
+    mutation: acquireJobQuery,
+    variables: { typeList, workerId, workerType },
+  })
+
+  const { job } = data
+
+  if (!job) {
+    if (looping) {
+      setTimeout(() => checkForJobs(args), loopTime)
+      return null
+    } else {
+      return null
+    }
+  }
+
+  parentPort?.postMessage({ status: 'PROCESSING' })
+  debug('Reiceived a new job', job)
+  let output = null
   try {
-    const result = await client.mutate({
-      mutation: updateJobQuery,
-      variables: {
-        job: {
-          id: job.id,
-          status: 'successful',
-          output,
-        },
+    const processingPromise = processingFunction(job, {
+      updateProcessingInfo: (info: JSONValue) => {
+        return updateProcessingInfo(
+          client,
+          job,
+          info,
+          isCancelledOnCancelRequest
+        )
       },
     })
 
-    parentPort?.postMessage({ status: 'AVAILABLE' })
-    if (looping) {
-      return checkForJobs(args)
+    if(nonBlocking) {
+      processingPromise.then((output) => {
+        debug("Job's done", job.id)
+        // We only save the result, the looping will be instantly started
+        handleJobResult({client, job, output, looping: false, args})
+      }).catch((err) => {
+        handleError({err, client, job, looping, args})
+      })
+      if(looping) {
+        return checkForJobs(args)
+      }
+    } else {
+      output = await processingPromise
+      debug("Job's done", job.id)
+      return await handleJobResult({client, job, output, looping, args})
     }
-    return result.data.job
-  } catch (err) {
-    parentPort?.postMessage({ status: 'FAILED' })
-    debug('Failed to update the success status of the current job.', err)
+    
+  } catch (err: any) {
+    return handleError({err, client, job, looping, args})
   }
+
+  // In the case the looping is not enabled and the async processing is not enabled
+  // we return the "processing" job.
+  return job
 }
