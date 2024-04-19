@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.0](https://github.com/teamstarter/graphql-node-jobs/compare/v2.2.2...v2.3.0) (2024-04-19)
+
+
+### Features
+
+* **worker:** Add a new "nonBlocking" parameter to checkForJobs that allows for parallele processing of all jobs of a given worker. ([98220a3](https://github.com/teamstarter/graphql-node-jobs/commit/98220a3180152a4e31e03371290bc48f5dfe189f))
+
 ### [2.2.2](https://github.com/teamstarter/graphql-node-jobs/compare/v2.2.1...v2.2.2) (2024-04-19)
 
 ### [2.2.1](https://github.com/teamstarter/graphql-node-jobs/compare/v2.2.0...v2.2.1) (2024-04-15)
