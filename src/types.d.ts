@@ -8,7 +8,7 @@ export type JobStatus =
   | 'queued'
   | 'processing'
   | 'failed'
-  | 'sucessful'
+  | 'successful'
   | 'cancelled'
 
 export type JobType = {
