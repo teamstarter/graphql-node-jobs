@@ -134,21 +134,6 @@ export default async function checkForJobs(args: {
     nonBlocking = false
   } = args
 
-  client.subscribe({
-    query: gql`
-      subscription {
-        job: jobUpdate {
-          id
-          type
-          name
-          input
-          output
-          status
-        }
-      }
-    `,
-  })
-
   const { data } = await client.mutate({
     mutation: acquireJobQuery,
     variables: { typeList, workerId, workerType },
