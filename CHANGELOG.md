@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.1](https://github.com/teamstarter/graphql-node-jobs/compare/v3.0.0...v3.0.1) (2024-06-02)
+
+
+### Bug Fixes
+
+* **job:** Change transaction type. ([3b3a8a5](https://github.com/teamstarter/graphql-node-jobs/commit/3b3a8a5b11836fe4decddb9742db91940d8e54bf))
+* **job:** Fix undocumented async behavior. Moving it to a sync behavior for now. ([72fd970](https://github.com/teamstarter/graphql-node-jobs/commit/72fd970cf4da21f136b751c018b138edeed5a28a))
+
 ## [3.0.0](https://github.com/teamstarter/graphql-node-jobs/compare/v2.3.1...v3.0.0) (2024-06-02)
 
 
