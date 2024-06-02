@@ -1,13 +1,13 @@
 import {
-  InAndOutTypes,
-  ModelDeclarationType,
-  SequelizeModels,
-} from '@teamstarter/graphql-sequelize-generator/types'
+    InAndOutTypes,
+    ModelDeclarationType,
+    SequelizeModels,
+} from '@teamstarter/graphql-sequelize-generator/src/types/types'
 
 export default function PipelineStepConfiguration(
   types: InAndOutTypes,
   models: SequelizeModels
-): ModelDeclarationType {
+): ModelDeclarationType<any> {
   return {
     model: models.pipelineStep,
     actions: ['list', 'update', 'create', 'count'],

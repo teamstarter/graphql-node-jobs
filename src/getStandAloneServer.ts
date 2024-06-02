@@ -3,13 +3,15 @@ import { json } from 'body-parser'
 import cors from 'cors'
 import { getApolloServer } from './../lib/index'
 
+import { Sequelize } from 'sequelize'
 import { JobType } from './types'
 
 export default async function getStandAloneServer(
-  config: any,
+  dbConfig: any,
   gsgParams: any = {},
   customMutations: any = {},
-  onJobFail?: (job: JobType) => Promise<any>
+  onJobFail?: (job: JobType) => Promise<any>,
+  sequelizeInstance?: Sequelize
 ) {
   const express = require('express')
   const http2 = require('http')
@@ -34,11 +36,14 @@ export default async function getStandAloneServer(
   })
 
   const server = await getApolloServer(
-    config,
-    gsgParams,
-    customMutations,
-    onJobFail,
-    wsServer
+    {
+      dbConfig,
+      sequelizeInstance,
+      gsgParams,
+      customMutations,
+      onJobFail,
+      wsServer
+    }
   )
   await server.start()
 

@@ -16,14 +16,14 @@ program
     'Migrate the database with the last schema of graphql-node-jobs. We advise to provide a separated schema.'
   )
   .action(async function (configPath, options) {
-    let config = null
+    let dbConfig = null
     try {
-      config = require(configPath)
+      dbConfig = require(configPath)
     } catch (e: any) {
       throw new Error('Could not load the given config.' + e.message)
     }
 
-    const models = await getModelsAndInitializeDatabase(config, options ? options.dbhash : null)
+    const models = await getModelsAndInitializeDatabase({dbConfig, dbhash : options ? options.dbhash : null})
     await migrate(models)
     await models.sequelize.close()
   })
@@ -35,13 +35,13 @@ program
     if (process.env.NODE_ENV !== 'development') {
       throw new Error('This command is only available in development mode')
     }
-    let config = null
+    let dbConfig = null
     try {
-      config = require(configPath)
+      dbConfig = require(configPath)
     } catch (e: any) {
       throw new Error('Could not load the given config.' + e.message)
     }
-    const models = await getModelsAndInitializeDatabase(config, '')
+    const models = await getModelsAndInitializeDatabase({dbConfig})
     await generateJobs(models, nbDays, nbJobsPerDay)
     await models.sequelize.close()
     console.log('Seeding Done')
@@ -54,13 +54,13 @@ program
     if (process.env.NODE_ENV !== 'development') {
       throw new Error('This command is only available in development mode')
     }
-    let config = null
+    let dbConfig = null
     try {
-      config = require(configPath)
+      dbConfig = require(configPath)
     } catch (e: any) {
       throw new Error('Could not load the given config.' + e.message)
     }
-    const models = await getModelsAndInitializeDatabase(config, '')
+    const models = await getModelsAndInitializeDatabase({dbConfig})
     await generateWorkersLogs(models, nbHours)
     await models.sequelize.close()
     console.log('Seeding Done')

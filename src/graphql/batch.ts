@@ -1,13 +1,13 @@
 import {
+  InAndOutTypes,
   ModelDeclarationType,
   SequelizeModels,
-  InAndOutTypes,
-} from '@teamstarter/graphql-sequelize-generator/types'
+} from '@teamstarter/graphql-sequelize-generator/src/types/types'
 
 export default function BatchConfiguration(
   graphqlTypes: InAndOutTypes,
   models: SequelizeModels
-): ModelDeclarationType {
+): ModelDeclarationType<any> {
   return {
     model: models.batch,
     actions: ['list', 'update', 'create', 'count'],

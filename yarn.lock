@@ -795,10 +795,10 @@
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==
 
-"@teamstarter/graphql-sequelize-generator@^8.3.0":
-  version "8.3.0"
-  resolved "https://registry.yarnpkg.com/@teamstarter/graphql-sequelize-generator/-/graphql-sequelize-generator-8.3.0.tgz#42520f7950b0703fe600cdd91f06a7e648de27ec"
-  integrity sha512-rQUn/TA0jMQ+FY+R776Daqu+0r2j828PVg8ABO+7XnxfEdzSqNmXuJCbrB14yO3VGIbzCQHRNjiZj5W2mjYQ6A==
+"@teamstarter/graphql-sequelize-generator@^8.7.3":
+  version "8.7.3"
+  resolved "https://registry.yarnpkg.com/@teamstarter/graphql-sequelize-generator/-/graphql-sequelize-generator-8.7.3.tgz#52a670ce3e8dbf812de4c581b0686d6de5dac1f2"
+  integrity sha512-yFa2mPdpvm/b+5t6OGbw05fA7dGmVTkwuO3cRAUu6SsRqK+g8bM8mlCMVMsgB5RF31TnUC+YWlJ4RFPSgm1bhw==
   dependencies:
     "@apollo/server" "^4.1.1"
     "@graphql-tools/schema" "^9.0.10"

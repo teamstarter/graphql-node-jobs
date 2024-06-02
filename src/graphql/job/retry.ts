@@ -1,9 +1,9 @@
-import { GraphQLInt, GraphQLNonNull } from 'graphql'
 import {
-  CustomMutationConfiguration,
-  InAndOutTypes,
-  SequelizeModels,
-} from '@teamstarter/graphql-sequelize-generator/types'
+    CustomMutationConfiguration,
+    InAndOutTypes,
+    SequelizeModels,
+} from '@teamstarter/graphql-sequelize-generator/src/types/types'
+import { GraphQLInt, GraphQLNonNull } from 'graphql'
 import { PubSub } from 'graphql-subscriptions'
 
 const status = [

@@ -28,10 +28,12 @@ async function startServer() {
     path: '/graphql',
   })
 
-  const server = await getApolloServer(config, {
-    wsServer,
-    pubSubInstance,
-    playground: true,
+  const server = await getApolloServer({dbConfig,
+    gsgParams: {  
+      pubSubInstance,
+      playground: true
+    },
+    wsServer
   })
 
   /**

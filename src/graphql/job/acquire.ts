@@ -1,8 +1,8 @@
 import {
-  CustomMutationConfiguration,
-  InAndOutTypes,
-  SequelizeModels,
-} from '@teamstarter/graphql-sequelize-generator/types'
+    CustomMutationConfiguration,
+    InAndOutTypes,
+    SequelizeModels,
+} from '@teamstarter/graphql-sequelize-generator/src/types/types'
 import { GraphQLList, GraphQLNonNull, GraphQLString } from 'graphql'
 import { Op, Transaction } from 'sequelize'
 

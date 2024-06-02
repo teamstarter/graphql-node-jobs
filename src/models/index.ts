@@ -4,7 +4,7 @@ import { Sequelize } from 'sequelize'
 
 let db: any = null
 
-function importModels(sequelizeInstance: typeof Sequelize) {
+function importModels(sequelizeInstance: Sequelize) {
   db = {}
   const basename = path.basename(module.filename)
 
@@ -39,28 +39,29 @@ function importModels(sequelizeInstance: typeof Sequelize) {
  * It must be noted that NJ does not support changing the models configuration
  * once the models are fetched.
  */
-async function initDb(config: any, dbhash?: string) {
+async function initDb({dbConfig, sequelizeInstance, dbhash}: {dbConfig?: any, sequelizeInstance?: Sequelize, dbhash?: string}) {
  
   db = {}
 
-  let sequelize: any = null
-
   if (
-    typeof config.use_env_variable !== 'undefined' &&
-    config.use_env_variable
+    dbConfig &&
+    typeof dbConfig.use_env_variable !== 'undefined' &&
+    dbConfig.use_env_variable && 
+    !sequelizeInstance
   ) {
     if (dbhash) {
       throw new Error(
         'Configuration in env variables cannot be used in db hash mode.'
       )
     }
-    sequelize = new Sequelize()
-  } else {
+    sequelizeInstance = new Sequelize()
+  } else if(dbConfig) {
     const connexion =
       process.env.NODE_ENV &&
-      typeof config[process.env.NODE_ENV] !== 'undefined'
-        ? config[process.env.NODE_ENV]
-        : config
+      typeof dbConfig[process.env.NODE_ENV] !== 'undefined'
+        ? dbConfig[process.env.NODE_ENV]
+        : dbConfig
+        
     if (dbhash) {
       connexion.database = null
       const tmpConnexion = new Sequelize(
@@ -76,20 +77,20 @@ async function initDb(config: any, dbhash?: string) {
       }
 
       connexion.database = dbhash
-      sequelize = new Sequelize(connexion)
+      sequelizeInstance = new Sequelize(connexion)
     } else {
-      sequelize = new Sequelize(connexion)
+      sequelizeInstance = new Sequelize(connexion)
     }
   }
 
-  importModels(sequelize)
+  importModels(sequelizeInstance as Sequelize)
   
   return db
 }
 
-export async function getModelsAndInitializeDatabase(dbConfig: any, dbhash?: string) {
+export async function getModelsAndInitializeDatabase({dbConfig, sequelizeInstance, dbhash}: {dbConfig?: any, sequelizeInstance?: Sequelize, dbhash?: string}) {
   if (!db) {
-    await initDb(dbConfig, dbhash)
+    await initDb({dbConfig, sequelizeInstance, dbhash})
   }
   return db
 }

@@ -2,7 +2,7 @@ import {
   InAndOutTypes,
   ModelDeclarationType,
   SequelizeModels,
-} from '@teamstarter/graphql-sequelize-generator/types'
+} from '@teamstarter/graphql-sequelize-generator/src/types/types'
 import debounce from 'debounce'
 import { PubSub } from 'graphql-subscriptions'
 
@@ -76,7 +76,7 @@ export default function JobConfiguration(
   models: SequelizeModels,
   pubSubInstance: PubSub | null = null,
   onJobFail?: (job: JobType) => Promise<any>
-): ModelDeclarationType {
+): ModelDeclarationType<any> {
   return {
     model: models.job,
     actions: ['list', 'update', 'create', 'count'],

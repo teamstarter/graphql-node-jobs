@@ -5,6 +5,7 @@ import {
 import { getModelsAndInitializeDatabase } from '../models'
 import { JobType } from '../types'
 
+import { Sequelize } from 'sequelize'
 import batch from './batch'
 import job from './job'
 import jobHoldType from './jobHoldType'
@@ -18,14 +19,22 @@ import { workerSuccessRating } from './workerSuccessRating'
  * @param dbConfig Sequelize database configuration object
  * @param gsgParams Params from graphql-sequelize-generator that overwrite the default ones.
  */
-export default async function getApolloServer(
+export default async function getApolloServer({
+  dbConfig,
+  sequelizeInstance,
+  gsgParams = {},
+  customMutations = {},
+  onJobFail,
+  wsServer = null} : {
   dbConfig: any,
-  gsgParams: any = {},
-  customMutations: any = {},
+  sequelizeInstance?: Sequelize,
+  gsgParams?: any,
+  customMutations?: any,
   onJobFail?: (job: JobType) => Promise<any>,
-  wsServer: any = null
+  wsServer?: any
+  }
 ) {
-  const models = await getModelsAndInitializeDatabase(dbConfig)
+  const models = await getModelsAndInitializeDatabase({dbConfig, sequelizeInstance})
 
   const types = generateModelTypes(models)
 

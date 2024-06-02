@@ -1,4 +1,4 @@
-import { SequelizeModels } from '@teamstarter/graphql-sequelize-generator/types'
+import { SequelizeModels } from '@teamstarter/graphql-sequelize-generator/src/types/types'
 
 export default async function putNextStepJobsInTheQueued(
   nextStep: any,

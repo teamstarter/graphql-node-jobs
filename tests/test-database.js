@@ -44,7 +44,7 @@ const seederFiles = fs
  * Migrates the database
  */
 exports.migrateDatabase = async () => {
-  const models = await getModelsAndInitializeDatabase(dbConfig)
+  const models = await getModelsAndInitializeDatabase({dbConfig})
   const sequelize = models.sequelize // sequelize is the instance of the db
 
   /**
@@ -82,7 +82,7 @@ exports.migrateDatabase = async () => {
  * Seeds the database with mockup data
  */
 exports.seedDatabase = async () => {
-  const models = await getModelsAndInitializeDatabase(dbConfig)
+  const models = await getModelsAndInitializeDatabase({dbConfig})
   const sequelize = models.sequelize // sequelize is the instance of the db
 
   /**
@@ -138,7 +138,7 @@ exports.resetDatabase = async () => {
 }
 
 exports.getModelsAndInitializeDatabase = async () => {
-  return await getModelsAndInitializeDatabase(dbConfig)
+  return await getModelsAndInitializeDatabase({dbConfig})
 }
 
 async function closeConnections() {
@@ -152,7 +152,7 @@ exports.closeEverything = async (mainServer, models, done) => {
   done()
 }
 
-exports.getNewServer = (onJobFail) => {
+exports.getNewServer = (onJobFail, sequelizeInstance) => {
   return getStandAloneServer(
     dbConfig,
     {
@@ -187,6 +187,7 @@ exports.getNewServer = (onJobFail) => {
         },
       },
     },
-    onJobFail
+    onJobFail,
+    sequelizeInstance
   )
 }

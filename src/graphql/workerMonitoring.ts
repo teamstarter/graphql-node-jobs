@@ -1,19 +1,18 @@
 import {
-  InAndOutTypes,
-  ModelDeclarationType,
-  SequelizeModels,
-} from '@teamstarter/graphql-sequelize-generator/types'
-import { pinged } from './workerMonitoring/subscriptions/pinged'
-import { ponged } from './workerMonitoring/subscriptions/ponged'
+    ModelDeclarationType,
+    SequelizeModels
+} from '@teamstarter/graphql-sequelize-generator/src/types/types'
 import { ping } from './workerMonitoring/mutations/ping'
 import { pong } from './workerMonitoring/mutations/pong'
-import { workerMonitorUpdated } from './workerMonitoring/subscriptions/workerMonitoringUpdated'
 import { workerMonitorUpdate } from './workerMonitoring/mutations/workerMonitorUpdate'
+import { pinged } from './workerMonitoring/subscriptions/pinged'
+import { ponged } from './workerMonitoring/subscriptions/ponged'
+import { workerMonitorUpdated } from './workerMonitoring/subscriptions/workerMonitoringUpdated'
 
 export function workerMonitoring(
   models: SequelizeModels,
   pubSubInstance: any
-): ModelDeclarationType {
+): ModelDeclarationType<any> {
   return {
     model: models.workerMonitoring,
     actions: ['list'],
