@@ -216,7 +216,7 @@ export default function JobConfiguration(
               })
 
               if (step) {
-                step.update({
+                await step.update({
                   status: 'done',
                 })
               }

@@ -8,14 +8,14 @@ export default async function putNextStepJobsInTheQueued(
     const job = await models.job.findOne({
       where: { id: nextStep.jobId },
     })
-    job.update({ status: 'queued' })
+    await job.update({ status: 'queued' })
   }
   if (nextStep.batchId) {
     const jobs = await models.job.findAll({
       where: { batchId: nextStep.batchId },
     })
-    jobs.forEach((job: any) => {
-      job.update({ status: 'queued' })
-    })
+    for(const job of jobs) {
+      await job.update({ status: 'queued' })
+    }
   }
 }
