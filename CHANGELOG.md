@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0](https://github.com/teamstarter/graphql-node-jobs/compare/v2.3.1...v3.0.0) (2024-06-02)
+
+
+### ⚠ BREAKING CHANGES
+
+* **db:** Change the signature of getApolloServer.
+
+### Features
+
+* **db:** Allow to provide a sequelizeInstance. ([458593d](https://github.com/teamstarter/graphql-node-jobs/commit/458593d075ab0030e30f6e85117dc636d9ffe331))
+
 ### [2.3.1](https://github.com/teamstarter/graphql-node-jobs/compare/v2.3.0...v2.3.1) (2024-04-22)
 
 
