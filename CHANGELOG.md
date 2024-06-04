@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.2](https://github.com/teamstarter/graphql-node-jobs/compare/v3.0.1...v3.0.2) (2024-06-04)
+
+
+### Bug Fixes
+
+* **types:** Upgrade GSG to fix CI. ([ef68399](https://github.com/teamstarter/graphql-node-jobs/commit/ef6839926ebfcb9d417b7a31f603a2a3cfeecd57))
+
 ### [3.0.1](https://github.com/teamstarter/graphql-node-jobs/compare/v3.0.0...v3.0.1) (2024-06-02)
 
 
