@@ -31,7 +31,7 @@ export default function AcquireJobDefinition(
     },
     resolve: async (source: any, args: any, context: any) => {
       const dialect = models.sequelize.getDialect()
-
+      console.log('--- dialect is ---', dialect)
       if (dialect === 'sqlite') {
         // Use optimistic concurrency control for SQLite
         return acquireJobSQLite(models, args)
