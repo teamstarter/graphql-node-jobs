@@ -24,8 +24,9 @@ export default function AcquireJobDefinition(
       workerType: { type: GraphQLString },
     },
     resolve: async (source, args, context) => {
+      console.log('123debug')
       const transaction = await models.sequelize.transaction({
-        isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
+        isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ,
       })
       const allJobHoldType = await models.jobHoldType.findAll({ transaction })
       const heldTypes = allJobHoldType.map((heldType: any) => heldType.type)
