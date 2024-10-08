@@ -1,5 +1,6 @@
 const request = require('supertest')
 const addMinutes = require('date-fns/addMinutes')
+const { canUseRowLevelLocking } = require('../lib/graphql/job')
 
 const {
   migrateDatabase,
@@ -10,28 +11,14 @@ const {
   deleteTables,
   resetDatabase,
 } = require('./test-database.js')
-const {
-  checkForJobs,
-  listJobs,
-  getNewClient,
-  createJob,
-  CancelRequestedError,
-} = require('../lib/index')
-
-// This is the maximum amount of time the band of test can run before timing-out
 jest.setTimeout(600000)
 
 let server = null
-const client = getNewClient(
-  `http://localhost:${process.env.PORT || 8080}/graphql`
-)
-
-const wait = (time) => new Promise((resolve) => setTimeout(resolve, time))
 
 const acquireJob = (variables) => ({
   query: `mutation($typeList: [String!]!, $workerId: String) {
     acquireJob(
-      typeList: $typeList
+      typeList: $typeList,
       workerId: $workerId
     ) {
       id
@@ -44,103 +31,6 @@ const acquireJob = (variables) => ({
   operationName: null,
 })
 
-const jobCreate = (variables) => ({
-  query: `mutation($job: jobInput!) {
-    jobCreate(
-      job: $job
-    ) {
-      id
-      name
-      status
-      output
-      jobUniqueId
-    }
-  }`,
-  variables,
-  operationName: null,
-})
-
-const jobUpdate = (variables) => ({
-  query: `mutation($job: jobInput!) {
-    jobUpdate(
-      job: $job
-    ) {
-      id
-      name
-      status
-      isUpdateAlreadyCalledWhileCancelRequested
-    }
-  }`,
-  variables,
-  operationName: null,
-})
-
-const jobList = (variables) => ({
-  query: `query($where: SequelizeJSON!) {
-    job(
-      where: $where
-    ) {
-      id
-      name
-      status
-      isHighFrequency
-    }
-  }`,
-  variables,
-  operationName: null,
-})
-
-const customAcquire = (variables) => ({
-  query: `mutation($typeList: [String!]!) {
-    customAcquire(
-      typeList: $typeList
-    ) {
-      id
-    }
-  }`,
-  variables,
-  operationName: null,
-})
-
-const recoverJob = (variables) => ({
-  query: `mutation($id: Int!) {
-    recover(id: $id) {
-      id
-      status
-    }
-  }`,
-  variables,
-  operationName: null,
-})
-
-const toggleHoldJobType = (variables) => ({
-  query: `mutation($type: String!) {
-    toggleHoldJobType(type: $type) {
-      id
-      type
-
-    }
-  }`,
-  variables,
-  operationName: null,
-})
-
-const retryJob = (variables) => ({
-  query: `mutation retryJob($id: Int!){
-    retryJob(id: $id) {
-      id
-      name
-      type
-      status
-    }
-  }`,
-  variables,
-  operationName: null,
-})
-
-/**
- * Starting the tests
- */
 describe('Test acquireJob mutation', () => {
   beforeAll(async () => {
     await migrateDatabase()
@@ -161,11 +51,8 @@ describe('Test acquireJob mutation', () => {
     await closeEverything(server, models, done)
   })
 
-  it('Acquiring a job require a type', async () => {
-    console.log('Before')
+  it('Acquiring a job requires a type', async () => {
     const response = await request(server).post('/graphql').send(acquireJob({}))
-    console.log('After')
-
     expect(response.body.errors).toHaveLength(1)
     expect(response.body.errors[0].message).toMatchSnapshot()
   })
@@ -194,7 +81,7 @@ describe('Test acquireJob mutation', () => {
     expect(response2.body.data.acquireJob).toBe(null)
   })
 
-  it('When a job is planified to be run in the future, it cannot be acquired.', async () => {
+  it('When a job is scheduled to be run in the future, it cannot be acquired.', async () => {
     const date = new Date()
     const models = await getModelsAndInitializeDatabase()
     const job = await models.job.findByPk(1)
@@ -211,7 +98,7 @@ describe('Test acquireJob mutation', () => {
     expect(response.body.errors).toBeUndefined()
     expect(response.body.data.acquireJob).toBe(null)
 
-    // A few milli-seconds passed, so the job should be returned
+    // A few milliseconds passed, so the job should be returned
     await job.update({ startAfter: date })
 
     const response2 = await request(server)
@@ -231,7 +118,6 @@ describe('Test acquireJob mutation', () => {
     await models.job.create({ type: 'blacklisted' })
     await models.jobHoldType.create({ type: 'blacklisted' })
     await models.jobHoldType.create({ type: 'blacklisted2' })
-
     const response = await request(server)
       .post('/graphql')
       .send(
@@ -242,5 +128,39 @@ describe('Test acquireJob mutation', () => {
 
     expect(response.body.errors).toBeUndefined()
     expect(response.body.data).toMatchSnapshot()
+  })
+
+  it('Concurrent job acquiring should only allow one acquisition', async () => {
+    // Send multiple "concurrent" requests to acquire the same type of job
+    const typeList = ['a']
+    const requestPromises = Array(5)
+      .fill(null)
+      .map(() =>
+        request(server).post('/graphql').send(acquireJob({ typeList }))
+      )
+
+    // Wait for all the requests to finish
+    const results = await Promise.all(requestPromises)
+
+    // Filter responses to only those that were successful in acquiring a job
+    const successfulAcquisitions = results.filter(
+      (response) => response.body.data && response.body.data.acquireJob !== null
+    )
+
+    // Ensure that only one request was successful in acquiring the job
+    expect(successfulAcquisitions.length).toBe(1)
+
+    // Check the remaining responses to confirm that they did not acquire the job
+    const failedAcquisitions = results.filter(
+      (response) => response.body.data && response.body.data.acquireJob === null
+    )
+
+    // Expect that 4 out of 5 attempts failed to acquire the job due to it already being acquired
+    expect(failedAcquisitions.length).toBe(4)
+
+    // Verify that there were no unexpected GraphQL errors across all responses
+    results.forEach((response) => {
+      expect(response.body.errors).toBeUndefined()
+    })
   })
 })

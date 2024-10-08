@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Test acquireJob mutation Acquiring a job require a type 1`] = `"Variable \\"$typeList\\" of required type \\"[String!]!\\" was not provided."`;
+exports[`Test acquireJob mutation Acquiring a job requires a type 1`] = `"Variable \\"$typeList\\" of required type \\"[String!]!\\" was not provided."`;
 
 exports[`Test acquireJob mutation One can acquire a job of a given type. 1`] = `
 Object {
