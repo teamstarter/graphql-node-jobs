@@ -86,7 +86,7 @@ async function canUseRowLevelLocking(
   try {
     await models.sequelize.transaction(async (transaction) => {
       await models.job.findOne({
-        lock: transaction.LOCK.UPDATE,
+        lock: Transaction.LOCK.UPDATE,
         skipLocked: true,
         transaction,
       })
@@ -122,8 +122,6 @@ async function acquireJobWithRowLocking(
   try {
     const transactionOptions = {
       isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
-      lock: Transaction.LOCK.UPDATE,
-      skipLocked: true,
     }
     return await models.sequelize.transaction(
       transactionOptions,
@@ -154,11 +152,17 @@ async function attemptJobAcquisition(
   transaction?: Transaction
 ): Promise<any> {
   try {
-    const job = await models.job.findOne({
+    const findOptions: any = {
       where: { [Op.and]: conditions },
       order: [['id', 'ASC']],
       transaction,
-    })
+    }
+    if (transaction) {
+      findOptions.lock = Transaction.LOCK.UPDATE
+      findOptions.skipLocked = true
+    }
+
+    const job = await models.job.findOne(findOptions)
     if (!job) {
       return null
     }
@@ -167,7 +171,7 @@ async function attemptJobAcquisition(
       status: 'processing',
       startedAt: new Date(),
     }
-    const updateOptions = {
+    const updateOptions: any = {
       where: { id: job.id, status: 'queued' },
       transaction,
     }
