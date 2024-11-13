@@ -149,6 +149,7 @@ describe('Test acquireJob mutation', () => {
 
     // Ensure that only one request was successful in acquiring the job
     expect(successfulAcquisitions.length).toBe(1)
+    expect(successfulAcquisitions[0].body.data).toMatchSnapshot()
 
     // Check the remaining responses to confirm that they did not acquire the job
     const failedAcquisitions = results.filter(
