@@ -98,9 +98,8 @@ describe('Test acquireJob mutation', () => {
     expect(response.body.errors).toBeUndefined()
     expect(response.body.data.acquireJob).toBe(null)
 
-    // A few milliseconds passed, so the job should be returned
     await job.update({ startAfter: date })
-
+    await new Promise((resolve) => setTimeout(resolve, 1000))
     const response2 = await request(server)
       .post('/graphql')
       .send(

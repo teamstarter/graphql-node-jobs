@@ -9,11 +9,11 @@ import {
   GraphQLString,
   GraphQLBoolean,
 } from 'graphql'
+import { Op } from 'sequelize'
 
 interface AcquireJobArgs {
   typeList: string[]
   workerId?: string
-  workerType?: string
 }
 
 export default function AcquireJobDefinition(
@@ -38,35 +38,47 @@ export default function AcquireJobDefinition(
     },
   }
 }
-
 async function acquireJob(
   models: SequelizeModels,
   args: AcquireJobArgs
 ): Promise<any> {
   try {
+    const heldTypes = (
+      await models.jobHoldType.findAll({
+        attributes: ['type'],
+      })
+    ).map((heldType: any) => heldType.type)
+
+    // Check if 'all' is held
+    if (heldTypes.includes('all')) {
+      return null
+    }
     const result = await models.sequelize.query(
       `
       UPDATE job
-      SET worker_id = :workerId, status = 'processing', started_at = NOW()
-      WHERE id = (
+      SET "workerId" = ${args.workerId ? ':workerId' : 'NULL'},
+          "status" = 'processing',
+          "startedAt" = CURRENT_TIMESTAMP
+      FROM (
         SELECT id
         FROM job
-        WHERE type = ANY(:typeList)
-          AND status = 'queued'
-          AND (start_after IS NULL OR start_after < NOW())
+        WHERE type IN(:typeList)
+          AND "status" = 'queued'
+          AND (job."startAfter" IS NULL OR 
+            job."startAfter" <=  current_timestamp)
           AND type NOT IN (
             SELECT type
-            FROM job_hold_type
+            FROM "jobHoldType"
           )
         ORDER BY id ASC
         LIMIT 1
-        FOR UPDATE SKIP LOCKED
-      )
+      ) as subquery
+      WHERE job.id = subquery.id
       RETURNING *;
       `,
       {
         replacements: {
-          workerId: args.workerId,
+          ...(args.workerId ? { workerId: args.workerId } : {}),
           typeList: args.typeList,
         },
       }
