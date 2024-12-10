@@ -65,13 +65,14 @@ async function acquireJob(
         WHERE type IN(:typeList)
           AND "status" = 'queued'
           AND (job."startAfter" IS NULL OR 
-            job."startAfter" <=  current_timestamp)
+            job."startAfter" <= current_timestamp)
           AND type NOT IN (
             SELECT type
             FROM "jobHoldType"
           )
         ORDER BY id ASC
         LIMIT 1
+        FOR UPDATE SKIP LOCKED
       ) as subquery
       WHERE job.id = subquery.id
       RETURNING *;
