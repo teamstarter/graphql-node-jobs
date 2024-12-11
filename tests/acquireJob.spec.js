@@ -18,7 +18,7 @@ let server = null
 const acquireJob = (variables) => ({
   query: `mutation($typeList: [String!]!, $workerId: String) {
     acquireJob(
-      typeList: $typeList,
+      typeList: $typeList
       workerId: $workerId
     ) {
       id
