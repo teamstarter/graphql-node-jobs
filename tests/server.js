@@ -7,7 +7,7 @@ const { WebSocketServer } = require('ws')
 const { json } = require('body-parser')
 const cors = require('cors')
 
-const config = require('./sqliteTestConfig.js')
+const config = require('../config/sequelizeConfig')
 
 async function startServer() {
   const app = express()
@@ -28,12 +28,13 @@ async function startServer() {
     path: '/graphql',
   })
 
-  const server = await getApolloServer({dbConfig,
-    gsgParams: {  
+  const server = await getApolloServer({
+    dbConfig,
+    gsgParams: {
       pubSubInstance,
-      playground: true
+      playground: true,
     },
-    wsServer
+    wsServer,
   })
 
   /**

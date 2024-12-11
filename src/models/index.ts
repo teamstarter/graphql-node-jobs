@@ -1,6 +1,8 @@
 import fs from 'fs'
 import path from 'path'
 import { Sequelize } from 'sequelize'
+import { TextEncoder } from 'util'
+global.TextEncoder = TextEncoder
 
 let db: any = null
 
@@ -9,17 +11,17 @@ function importModels(sequelizeInstance: Sequelize) {
   const basename = path.basename(module.filename)
 
   fs.readdirSync(__dirname)
-  .filter(function (file) {
-    return (
-      file.indexOf('.') !== 0 && file !== basename && file.slice(-3) === '.js'
-    )
-  })
-  .forEach(function (file) {
-    const model = require(path.join(__dirname, file)).default(
-      sequelizeInstance
-    )
-    db[model.name] = model
-  })
+    .filter(function (file) {
+      return (
+        file.indexOf('.') !== 0 && file !== basename && file.slice(-3) === '.js'
+      )
+    })
+    .forEach(function (file) {
+      const model = require(path.join(__dirname, file)).default(
+        sequelizeInstance
+      )
+      db[model.name] = model
+    })
 
   Object.keys(db).forEach(function (modelName) {
     if (db[modelName].associate) {
@@ -39,14 +41,20 @@ function importModels(sequelizeInstance: Sequelize) {
  * It must be noted that NJ does not support changing the models configuration
  * once the models are fetched.
  */
-async function initDb({dbConfig, sequelizeInstance, dbhash}: {dbConfig?: any, sequelizeInstance?: Sequelize, dbhash?: string}) {
- 
+async function initDb({
+  dbConfig,
+  sequelizeInstance,
+  dbhash,
+}: {
+  dbConfig?: any
+  sequelizeInstance?: Sequelize
+  dbhash?: string
+}) {
   db = {}
-
   if (
     dbConfig &&
     typeof dbConfig.use_env_variable !== 'undefined' &&
-    dbConfig.use_env_variable && 
+    dbConfig.use_env_variable &&
     !sequelizeInstance
   ) {
     if (dbhash) {
@@ -55,13 +63,13 @@ async function initDb({dbConfig, sequelizeInstance, dbhash}: {dbConfig?: any, se
       )
     }
     sequelizeInstance = new Sequelize()
-  } else if(dbConfig) {
+  } else if (dbConfig) {
     const connexion =
       process.env.NODE_ENV &&
       typeof dbConfig[process.env.NODE_ENV] !== 'undefined'
         ? dbConfig[process.env.NODE_ENV]
         : dbConfig
-        
+
     if (dbhash) {
       connexion.database = null
       const tmpConnexion = new Sequelize(
@@ -84,25 +92,31 @@ async function initDb({dbConfig, sequelizeInstance, dbhash}: {dbConfig?: any, se
   }
 
   importModels(sequelizeInstance as Sequelize)
-  
   return db
 }
 
-export async function getModelsAndInitializeDatabase({dbConfig, sequelizeInstance, dbhash}: {dbConfig?: any, sequelizeInstance?: Sequelize, dbhash?: string}) {
+export async function getModelsAndInitializeDatabase({
+  dbConfig,
+  sequelizeInstance,
+  dbhash,
+}: {
+  dbConfig?: any
+  sequelizeInstance?: Sequelize
+  dbhash?: string
+}) {
   if (!db) {
-    await initDb({dbConfig, sequelizeInstance, dbhash})
+    await initDb({ dbConfig, sequelizeInstance, dbhash })
   }
   return db
 }
 
 export function getModels(dbConfig: any, sequelizeInstance: any) {
   if (!db) {
-    if(!sequelizeInstance) {
+    if (!sequelizeInstance) {
       if (
         typeof dbConfig.use_env_variable !== 'undefined' &&
         dbConfig.use_env_variable
       ) {
-        
         sequelizeInstance = new Sequelize()
       } else {
         const connexion =
@@ -110,8 +124,8 @@ export function getModels(dbConfig: any, sequelizeInstance: any) {
           typeof dbConfig[process.env.NODE_ENV] !== 'undefined'
             ? dbConfig[process.env.NODE_ENV]
             : dbConfig
-        
-            sequelizeInstance = new Sequelize(connexion)
+
+        sequelizeInstance = new Sequelize(connexion)
       }
     }
 

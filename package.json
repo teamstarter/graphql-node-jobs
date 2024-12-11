@@ -26,13 +26,17 @@
     "cors": "^2.8.5",
     "debounce": "^1.2.1",
     "debug": "^4.1.1",
+    "docker-compose": "^1.1.0",
+    "dotenv": "^16.4.7",
+    "dotenv-extended": "^2.9.0",
     "graphql-tag": "^2.12.6",
     "graphql-ws": "^5.14.1",
     "http2": "^3.3.7",
     "node-fetch": "^2.6.0",
     "pg": "^8.8.0",
-    "sequelize": "^6.3.5",
+    "sequelize": "6.28.0",
     "umzug": "^2.2.0",
+    "util": "^0.12.5",
     "uuid": "^3.3.3",
     "ws": "^8.14.2"
   },
@@ -62,7 +66,7 @@
     "jest": "^24.9.0",
     "pm2": "^4.2.1",
     "react": "^18.2.0",
-    "sequelize": "^6.3.5",
+    "sequelize": "6.28.0",
     "spdy": "^4.0.1",
     "sqlite3": "^5.1.6",
     "standard-version": "^7.0.1",
@@ -74,7 +78,7 @@
     "graphql": "^16.6.0",
     "graphql-relay": "^0.10.0",
     "graphql-sequelize": "^9.5.1",
-    "sequelize": "^6.3.5"
+    "sequelize": "6.28.0"
   },
   "resolutions": {
     "@types/serve-static": "1.13.9"
@@ -87,6 +91,13 @@
     "test": "NO_ASYNC=true NODE_ENV=test PORT=3332 jest --runInBand --ci --forceExit --verbose",
     "release": "yarn build && yarn standard-version",
     "gnj": "node ./lib/gnj.js",
-    "start": "node ./tests/server.js"
+    "start": "node ./tests/server.js",
+    "install-docker-image": "docker-compose build",
+    "db-start": "docker-compose up -d && dotenv-extended bash ./config/docker/waitforit.sh",
+    "db-stop": "docker-compose stop",
+    "db-remove": "docker-compose down --remove-orphans",
+    "db-restart": "docker-compose ps",
+    "db-logs": "docker-compose logs -f",
+    "db-ssh": "docker-compose run --rm postgres bash"
   }
 }

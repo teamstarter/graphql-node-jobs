@@ -132,7 +132,7 @@ describe('Test acquireJob mutation', () => {
   it('Concurrent job acquiring should only allow one acquisition', async () => {
     // Send multiple "concurrent" requests to acquire the same type of job
     const typeList = ['a']
-    const requestPromises = Array(5)
+    const requestPromises = Array(100)
       .fill(null)
       .map(() =>
         request(server).post('/graphql').send(acquireJob({ typeList }))
@@ -155,10 +155,75 @@ describe('Test acquireJob mutation', () => {
       (response) => response.body.data && response.body.data.acquireJob === null
     )
 
-    // Expect that 4 out of 5 attempts failed to acquire the job due to it already being acquired
-    expect(failedAcquisitions.length).toBe(4)
+    // Expect that 99 out of 100 attempts failed to acquire the job due to it already being acquired
+    expect(failedAcquisitions.length).toBe(99)
 
     // Verify that there were no unexpected GraphQL errors across all responses
+    results.forEach((response) => {
+      expect(response.body.errors).toBeUndefined()
+    })
+  })
+  it('Concurrent job acquiring should fetch jobs only once', async () => {
+    const models = await getModelsAndInitializeDatabase()
+    // Count existing queued jobs in the database
+    const existingJobs = await models.job.findAll({
+      where: { status: 'queued', type: 'a' },
+    })
+    const existingJobCount = existingJobs.length
+    // Create additional jobs
+    const type = 'a'
+    const numberOfJobsToCreate = 15
+    const jobs = await Promise.all(
+      Array(numberOfJobsToCreate)
+        .fill(null)
+        .map(() =>
+          models.job.create({
+            type,
+            status: 'queued',
+          })
+        )
+    )
+
+    // Send multiple "concurrent" requests to acquire jobs
+    const requestPromises = Array(100)
+      .fill(null)
+      .map(() =>
+        request(server)
+          .post('/graphql')
+          .send(acquireJob({ typeList: [type] }))
+      )
+    const results = await Promise.all(requestPromises)
+
+    // Filter responses to those that successfully acquired a job
+    const successfulAcquisitions = results.filter(
+      (response) => response.body.data && response.body.data.acquireJob !== null
+    )
+
+    // Ensure that the number of successful acquisitions matches the total number of jobs
+    const totalJobs = existingJobCount + numberOfJobsToCreate
+    expect(successfulAcquisitions.length).toBe(totalJobs)
+
+    // Verify that each acquired job is unique
+    const acquiredJobIds = successfulAcquisitions.map(
+      (response) => response.body.data.acquireJob.id
+    )
+    const uniqueJobIds = new Set(acquiredJobIds)
+    expect(uniqueJobIds.size).toBe(totalJobs)
+
+    // Check that all jobs (existing + newly created) have been acquired exactly once
+    const allJobIds = [
+      ...existingJobs.map((job) => job.id),
+      ...jobs.map((job) => job.id),
+    ]
+    expect(acquiredJobIds.sort()).toEqual(allJobIds.sort())
+
+    // Verify that the remaining responses did not acquire any job
+    const failedAcquisitions = results.filter(
+      (response) => response.body.data && response.body.data.acquireJob === null
+    )
+    expect(failedAcquisitions.length).toBe(100 - totalJobs)
+
+    // Ensure there were no unexpected GraphQL errors across all responses
     results.forEach((response) => {
       expect(response.body.errors).toBeUndefined()
     })

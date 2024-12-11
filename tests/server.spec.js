@@ -167,7 +167,7 @@ describe('Test server options', () => {
     await seedDatabase()
     let isCalled = false
 
-    const config = require('./sqliteTestConfig.js')
+    const config = require('../config/sequelizeConfig.js')
     const sequelizeInstance = new Sequelize(config['test'])
     server = await getNewServer(null, sequelizeInstance)
 

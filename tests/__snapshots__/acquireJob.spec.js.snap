@@ -7,7 +7,7 @@ Object {
   "acquireJob": Object {
     "id": 1,
     "name": "Bla a",
-    "output": "{}",
+    "output": Object {},
     "status": "processing",
   },
 }
@@ -18,7 +18,7 @@ Object {
   "acquireJob": Object {
     "id": 1,
     "name": "Bla a",
-    "output": "{}",
+    "output": Object {},
     "status": "processing",
   },
 }
