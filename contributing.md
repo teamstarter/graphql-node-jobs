@@ -25,7 +25,7 @@ yarn
 yarn start
 ```
 
-### Be able to run bin files from the local node\_modules folder
+### Be able to run bin files from the local node_modules folder
 
 ```bash
 vim ~/.bashrc
@@ -39,7 +39,7 @@ source ~/.bashrc
 ### Test the migration script locally
 
 ```bash
-yarn run gnj migrate ./../tests/sqliteTestConfig.js
+yarn run gnj migrate ../config/sequelizeConfig.js
 ```
 
 ### Start a test server using the test database migrated previously
@@ -59,4 +59,3 @@ Debugging a specific test
 ```bash
 node --inspect-brk ./node_modules/jest/bin/jest.js ./tests/job.spec.js
 ```
-

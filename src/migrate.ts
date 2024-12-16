@@ -4,16 +4,6 @@ import path from 'path'
 import Umzug from 'umzug'
 
 /**
- * This file handles an im-memory SQLite database used for test purposes.
- * It exports three functions:
- * - migrateDatabase: generates the database from the migrations files
- * - seedDatabase: seeds the database from the seeders files
- * - deleteTables: delete all the tables
- * It also exports sequelize models.
- * - models
- */
-
-/**
  * Seeds the database with mockup data
  */
 export default async (models: SequelizeModels) => {

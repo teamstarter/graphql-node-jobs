@@ -8,9 +8,13 @@ const {
   GraphQLList,
 } = require('graphql')
 
-const { getStandAloneServer, getModelsAndInitializeDatabase } = require('./../lib/index')
+const {
+  getStandAloneServer,
+  getModelsAndInitializeDatabase,
+} = require('./../lib/index')
+const sequelize = require('sequelize')
 
-var dbConfig = require(path.join(__dirname, '/sqliteTestConfig.js')).test
+var dbConfig = require('../config/sequelizeConfig.js').test
 
 /**
  * This file handles an im-memory SQLite database used for test purposes.
@@ -44,7 +48,7 @@ const seederFiles = fs
  * Migrates the database
  */
 exports.migrateDatabase = async () => {
-  const models = await getModelsAndInitializeDatabase({dbConfig})
+  const models = await getModelsAndInitializeDatabase({ dbConfig })
   const sequelize = models.sequelize // sequelize is the instance of the db
 
   /**
@@ -82,7 +86,7 @@ exports.migrateDatabase = async () => {
  * Seeds the database with mockup data
  */
 exports.seedDatabase = async () => {
-  const models = await getModelsAndInitializeDatabase({dbConfig})
+  const models = await getModelsAndInitializeDatabase({ dbConfig })
   const sequelize = models.sequelize // sequelize is the instance of the db
 
   /**
@@ -131,6 +135,36 @@ exports.resetDatabase = async () => {
   try {
     await exports.migrateDatabase()
     await exports.seedDatabase()
+    const models = await exports.getModelsAndInitializeDatabase()
+    const sequelize = models.sequelize
+    await sequelize.query(
+      `DROP FUNCTION IF EXISTS public.tool_reset_all_sequences_to_max_values`
+    )
+    await sequelize.query(`
+      CREATE FUNCTION public.tool_reset_all_sequences_to_max_values() RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+          DECLARE
+            rec RECORD;
+            query TEXT;
+            queryRestart TEXT;
+          BEGIN
+            query := 'SELECT PGT.schemaname, S.relname, C.attname, T.relname as "tRelname" FROM pg_class AS S,  pg_depend AS D,     pg_class AS T,     pg_attribute AS C,     pg_tables AS PGT WHERE S.relkind = ''S''  AND S.oid = D.objid  AND D.refobjid = T.oid  AND D.refobjid = C.attrelid  AND D.refobjsubid = C.attnum  AND T.relname = PGT.tablename ORDER BY S.relname;';
+            FOR rec IN EXECUTE query
+            LOOP
+              queryRestart := 'SELECT SETVAL(' ||
+                             quote_literal(quote_ident(rec.schemaname) || '.' || quote_ident(rec.relname)) ||
+                             ', COALESCE(MAX(' ||quote_ident(rec.attname)|| '::int), 1) ) FROM ' ||
+                             quote_ident(rec.schemaname)|| '.'||quote_ident(rec."tRelname")|| ';';
+              RAISE NOTICE 'Will execute (%)', queryRestart;
+              EXECUTE queryRestart;
+            END LOOP;
+          END;
+          $$;
+`)
+    await sequelize.query(
+      'SELECT public.tool_reset_all_sequences_to_max_values()'
+    )
   } catch (e) {
     console.log('Critical error during the database migration', e.message, e)
     throw e
@@ -138,7 +172,7 @@ exports.resetDatabase = async () => {
 }
 
 exports.getModelsAndInitializeDatabase = async () => {
-  return await getModelsAndInitializeDatabase({dbConfig})
+  return await getModelsAndInitializeDatabase({ dbConfig })
 }
 
 async function closeConnections() {

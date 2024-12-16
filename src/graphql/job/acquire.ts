@@ -3,8 +3,18 @@ import {
   InAndOutTypes,
   SequelizeModels,
 } from '@teamstarter/graphql-sequelize-generator/src/types/types'
-import { GraphQLList, GraphQLNonNull, GraphQLString } from 'graphql'
-import { Op, Transaction } from 'sequelize'
+import {
+  GraphQLList,
+  GraphQLNonNull,
+  GraphQLString,
+  GraphQLBoolean,
+} from 'graphql'
+import { Op } from 'sequelize'
+
+interface AcquireJobArgs {
+  typeList: string[]
+  workerId?: string
+}
 
 export default function AcquireJobDefinition(
   graphqlTypes: InAndOutTypes,
@@ -23,60 +33,62 @@ export default function AcquireJobDefinition(
       workerId: { type: GraphQLString },
       workerType: { type: GraphQLString },
     },
-    resolve: async (source, args, context) => {
-      const transaction = await models.sequelize.transaction({
-        isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
-      })
-      const allJobHoldType = await models.jobHoldType.findAll({ transaction })
-      const heldTypes = allJobHoldType.map((heldType: any) => heldType.type)
-
-      if (heldTypes.includes('all')) {
-        await transaction.rollback()
-        return null
-      }
-
-      const conditions: any = [
-        {
-          type: args.typeList,
-          status: 'queued',
-          [Op.or]: [
-            { startAfter: null },
-            { startAfter: { [Op.lt]: new Date() } },
-          ],
-        },
-      ]
-
-      if (heldTypes && heldTypes.length && heldTypes.length > 0) {
-        conditions.push({
-          type: { [Op.notIn]: heldTypes },
-        })
-      }
-
-      const job = await models.job.findOne({
-        where: {
-          [Op.and]: conditions,
-        },
-        order: [['id', 'ASC']],
-        transaction,
-      })
-
-      if (!job) {
-        await transaction.rollback()
-        return null
-      }
-
-      await job.update(
-        {
-          workerId: args.workerId,
-          status: 'processing',
-          startedAt: new Date(),
-        },
-        { transaction }
-      )
-
-      await transaction.commit()
-
-      return job
+    resolve: async (source: any, args: any, context: any) => {
+      return acquireJob(models, args)
     },
+  }
+}
+async function acquireJob(
+  models: SequelizeModels,
+  args: AcquireJobArgs
+): Promise<any> {
+  try {
+    const heldTypes = (
+      await models.jobHoldType.findAll({
+        attributes: ['type'],
+      })
+    ).map((heldType: any) => heldType.type)
+
+    // Check if 'all' is held
+    if (heldTypes.includes('all')) {
+      return null
+    }
+    const result = await models.sequelize.query(
+      `
+      UPDATE job
+      SET "workerId" = ${args.workerId ? ':workerId' : 'NULL'},
+          "status" = 'processing',
+          "startedAt" = CURRENT_TIMESTAMP
+      FROM (
+        SELECT id
+        FROM job
+        WHERE type IN(:typeList)
+          AND "status" = 'queued'
+          AND (job."startAfter" IS NULL OR 
+            job."startAfter" <= current_timestamp)
+          AND type NOT IN (
+            SELECT type
+            FROM "jobHoldType"
+          )
+        ORDER BY id ASC
+        LIMIT 1
+        FOR UPDATE SKIP LOCKED
+      ) as subquery
+      WHERE job.id = subquery.id
+      RETURNING *;
+      `,
+      {
+        replacements: {
+          ...(args.workerId ? { workerId: args.workerId } : {}),
+          typeList: args.typeList,
+        },
+      }
+    )
+
+    // If a job was updated, result[0][0] contains the job details
+    return result[0]?.[0] || null
+  } catch (error) {
+    console.error('Failed to acquire job:', error)
+    throw new Error('Error acquiring job')
   }
 }
