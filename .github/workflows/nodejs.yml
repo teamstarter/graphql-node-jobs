@@ -35,3 +35,8 @@ jobs:
         env:
           NODE_ENV: test
           CI: true
+          PGHOST: localhost
+          PGPORT: 5432
+          PGDATABASE: gnj-dev
+          PGUSER: gnj
+          PGPASSWORD: gnj
