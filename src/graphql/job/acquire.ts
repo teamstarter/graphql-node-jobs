@@ -68,7 +68,7 @@ async function acquireJob(
             job."startAfter" <= current_timestamp)
           AND type NOT IN (
             SELECT type
-            FROM "jobHoldType"
+            FROM "jobHoldType" WHERE "deletedAt" IS NULL
           )
         ORDER BY id ASC
         LIMIT 1
