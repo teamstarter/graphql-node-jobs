@@ -17,7 +17,7 @@ jobs:
           POSTGRES_PASSWORD: gnj
           POSTGRES_DB: gnj-dev
         ports:
-          - 5433:5433
+          - 5432:5432
         # needed because the postgres container does not provide a healthcheck
         options: --mount type=tmpfs,destination=/var/lib/postgresql/data --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
@@ -35,3 +35,8 @@ jobs:
         env:
           NODE_ENV: test
           CI: true
+          PGHOST: localhost
+          PGPORT: 5432
+          PGDATABASE: gnj-dev
+          PGUSER: gnj
+          PGPASSWORD: gnj
