@@ -70,6 +70,7 @@ async function acquireJob(
             SELECT type
             FROM "jobHoldType" WHERE "deletedAt" IS NULL
           )
+          AND job."deletedAt" IS NULL
         ORDER BY id ASC
         LIMIT 1
         FOR UPDATE SKIP LOCKED
