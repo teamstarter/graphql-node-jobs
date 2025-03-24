@@ -1,7 +1,7 @@
 import {
-    InAndOutTypes,
-    ModelDeclarationType,
-    SequelizeModels,
+  InAndOutTypes,
+  ModelDeclarationType,
+  SequelizeModels,
 } from '@teamstarter/graphql-sequelize-generator/src/types/types'
 
 export default function PipelineStepConfiguration(
@@ -12,7 +12,7 @@ export default function PipelineStepConfiguration(
     model: models.pipelineStep,
     actions: ['list', 'update', 'create', 'count'],
     list: {
-      before: (findOptions) => {
+      before: ({findOptions}) => {
         return findOptions
       },
     },

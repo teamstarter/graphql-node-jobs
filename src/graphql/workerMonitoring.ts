@@ -1,6 +1,6 @@
 import {
-    ModelDeclarationType,
-    SequelizeModels
+  ModelDeclarationType,
+  SequelizeModels
 } from '@teamstarter/graphql-sequelize-generator/src/types/types'
 import { ping } from './workerMonitoring/mutations/ping'
 import { pong } from './workerMonitoring/mutations/pong'
@@ -17,7 +17,7 @@ export function workerMonitoring(
     model: models.workerMonitoring,
     actions: ['list'],
     list: {
-      before: (findOptions) => {
+      before: ({findOptions}) => {
         return findOptions
       },
     },
