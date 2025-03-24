@@ -87,12 +87,12 @@ export default function JobConfiguration(
       retryJob: retryJob(graphqlTypes, models, pubSubInstance),
     },
     list: {
-      before: (findOptions) => {
+      before: ({ findOptions }) => {
         return findOptions
       },
     },
     update: {
-      before: async (findOptions, args, context, info) => {
+      before: async ({  args }) => {
         const properties = args.job
 
         const job = await models.job.findByPk(args.job.id)
@@ -185,7 +185,7 @@ export default function JobConfiguration(
         }
         return properties
       },
-      after: async (job, oldJob) => {
+      after: async ({ updatedEntity: job, entitySnapshot: oldJob }) => {
         if (job.status === 'failed' && onJobFail) {
           await onJobFail(job)
         }
@@ -276,7 +276,7 @@ export default function JobConfiguration(
       },
     },
     create: {
-      before: async (findOptions, args, context, info) => {
+      before: async ({ args}) => {
         const properties = args.job
 
         if (
@@ -288,7 +288,7 @@ export default function JobConfiguration(
 
         return properties
       },
-      after: async (job, source, args, context, info) => {
+      after: async ({ newEntity: job, source, args, context, info }) => {
         if (job.pipelineId) {
           const pipeline = await models.pipeline.findByPk(job.pipelineId)
 

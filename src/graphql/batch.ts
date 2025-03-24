@@ -12,12 +12,12 @@ export default function BatchConfiguration(
     model: models.batch,
     actions: ['list', 'update', 'create', 'count'],
     list: {
-      before: (findOptions) => {
+      before: ({ findOptions }) => {
         return findOptions
       },
     },
     create: {
-      after: async (batch, source, args, context, info) => {
+      after: async ({ newEntity: batch, source, args, context, info }) => {
         if (batch.pipelineId) {
           const indexCount = await models.pipelineStep.count({
             where: {

@@ -1,7 +1,7 @@
 import {
-    InAndOutTypes,
-    ModelDeclarationType,
-    SequelizeModels,
+  InAndOutTypes,
+  ModelDeclarationType,
+  SequelizeModels,
 } from '@teamstarter/graphql-sequelize-generator/src/types/types'
 
 import { GraphQLNonNull, GraphQLString } from 'graphql'
@@ -41,7 +41,7 @@ export default function jobHoldType(
       },
     },
     list: {
-      before: (findOptions) => {
+      before: ({ findOptions }) => {
         return findOptions
       },
     },
