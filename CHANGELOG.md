@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.0](https://github.com/teamstarter/graphql-node-jobs/compare/v3.0.6...v3.1.0) (2025-03-24)
+
+
+### Features
+
+* **GSG:** Upgrade to GSG 9.0.1 ([935e51f](https://github.com/teamstarter/graphql-node-jobs/commit/935e51f6b9a61d22dfb9e598480cf690ad6cbc55))
+
 ### [3.0.6](https://github.com/teamstarter/graphql-node-jobs/compare/v3.0.5...v3.0.6) (2025-02-11)
 
 ### [3.0.5](https://github.com/teamstarter/graphql-node-jobs/compare/v3.0.4...v3.0.5) (2025-02-11)
