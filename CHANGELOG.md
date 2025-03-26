@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.2.0](https://github.com/teamstarter/graphql-node-jobs/compare/v3.1.0...v3.2.0) (2025-03-26)
+
+
+### Features
+
+* **hooks:** Adapt hook signatures. ([95c63c8](https://github.com/teamstarter/graphql-node-jobs/commit/95c63c8ad47c553d6c38695d2a55f7b7cbe17f0d))
+
 ## [3.1.0](https://github.com/teamstarter/graphql-node-jobs/compare/v3.0.6...v3.1.0) (2025-03-24)
 
 
