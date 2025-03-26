@@ -17,7 +17,7 @@ export default function BatchConfiguration(
       },
     },
     create: {
-      after: async ({ newEntity: batch, source, args, context, info }) => {
+      after: async ({ createdEntity: batch, source, args, context, info }) => {
         if (batch.pipelineId) {
           const indexCount = await models.pipelineStep.count({
             where: {

@@ -14,7 +14,7 @@
   "types": "./src/types.d.ts",
   "dependencies": {
     "@apollo/client": "^3.7.2",
-    "@teamstarter/graphql-sequelize-generator": "^9.0.1",
+    "@teamstarter/graphql-sequelize-generator": "^9.4.0",
     "@types/cors": "^2.8.13",
     "@types/debounce": "^1.2.1",
     "@types/react": "^18.0.26",

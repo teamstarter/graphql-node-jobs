@@ -185,7 +185,7 @@ export default function JobConfiguration(
         }
         return properties
       },
-      after: async ({ updatedEntity: job, entitySnapshot: oldJob }) => {
+      after: async ({ updatedEntity: job, previousPropertiesSnapshot: oldJob }) => {
         if (job.status === 'failed' && onJobFail) {
           await onJobFail(job)
         }
@@ -288,7 +288,7 @@ export default function JobConfiguration(
 
         return properties
       },
-      after: async ({ newEntity: job, source, args, context, info }) => {
+      after: async ({ createdEntity: job, source, args, context, info }) => {
         if (job.pipelineId) {
           const pipeline = await models.pipeline.findByPk(job.pipelineId)
 
