@@ -1,8 +1,8 @@
-import { CustomMutationConfiguration } from '@teamstarter/graphql-sequelize-generator/src/types/types'
+import { GraphQLFieldConfig } from 'graphql'
 import { PubSub } from 'graphql-subscriptions'
 import { successType } from '../type'
 
-export function ping(pubSubInstance: PubSub): CustomMutationConfiguration {
+export function ping(pubSubInstance: PubSub): GraphQLFieldConfig<any, any, any> {
   return {
     type: successType,
     description: 'Ping the server.',

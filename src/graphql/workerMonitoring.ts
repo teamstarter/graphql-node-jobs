@@ -17,7 +17,7 @@ export function workerMonitoring(
     model: models.workerMonitoring,
     actions: ['list'],
     list: {
-      before: ({findOptions}) => {
+      beforeList: ({findOptions}) => {
         return findOptions
       },
     },

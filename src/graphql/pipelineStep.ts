@@ -12,7 +12,7 @@ export default function PipelineStepConfiguration(
     model: models.pipelineStep,
     actions: ['list', 'update', 'create', 'count'],
     list: {
-      before: ({findOptions}) => {
+      beforeList: ({findOptions}) => {
         return findOptions
       },
     },

@@ -1,9 +1,8 @@
 import {
-    CustomMutationConfiguration,
-    InAndOutTypes,
-    SequelizeModels,
+  InAndOutTypes,
+  SequelizeModels
 } from '@teamstarter/graphql-sequelize-generator/src/types/types'
-import { GraphQLInt, GraphQLNonNull } from 'graphql'
+import { GraphQLFieldConfig, GraphQLInt, GraphQLNonNull } from 'graphql'
 import { PubSub } from 'graphql-subscriptions'
 
 const status = [
@@ -19,7 +18,7 @@ export default function RetryJob(
   graphqlTypes: InAndOutTypes,
   models: SequelizeModels,
   pubSubInstance: PubSub | null = null
-): CustomMutationConfiguration {
+): GraphQLFieldConfig<any, any, any> {
   return {
     type: graphqlTypes.outputTypes.job,
     description: 'Retry a job which fail',

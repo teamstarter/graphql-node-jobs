@@ -1,15 +1,13 @@
 import {
-  CustomMutationConfiguration,
   InAndOutTypes,
-  SequelizeModels,
+  SequelizeModels
 } from '@teamstarter/graphql-sequelize-generator/src/types/types'
 import {
+  GraphQLFieldConfig,
   GraphQLList,
   GraphQLNonNull,
-  GraphQLString,
-  GraphQLBoolean,
+  GraphQLString
 } from 'graphql'
-import { Op } from 'sequelize'
 
 interface AcquireJobArgs {
   typeList: string[]
@@ -19,7 +17,7 @@ interface AcquireJobArgs {
 export default function AcquireJobDefinition(
   graphqlTypes: InAndOutTypes,
   models: SequelizeModels
-): CustomMutationConfiguration {
+): GraphQLFieldConfig<any, any, any> {
   return {
     type: graphqlTypes.outputTypes.job,
     description:

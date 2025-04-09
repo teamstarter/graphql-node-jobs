@@ -17,7 +17,7 @@ export default function PipelineConfiguration(
       startPipeline: startPipeline(graphqlTypes, models),
     },
     list: {
-      before: ({findOptions}) => {
+      beforeList: ({findOptions}) => {
         return findOptions
       },
     },

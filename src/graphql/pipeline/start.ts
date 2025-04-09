@@ -1,16 +1,15 @@
 import {
-    CustomMutationConfiguration,
-    InAndOutTypes,
-    SequelizeModels,
+  InAndOutTypes,
+  SequelizeModels
 } from '@teamstarter/graphql-sequelize-generator/src/types/types'
-import { GraphQLInt, GraphQLNonNull } from 'graphql'
+import { GraphQLFieldConfig, GraphQLInt, GraphQLNonNull } from 'graphql'
 
 import putNextStepJobsInTheQueued from '../utils/putNextStepJobsInTheQueued'
 
 export default function StartPipeline(
   graphqlTypes: InAndOutTypes,
   models: SequelizeModels
-): CustomMutationConfiguration {
+): GraphQLFieldConfig<any, any, any> {
   return {
     type: graphqlTypes.outputTypes.pipeline,
     description: 'Start a pipeline',

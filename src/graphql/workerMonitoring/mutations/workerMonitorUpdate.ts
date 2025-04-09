@@ -1,15 +1,14 @@
 import {
-    CustomMutationConfiguration,
-    SequelizeModels,
+  SequelizeModels
 } from '@teamstarter/graphql-sequelize-generator/src/types/types'
-import { GraphQLList } from 'graphql'
+import { GraphQLFieldConfig, GraphQLList } from 'graphql'
 import { PubSub } from 'graphql-subscriptions'
 import { successType, workerInfoInputType } from '../type'
 
 export function workerMonitorUpdate(
   pubSubInstance: PubSub,
   models: SequelizeModels
-): CustomMutationConfiguration {
+): GraphQLFieldConfig<any, any, any> {
   return {
     type: successType,
     description: 'Update workers status',

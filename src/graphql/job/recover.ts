@@ -1,14 +1,13 @@
 import {
-    CustomMutationConfiguration,
-    InAndOutTypes,
-    SequelizeModels,
+  InAndOutTypes,
+  SequelizeModels
 } from '@teamstarter/graphql-sequelize-generator/src/types/types'
-import { GraphQLInt, GraphQLNonNull } from 'graphql'
+import { GraphQLFieldConfig, GraphQLInt, GraphQLNonNull } from 'graphql'
 
 export default function recoverJobDefinition(
   graphqlTypes: InAndOutTypes,
   models: SequelizeModels
-): CustomMutationConfiguration {
+): GraphQLFieldConfig<any, any, any> {
   return {
     type: graphqlTypes.outputTypes.job,
     description:

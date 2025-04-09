@@ -41,7 +41,7 @@ export default function jobHoldType(
       },
     },
     list: {
-      before: ({ findOptions }) => {
+      beforeList: ({ findOptions }) => {
         return findOptions
       },
     },
