@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.0.0](https://github.com/teamstarter/graphql-node-jobs/compare/v3.2.0...v4.0.0) (2025-04-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* **GSG:** Upgrade to last version of GSG>
+
+* **GSG:** Upgrade to last version of GSG ([9a6b343](https://github.com/teamstarter/graphql-node-jobs/commit/9a6b3430317d7e9280326516488147674b8e0b94))
+
 ## [3.2.0](https://github.com/teamstarter/graphql-node-jobs/compare/v3.1.0...v3.2.0) (2025-03-26)
 
 
