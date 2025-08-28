@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.0.1](https://github.com/teamstarter/graphql-node-jobs/compare/v4.0.0...v4.0.1) (2025-08-28)
+
+
+### Bug Fixes
+
+* **server:** Increase JSON body parser limit for GraphQL endpoint ([#92](https://github.com/teamstarter/graphql-node-jobs/issues/92)) ([c82fa72](https://github.com/teamstarter/graphql-node-jobs/commit/c82fa721f541d8381adbb1ef321b9eb1c8d3d05d))
+
 ## [4.0.0](https://github.com/teamstarter/graphql-node-jobs/compare/v3.2.0...v4.0.0) (2025-04-09)
 
 
