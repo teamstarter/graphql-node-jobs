@@ -44,7 +44,7 @@ async function startServer() {
    */
   await server.start()
 
-  app.use('/graphql', cors(), json(), expressMiddleware(server, {}))
+  app.use('/graphql', cors(), json({ limit: '1mb' }), expressMiddleware(server, {}))
 
   const port = process.env.PORT || 8080
 
