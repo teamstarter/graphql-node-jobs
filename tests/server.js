@@ -14,6 +14,12 @@ async function startServer() {
   var options = {
     spdy: {
       plain: true,
+      // Augmenter les limites pour gros payloads
+      maxSessionMemory: 100,
+      settings: {
+        maxFrameSize: 1048576, // 1MB par frame au lieu de 16KB
+        initialWindowSize: 1048576, // 1MB window size
+      },
     },
   }
   const httpServer = http.createServer(options, app)
