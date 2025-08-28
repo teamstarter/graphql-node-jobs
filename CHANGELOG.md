@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.2.0](https://github.com/teamstarter/graphql-node-jobs/compare/v4.1.0...v4.2.0) (2025-08-28)
+
+
+### Features
+
+* **server:** Enhance SPDY settings for larger payloads in standalone server ([#94](https://github.com/teamstarter/graphql-node-jobs/issues/94)) ([a655f45](https://github.com/teamstarter/graphql-node-jobs/commit/a655f4520ca3ba79e628f97f4794e25ce0b87ce1))
+
 ## [4.1.0](https://github.com/teamstarter/graphql-node-jobs/compare/v4.0.1...v4.1.0) (2025-08-28)
 
 
