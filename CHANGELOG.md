@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.1.0](https://github.com/teamstarter/graphql-node-jobs/compare/v4.0.1...v4.1.0) (2025-08-28)
+
+
+### Features
+
+* **worker:** Add fetchOptions with timeout to getNewClient function ([#93](https://github.com/teamstarter/graphql-node-jobs/issues/93)) ([3786919](https://github.com/teamstarter/graphql-node-jobs/commit/37869198d212abed157dcaf3c71a9f4965173a5e))
+
 ### [4.0.1](https://github.com/teamstarter/graphql-node-jobs/compare/v4.0.0...v4.0.1) (2025-08-28)
 
 
