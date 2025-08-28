@@ -25,6 +25,9 @@ export default function getNewClient(
   const httpLink = createHttpLink({
     uri,
     fetch: fetch as any,
+    fetchOptions: {
+      timeout: 300000, // 5 minutes timeout pour les gros payloads
+    },
   })
   const cache = new InMemoryCache()
   let client: ApolloClient<any>
