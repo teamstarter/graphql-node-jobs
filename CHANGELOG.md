@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.3.0](https://github.com/teamstarter/graphql-node-jobs/compare/v4.2.1...v4.3.0) (2025-08-29)
+
+
+### Features
+
+* **server:** Enhance server configuration for GraphQL with dynamic timeouts and payload settings ([#96](https://github.com/teamstarter/graphql-node-jobs/issues/96)) ([7feefc3](https://github.com/teamstarter/graphql-node-jobs/commit/7feefc3e76280632839ba49adeb86bba24243436))
+
 ### [4.2.1](https://github.com/teamstarter/graphql-node-jobs/compare/v4.2.0...v4.2.1) (2025-08-29)
 
 
