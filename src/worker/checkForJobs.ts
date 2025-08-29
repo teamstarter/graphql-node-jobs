@@ -54,8 +54,9 @@ async function handleJobResult({client, job, output, looping, args}: any) {
     }
     return result.data.job
   } catch (err) {
-    parentPort?.postMessage({ status: 'FAILED' })
     debug('Failed to update the success status of the current job.', err)
+    return handleError({err, client, job, looping, args})
+    //parentPort?.postMessage({ status: 'FAILED' })
   }
 }
 
