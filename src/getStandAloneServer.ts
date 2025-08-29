@@ -53,7 +53,7 @@ export default async function getStandAloneServer(
   )
   await server.start()
 
-  app.use('/graphql', cors(), json({ limit: '1mb' }), expressMiddleware(server, {}))
+  app.use('/graphql', cors(), json({ limit: '50mb' }), expressMiddleware(server, {}))
 
   const port = process.env.PORT || 8080
 
