@@ -33,12 +33,28 @@ export default async function getStandAloneServer(
     app
   )
 
+  // Increase server timeouts for large payloads/slow connections
+  const requestTimeoutMs = parseInt(process.env.GRAPHQL_REQUEST_TIMEOUT_MS || '300000', 10) // 5 minutes
+  ;(httpServer as any).headersTimeout = requestTimeoutMs
+  ;(httpServer as any).requestTimeout = requestTimeoutMs
+
+  const graphqlPath = process.env.GRAPHQL_JOBS_PATH || '/graphql'
+  const wsMaxPayload = parseInt(process.env.GRAPHQL_WS_MAX_PAYLOAD || `${100 * 1024 * 1024}`, 10) // default 100MB
+  const wsDeflateEnabled = (process.env.GRAPHQL_WS_PERMESSAGE_DEFLATE || 'true') !== 'false'
+  const wsDeflateThreshold = parseInt(process.env.GRAPHQL_WS_DEFLATE_THRESHOLD || '1024', 10)
+
   const wsServer = new WebSocketServer({
     // This is the `httpServer` we created in a previous step.
     server: httpServer,
     // Pass a different path here if app.use
     // serves expressMiddleware at a different path
-    path: '/graphql',
+    path: graphqlPath,
+    maxPayload: wsMaxPayload,
+    perMessageDeflate: wsDeflateEnabled
+      ? {
+          threshold: wsDeflateThreshold,
+        }
+      : false,
   })
 
   const server = await getApolloServer(
@@ -53,7 +69,8 @@ export default async function getStandAloneServer(
   )
   await server.start()
 
-  app.use('/graphql', cors(), json({ limit: '50mb' }), expressMiddleware(server, {}))
+  const graphqlMaxBodySize = process.env.GRAPHQL_MAX_BODY_SIZE || '50mb'
+  app.use(graphqlPath, cors(), json({ limit: graphqlMaxBodySize }), expressMiddleware(server, {}))
 
   const port = process.env.PORT || 8080
 
