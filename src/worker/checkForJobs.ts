@@ -33,10 +33,15 @@ const acquireJobQuery = gql`
   }
 `
 
-async function handleJobResult({client, job, output, looping, args}: any) {
+async function handleJobResult({ client, job, output, looping, args }: any) {
   debug('Updating job after successful processing.')
 
   try {
+    // Temporary fix for https://github.com/node-fetch/node-fetch/issues/1735
+    // See also: https://github.com/anthropics/anthropic-sdk-typescript/issues/712
+    // Should be removed when we can switch to node23. Sadly beanstalk has no support for it yet.
+    await new Promise((resolve) => setTimeout(resolve, 0))
+
     const result = await client.mutate({
       mutation: updateJobQuery,
       variables: {
@@ -55,50 +60,66 @@ async function handleJobResult({client, job, output, looping, args}: any) {
     return result.data.job
   } catch (err) {
     debug('Failed to update the success status of the current job.', err)
-    return handleError({err, client, job, looping, args})
+    return handleError({ err, client, job, looping, args })
     //parentPort?.postMessage({ status: 'FAILED' })
   }
 }
 
-async function handleError({err, client, job, looping, args}: {err: any, client: ApolloClient<any>, job: JobType, looping: boolean, args: any}) {
+async function handleError({
+  err,
+  client,
+  job,
+  looping,
+  args,
+}: {
+  err: any
+  client: ApolloClient<any>
+  job: JobType
+  looping: boolean
+  args: any
+}) {
   debug('Error during the job processing', err)
-    let updatedErrorJob = null
-    // @todo find why instanceof is not working
-    if (err.name === 'CancelRequestedError') {
-      updatedErrorJob = await client.mutate({
-        mutation: updateJobQuery,
-        variables: {
-          job: {
-            id: job.id,
-            status: 'cancelled',
-            output: {
-              cancelMessage: err.message || 'No cancel message provided',
-            },
-          },
-        },
-      })
-    } else {
-      updatedErrorJob = await client.mutate({
-        mutation: updateJobQuery,
-        variables: {
-          job: {
-            id: job.id,
-            status: 'failed',
-            output: {
-              error: `[${err.toString()}] Stack: ${
-                err.stack ? err.stack.toString() : 'No stack available.'
-              }`,
-            },
-          },
-        },
-      })
-    }
+  let updatedErrorJob = null
+  // @todo find why instanceof is not working
+  if (err.name === 'CancelRequestedError') {
+    await new Promise((resolve) => setTimeout(resolve, 0))
 
-    parentPort?.postMessage({ status: 'AVAILABLE' })
-    if (looping) {
-      return checkForJobs(args)
-    }
-    return updatedErrorJob.data.job
+    updatedErrorJob = await client.mutate({
+      mutation: updateJobQuery,
+      variables: {
+        job: {
+          id: job.id,
+          status: 'cancelled',
+          output: {
+            cancelMessage: err.message || 'No cancel message provided',
+          },
+        },
+      },
+    })
+  } else {
+    await new Promise((resolve) => setTimeout(resolve, 0))
+
+    updatedErrorJob = await client.mutate({
+      mutation: updateJobQuery,
+      variables: {
+        job: {
+          id: job.id,
+          status: 'failed',
+          output: {
+            error: `[${err.toString()}] Stack: ${
+              err.stack ? err.stack.toString() : 'No stack available.'
+            }`,
+          },
+        },
+      },
+    })
+  }
+
+  parentPort?.postMessage({ status: 'AVAILABLE' })
+  if (looping) {
+    return checkForJobs(args)
+  }
+  return updatedErrorJob.data.job
 }
 
 export default async function checkForJobs(args: {
@@ -132,7 +153,7 @@ export default async function checkForJobs(args: {
     looping = true,
     loopTime = DEFAULT_LOOP_TIME,
     isCancelledOnCancelRequest = false,
-    nonBlocking = false
+    nonBlocking = false,
   } = args
 
   const { data } = await client.mutate({
@@ -166,25 +187,26 @@ export default async function checkForJobs(args: {
       },
     })
 
-    if(nonBlocking) {
-      processingPromise.then((output) => {
-        debug("Job's done", job.id)
-        // We only save the result, the looping will be instantly started
-        handleJobResult({client, job, output, looping: false, args})
-      }).catch((err) => {
-        handleError({err, client, job, looping, args})
-      })
-      if(looping) {
+    if (nonBlocking) {
+      processingPromise
+        .then((output) => {
+          debug("Job's done", job.id)
+          // We only save the result, the looping will be instantly started
+          handleJobResult({ client, job, output, looping: false, args })
+        })
+        .catch((err) => {
+          handleError({ err, client, job, looping, args })
+        })
+      if (looping) {
         return checkForJobs(args)
       }
     } else {
       output = await processingPromise
       debug("Job's done", job.id)
-      return await handleJobResult({client, job, output, looping, args})
+      return await handleJobResult({ client, job, output, looping, args })
     }
-    
   } catch (err: any) {
-    return handleError({err, client, job, looping, args})
+    return handleError({ err, client, job, looping, args })
   }
 
   // In the case the looping is not enabled and the async processing is not enabled
