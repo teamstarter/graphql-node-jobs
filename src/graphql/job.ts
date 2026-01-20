@@ -6,7 +6,7 @@ import {
 import debounce from 'debounce'
 import { PubSub } from 'graphql-subscriptions'
 
-import { JobType } from '../types'
+import { JobType, JobStep } from '../types'
 import putNextStepJobsInTheQueued from './utils/putNextStepJobsInTheQueued'
 import updatePipelineStatus from './utils/updatePipelineStatus'
 
@@ -92,7 +92,7 @@ export default function JobConfiguration(
       },
     },
     update: {
-      beforeUpdateFetch: async ({  args }) => {
+      beforeUpdateFetch: async ({ args }) => {
         const properties = args.job
 
         const job = await models.job.findByPk(args.job.id)
@@ -148,22 +148,25 @@ export default function JobConfiguration(
           typeof args.job.processingInfo?.steps !== 'undefined' &&
           typeof args.job.processingInfo.steps !== null
         ) {
-          const steps: any = args.job.processingInfo.steps
+          const steps: Record<string, JobStep> = args.job.processingInfo.steps
           let lastUpdatedDate = getLastDoneStepDate(job)
           newSteps = Object.keys(steps as Object).reduce(
             (acc: any, stepName: string) => {
               let newStepContent = steps[stepName]
 
-              let previousStepContent = job.processingInfo &&
-                job.processingInfo.steps ?
-                job.processingInfo.steps[stepName] : null
+              let previousStepContent =
+                job.processingInfo && job.processingInfo.steps
+                  ? job.processingInfo.steps[stepName]
+                  : null
 
               const isStepAlreadySavedAsDone =
-                previousStepContent &&
-                previousStepContent.doneAt
+                previousStepContent && previousStepContent.doneAt
 
               // We set the end date when the status switch to a terminating state.
-              if (newStepContent.status === 'done' && !isStepAlreadySavedAsDone) {
+              if (
+                newStepContent.status === 'done' &&
+                !isStepAlreadySavedAsDone
+              ) {
                 const time = new Date()
                 const prevTime = lastUpdatedDate
                 newStepContent.doneAt = time
@@ -185,7 +188,10 @@ export default function JobConfiguration(
         }
         return properties
       },
-      afterUpdate: async ({ updatedEntity: job, previousPropertiesSnapshot: oldJob }) => {
+      afterUpdate: async ({
+        updatedEntity: job,
+        previousPropertiesSnapshot: oldJob,
+      }) => {
         if (job.status === 'failed' && onJobFail) {
           await onJobFail(job)
         }
@@ -276,7 +282,7 @@ export default function JobConfiguration(
       },
     },
     create: {
-      beforeCreate: async ({ args}) => {
+      beforeCreate: async ({ args }) => {
         const properties = args.job
 
         if (
@@ -288,7 +294,13 @@ export default function JobConfiguration(
 
         return properties
       },
-      afterCreate: async ({ createdEntity: job, source, args, context, info }) => {
+      afterCreate: async ({
+        createdEntity: job,
+        source,
+        args,
+        context,
+        info,
+      }) => {
         if (job.pipelineId) {
           const pipeline = await models.pipeline.findByPk(job.pipelineId)
 

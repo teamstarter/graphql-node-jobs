@@ -1,12 +1,12 @@
 import { ApolloClient } from '@apollo/client'
 import { CancelRequestedError } from '../graphql/job'
-import { JobType, JSONValue } from './../types'
+import { JobType, ProcessingInfo } from './../types'
 import updateJobQuery from './updateJobQuery'
 
 export default async function updateProcessingInfo(
   client: ApolloClient<any>,
   job: JobType,
-  processingInfo: JSONValue,
+  processingInfo: ProcessingInfo,
   isCancelledOnCancelRequest?: boolean
 ) {
   const response = await client.mutate({

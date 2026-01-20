@@ -3,7 +3,7 @@ import _debug from 'debug'
 import gql from 'graphql-tag'
 import uuidv4 from 'uuid'
 import { parentPort } from 'worker_threads'
-import { JobType, JSONValue } from '../types'
+import { JobType, ProcessingInfo, UpdateProcessingInfo } from '../types'
 
 import updateJobQuery from './updateJobQuery'
 import updateProcessingInfo from './updateProcessingInfo'
@@ -125,7 +125,7 @@ async function handleError({
 export default async function checkForJobs(args: {
   processingFunction: (
     job: JobType,
-    facilities: { updateProcessingInfo: Function }
+    facilities: { updateProcessingInfo: UpdateProcessingInfo }
   ) => Promise<any>
   client: ApolloClient<any>
   typeList: Array<String>
@@ -177,8 +177,8 @@ export default async function checkForJobs(args: {
   let output = null
   try {
     const processingPromise = processingFunction(job, {
-      updateProcessingInfo: (info: JSONValue) => {
-        return updateProcessingInfo(
+      updateProcessingInfo: async (info: ProcessingInfo) => {
+        await updateProcessingInfo(
           client,
           job,
           info,
