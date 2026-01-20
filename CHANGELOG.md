@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.4.0](https://github.com/teamstarter/graphql-node-jobs/compare/v4.3.3...v4.4.0) (2026-01-20)
+
+
+### Features
+
+* **steps:** Change the expected signature for processing info steps. ([042a378](https://github.com/teamstarter/graphql-node-jobs/commit/042a3785d8b62e37a4d05e4cf6c54c59fbad9b8b))
+
+
+### Bug Fixes
+
+* **stats:** Fix jobSucessRating having a too big default scope. ([b83dc49](https://github.com/teamstarter/graphql-node-jobs/commit/b83dc491a9a5c335e3d4974e525d491a439adef1))
+
 ### [4.3.3](https://github.com/teamstarter/graphql-node-jobs/compare/v4.3.1...v4.3.3) (2025-09-12)
 
 
