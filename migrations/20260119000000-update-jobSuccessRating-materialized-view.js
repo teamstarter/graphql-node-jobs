@@ -18,11 +18,15 @@ module.exports = {
       FROM
           job j
       WHERE
-          j."createdAt" < NOW() - INTERVAL '30 days'
+          j."createdAt" > NOW() - INTERVAL '30 days'
       GROUP BY
           DATE_TRUNC('day', j."createdAt")
       ORDER BY
-          DATE_TRUNC('day', j."createdAt");`)
+          DATE_TRUNC('day', j."createdAt") DESC;`)
+
+    await queryInterface.sequelize.query(`
+      CREATE INDEX IF NOT EXISTS idx_job_created_at_desc_status ON job ("createdAt" DESC, "status");
+    `)
   },
   down: async function (queryInterface) {
     await queryInterface.sequelize.query(
