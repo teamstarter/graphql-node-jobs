@@ -70,30 +70,23 @@ export interface JobStep<
 /**
  * Steps can be represented as either an object keyed by step name or an array
  */
-export type JobSteps<
-  TValues extends Record<string, any> = Record<string, any>,
-  TDebugValues extends Record<string, any> = Record<string, any>
-> =
-  | Record<string, JobStep<TValues, TDebugValues>>
-  | JobStep<TValues, TDebugValues>[]
+export type JobSteps<TStep extends JobStep = JobStep> =
+  | Record<string, TStep>
+  | TStep[]
 
 /**
  * Processing information structure passed to updateProcessingInfo
  */
-export interface ProcessingInfo<
-  TValues extends Record<string, any> = Record<string, any>,
-  TDebugValues extends Record<string, any> = Record<string, any>
-> {
-  steps: JobSteps<TValues, TDebugValues>
+export interface ProcessingInfo<TStep extends JobStep = JobStep> {
+  steps: JobSteps<TStep>
 }
 
 /**
  * Function signature for updateProcessingInfo callback
  */
-export type UpdateProcessingInfo<
-  TValues extends Record<string, any> = Record<string, any>,
-  TDebugValues extends Record<string, any> = Record<string, any>
-> = (info: ProcessingInfo<TValues, TDebugValues>) => Promise<void>
+export type UpdateProcessingInfo<TStep extends JobStep = JobStep> = (
+  info: ProcessingInfo<TStep>
+) => Promise<void>
 
 // Legacy type aliases for backwards compatibility
 export type StepStatus = JobStepStatus
