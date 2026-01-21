@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.5.0](https://github.com/teamstarter/graphql-node-jobs/compare/v4.4.1...v4.5.0) (2026-01-21)
+
+
+### Features
+
+* **types:** Simplify the job types. ([37f7429](https://github.com/teamstarter/graphql-node-jobs/commit/37f7429595596c0c46ec1a894b06875408471985))
+
 ### [4.4.1](https://github.com/teamstarter/graphql-node-jobs/compare/v4.4.0...v4.4.1) (2026-01-20)
 
 
