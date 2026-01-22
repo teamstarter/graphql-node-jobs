@@ -1,10 +1,9 @@
 import fs from 'fs'
 import path from 'path'
 import { Sequelize } from 'sequelize'
-import { TextEncoder } from 'util'
-global.TextEncoder = TextEncoder
 
 let db: any = null
+let initPromise: Promise<any> | null = null
 
 function importModels(sequelizeInstance: Sequelize) {
   db = {}

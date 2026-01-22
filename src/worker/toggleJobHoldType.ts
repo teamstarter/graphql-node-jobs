@@ -1,4 +1,4 @@
-import { ApolloClient } from '@apollo/client'
+import { ApolloClient } from '@apollo/client/core'
 import gql from 'graphql-tag'
 
 const toggleHoldJobTypeMutation = gql`

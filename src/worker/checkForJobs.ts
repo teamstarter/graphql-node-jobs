@@ -1,4 +1,4 @@
-import { ApolloClient } from '@apollo/client'
+import { ApolloClient } from '@apollo/client/core'
 import _debug from 'debug'
 import gql from 'graphql-tag'
 import uuidv4 from 'uuid'

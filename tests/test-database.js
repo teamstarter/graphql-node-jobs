@@ -33,9 +33,7 @@ let migrationFiles = fs
   .map((f) => path.basename(f, '.js'))
 if (process.env.NODE_ENV === 'test') {
   migrationFiles = migrationFiles.filter(
-    (f) =>
-      f !== '20230829170707-add-jobSuccessRating-materialized-view' &&
-      f !== '20231024111522-add-workerSuccessRating-materialized-view'
+    (f) => !f.includes('materialized-view')
   )
 }
 // Array containing the filenames of the seeders files without extensions, sorted chronologically.
@@ -126,9 +124,9 @@ exports.seedDatabase = async () => {
  */
 exports.deleteTables = async () => {
   const models = await exports.getModelsAndInitializeDatabase()
-  const sequelize = models.sequelize
+  const sequelizeInstance = models.sequelize
 
-  await sequelize.getQueryInterface().dropAllTables()
+  await sequelizeInstance.getQueryInterface().dropAllTables()
 }
 
 exports.resetDatabase = async () => {
@@ -136,11 +134,11 @@ exports.resetDatabase = async () => {
     await exports.migrateDatabase()
     await exports.seedDatabase()
     const models = await exports.getModelsAndInitializeDatabase()
-    const sequelize = models.sequelize
-    await sequelize.query(
+    const sequelizeInstance = models.sequelize
+    await sequelizeInstance.query(
       `DROP FUNCTION IF EXISTS public.tool_reset_all_sequences_to_max_values`
     )
-    await sequelize.query(`
+    await sequelizeInstance.query(`
       CREATE FUNCTION public.tool_reset_all_sequences_to_max_values() RETURNS void
     LANGUAGE plpgsql
     AS $$
@@ -162,7 +160,7 @@ exports.resetDatabase = async () => {
           END;
           $$;
 `)
-    await sequelize.query(
+    await sequelizeInstance.query(
       'SELECT public.tool_reset_all_sequences_to_max_values()'
     )
   } catch (e) {

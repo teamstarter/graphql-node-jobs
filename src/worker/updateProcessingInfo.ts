@@ -1,4 +1,4 @@
-import { ApolloClient } from '@apollo/client'
+import { ApolloClient } from '@apollo/client/core'
 import { CancelRequestedError } from '../graphql/job'
 import { JobType, ProcessingInfo } from './../types'
 import updateJobQuery from './updateJobQuery'
