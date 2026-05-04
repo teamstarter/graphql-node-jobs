@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.1.0](https://github.com/teamstarter/graphql-node-jobs/compare/v5.0.0...v5.1.0) (2026-05-04)
+
+
+### Features
+
+* **job:** Add a priority level to allow to priorize some jobs compare to others. ([4731bd2](https://github.com/teamstarter/graphql-node-jobs/commit/4731bd27b1176d6d4e63911e1aac1bab23ec5ae6))
+
 ## [5.0.0](https://github.com/teamstarter/graphql-node-jobs/compare/v4.5.0...v5.0.0) (2026-01-22)
 
 
