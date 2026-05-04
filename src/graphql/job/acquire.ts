@@ -69,7 +69,7 @@ async function acquireJob(
             FROM "jobHoldType" WHERE "deletedAt" IS NULL
           )
           AND job."deletedAt" IS NULL
-        ORDER BY id ASC
+        ORDER BY "priorityLevel" DESC, id ASC
         LIMIT 1
         FOR UPDATE SKIP LOCKED
       ) as subquery

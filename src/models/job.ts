@@ -83,6 +83,11 @@ export default function Job(sequelize: any) {
         allowNull: false,
         defaultValue: false,
       },
+      priorityLevel: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 4,
+      },
       isRecoverable: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
