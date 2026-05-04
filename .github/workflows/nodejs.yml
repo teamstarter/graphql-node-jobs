@@ -8,7 +8,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.14.0]
+        node-version: [22.17.0]
     services:
       postgres:
         image: postgres:11.13
