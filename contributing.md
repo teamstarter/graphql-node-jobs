@@ -1,61 +1,57 @@
 # Contributing
 
-### Install the development environment
+## Setup
+
+You need Node.js 22.17 (see `.nvmrc`), Yarn 1 and a PostgreSQL server. The `db-*` scripts run one with Docker.
 
 ```bash
-apt-get install git curl yarn
-# or
-brew install git curl yarn
-```
-
-_node & npm & yarn_
-
-```bash
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.2/install.sh | bash
-nvm install 12
-nvm use 12
-```
-
-Get the project
-
-```bash
-git clone git@github.com:teamstarter/node-jobs.git
-cd node-jobs
+git clone git@github.com:teamstarter/graphql-node-jobs.git
+cd graphql-node-jobs
+nvm use
 yarn
-yarn start
+cp .env.tmp .env # Database settings, used by docker-compose and the tests
+yarn db-start
 ```
 
-### Be able to run bin files from the local node_modules folder
+## Building
+
+The code is written in TypeScript in `src/`, and compiled with its type declarations into `lib/`, which is committed and published. The tests use `lib/` too, so build after each change and commit the `lib/` changes with the `src/` ones:
 
 ```bash
-vim ~/.bashrc
-#Add at the end of the file:
-alias npm-exec='PATH=$(npm bin):$PATH'
-npm-exec
-:wq #Then save and quit
-source ~/.bashrc
+yarn build
 ```
 
-### Test the migration script locally
+## Testing
 
-```bash
-yarn run gnj migrate ../config/sequelizeConfig.js
-```
-
-### Start a test server using the test database migrated previously
-
-```bash
-yarn start
-```
-
-### Running the test
+The tests run against the PostgreSQL database configured by the `PG*` variables of `.env`:
 
 ```bash
 yarn test
 ```
 
-Debugging a specific test
+To debug a single test file:
 
 ```bash
-node --inspect-brk ./node_modules/jest/bin/jest.js ./tests/job.spec.js
+NO_ASYNC=true NODE_ENV=test PORT=3332 TZ=UTC node --inspect-brk ./node_modules/.bin/jest --config ./tests/jest.config.js --runInBand ./tests/job.spec.js
 ```
+
+## Development server
+
+`yarn start` serves the GraphQL API and its playground at `http://localhost:$PORT/graphql` (port 3333 with `.env.tmp`), with the compiled `lib/`:
+
+```bash
+yarn build
+yarn start
+```
+
+It uses the database of `.env`, like the tests: it drops its tables, then runs the migrations and the seeders when it starts, and drops the tables again when it stops. So stop it before running the tests.
+
+## Database changes
+
+A change of the models in `src/models/` needs a migration in `migrations/`, named after its creation date so that it runs after the existing ones. The tests and `yarn start` run all the migrations.
+
+Do not run `gnj migrate` on the database of `.env`: it records the executed migrations in another table than the tests, which would then run them again and fail.
+
+## Commits and releases
+
+Commit messages follow [Conventional Commits](https://conventionalcommits.org). `yarn release` builds the library, bumps the version and updates the [changelog](CHANGELOG.md) with [standard-version](https://github.com/conventional-changelog/standard-version).

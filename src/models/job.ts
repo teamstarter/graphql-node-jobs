@@ -1,4 +1,5 @@
 import { DataTypes } from 'sequelize'
+import { isValidVersion } from '../version'
 
 export default function Job(sequelize: any) {
   const Job = sequelize.define(
@@ -87,6 +88,22 @@ export default function Job(sequelize: any) {
         type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 4,
+      },
+      // When set, the job is not dispatched to workers reporting a lower version.
+      requiredMinimumVersion: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue: null,
+        validate: {
+          isValidVersion(value: unknown) {
+            // Custom validators also run when the value is null.
+            if (value !== null && value !== undefined && !isValidVersion(value)) {
+              throw new Error(
+                `requiredMinimumVersion must be a valid semver version (like "1.2.3"), got "${value}".`
+              )
+            }
+          },
+        },
       },
       isRecoverable: {
         type: DataTypes.BOOLEAN,

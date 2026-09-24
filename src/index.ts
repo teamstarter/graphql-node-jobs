@@ -14,4 +14,5 @@ import toggleHoldJobType from './worker/toggleJobHoldType'
 export {
   CancelRequestedError, PRIORITY_HIGH, PRIORITY_LOW, PRIORITY_MED, checkForJobs, createJob, getApolloServer, getModels, getModelsAndInitializeDatabase, getNewClient, getStandAloneServer, listJobHoldTypes, listJobs, migrate, toggleHoldJobType
 }
+export * from './types'
 

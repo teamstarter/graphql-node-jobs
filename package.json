@@ -11,7 +11,7 @@
     "lib/**/*",
     "migrations/*"
   ],
-  "types": "./src/types.d.ts",
+  "types": "./lib/index.d.ts",
   "dependencies": {
     "@apollo/client": "^3.14.0",
     "@teamstarter/graphql-sequelize-generator": "^9.6.1",
@@ -33,6 +33,7 @@
     "http2": "^3.3.7",
     "node-fetch": "^2.6.0",
     "pg": "^8.8.0",
+    "semver": "^7.5.3",
     "sequelize": "6.28.0",
     "umzug": "^2.2.0",
     "util": "^0.12.5",
@@ -57,6 +58,7 @@
     "@types/debug": "^4.1.5",
     "@types/express": "4.17.14",
     "@types/node-fetch": "^2.5.4",
+    "@types/semver": "^7.5.8",
     "@types/spdy": "^3.4.4",
     "@types/uuid": "^3.4.6",
     "@types/ws": "^8.5.6",
@@ -66,7 +68,6 @@
     "graphql-relay": "^0.10.0",
     "graphql-sequelize": "^9.5.1",
     "jest": "^25.5.1",
-    "pm2": "^4.2.1",
     "react": "^18.2.0",
     "sequelize": "6.28.0",
     "spdy": "^4.0.1",
@@ -88,8 +89,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "graphql-node-jobs": "node ./lib/gnj.js",
-    "dev": "pm2 delete all -s; pm2 startOrReload ecosystem.dev.config.js",
-    "build": "tsc --lib es2019,dom --esModuleInterop --skipLibCheck --outDir ./lib ./src/index.ts ./src/models/*.ts ./src/gnj.ts",
+    "build": "tsc --lib es2019,dom --esModuleInterop --skipLibCheck --declaration --outDir ./lib ./src/index.ts ./src/models/*.ts ./src/gnj.ts",
     "test": "NO_ASYNC=true NODE_ENV=test PORT=3332 TZ=UTC node --max-old-space-size=8192 ./node_modules/.bin/jest --config ./tests/jest.config.js --runInBand --ci --forceExit --verbose",
     "release": "yarn build && yarn standard-version",
     "gnj": "node ./lib/gnj.js",

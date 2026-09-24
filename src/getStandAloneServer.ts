@@ -1,7 +1,7 @@
 import { expressMiddleware } from '@apollo/server/express4'
 import { json } from 'body-parser'
 import cors from 'cors'
-import { getApolloServer } from './../lib/index'
+import getApolloServer from './graphql/getApolloServer'
 
 import { Sequelize } from 'sequelize'
 import { JobType } from './types'
