@@ -1,4 +1,5 @@
 const { getApolloServer } = require('./../lib/index')
+const { deleteTables, resetDatabase } = require('./test-database')
 const express = require('express')
 const http = require('spdy')
 const { PubSub } = require('graphql-subscriptions')
@@ -10,6 +11,17 @@ const cors = require('cors')
 const config = require('../config/sequelizeConfig')
 
 async function startServer() {
+  // Like the tests, which use the same database, the server starts from a
+  // migrated and seeded database, and leaves it empty when stopped.
+  await deleteTables()
+  await resetDatabase()
+  const stop = async () => {
+    await deleteTables()
+    process.exit()
+  }
+  process.once('SIGINT', stop)
+  process.once('SIGTERM', stop)
+
   const app = express()
   var options = {
     spdy: {
@@ -49,18 +61,19 @@ async function startServer() {
   })
 
   const server = await getApolloServer({
-    dbConfig,
+    dbConfig: config,
     gsgParams: {
       pubSubInstance,
       playground: true,
+      // Apollo would otherwise exit on SIGINT and SIGTERM before `stop` empties the database.
+      apolloServerOptions: { stopOnTerminationSignals: false },
     },
     wsServer,
   })
 
   /**
-   * This is the test server.
-   * Used to allow the access to the Graphql Playground at this address: http://localhost:8080/graphql.
-   * Each time the server is starter, the database is reset.
+   * This is the development server, started with `yarn start`.
+   * It serves the GraphQL API and its playground at http://localhost:${PORT}/graphql.
    */
   await server.start()
 

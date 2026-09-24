@@ -35,13 +35,22 @@ To debug a single test file:
 NO_ASYNC=true NODE_ENV=test PORT=3332 TZ=UTC node --inspect-brk ./node_modules/.bin/jest --config ./tests/jest.config.js --runInBand ./tests/job.spec.js
 ```
 
-## Database changes
+## Development server
 
-A change of the models in `src/models/` needs a migration in `migrations/`, named after its creation date so that it runs after the existing ones. To try the migrations on the database of `.env`:
+`yarn start` serves the GraphQL API and its playground at `http://localhost:$PORT/graphql` (port 3333 with `.env.tmp`), with the compiled `lib/`:
 
 ```bash
-yarn gnj migrate "$PWD/config/sequelizeConfig.js"
+yarn build
+yarn start
 ```
+
+It uses the database of `.env`, like the tests: it drops its tables, then runs the migrations and the seeders when it starts, and drops the tables again when it stops. So stop it before running the tests.
+
+## Database changes
+
+A change of the models in `src/models/` needs a migration in `migrations/`, named after its creation date so that it runs after the existing ones. The tests and `yarn start` run all the migrations.
+
+Do not run `gnj migrate` on the database of `.env`: it records the executed migrations in another table than the tests, which would then run them again and fail.
 
 ## Commits and releases
 
