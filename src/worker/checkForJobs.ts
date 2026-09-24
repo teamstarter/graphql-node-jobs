@@ -4,6 +4,7 @@ import gql from 'graphql-tag'
 import uuidv4 from 'uuid'
 import { parentPort } from 'worker_threads'
 import { JobType, ProcessingInfo, UpdateProcessingInfo } from '../types'
+import { isValidVersion } from '../version'
 
 import updateJobQuery from './updateJobQuery'
 import updateProcessingInfo from './updateProcessingInfo'
@@ -22,6 +23,31 @@ const acquireJobQuery = gql`
       typeList: $typeList
       workerId: $workerId
       workerType: $workerType
+    ) {
+      id
+      type
+      name
+      input
+      output
+      status
+    }
+  }
+`
+
+// Only used when the worker reports its version, so that the workers that do not
+// use this option keep working with servers not knowing the workerVersion argument.
+const acquireJobWithVersionQuery = gql`
+  mutation acquireJob(
+    $typeList: [String!]!
+    $workerId: String
+    $workerType: String
+    $workerVersion: String
+  ) {
+    job: acquireJob(
+      typeList: $typeList
+      workerId: $workerId
+      workerType: $workerType
+      workerVersion: $workerVersion
     ) {
       id
       type
@@ -131,6 +157,7 @@ export default async function checkForJobs(args: {
   typeList: Array<String>
   workerId?: string
   workerType: string
+  workerVersion?: string
   looping: true
   loopTime?: number
   isCancelledOnCancelRequest?: boolean
@@ -138,6 +165,16 @@ export default async function checkForJobs(args: {
 }): Promise<any> {
   if (!args.typeList || args.typeList.length === 0) {
     throw new Error('Please provide a typeList property in the configuration.')
+  }
+
+  if (
+    args.workerVersion !== undefined &&
+    args.workerVersion !== null &&
+    !isValidVersion(args.workerVersion)
+  ) {
+    throw new Error(
+      `Please provide a valid semver workerVersion (like "1.2.3"), got "${args.workerVersion}".`
+    )
   }
 
   if (!args.workerId) {
@@ -150,16 +187,24 @@ export default async function checkForJobs(args: {
     typeList,
     workerId = undefined,
     workerType,
+    workerVersion,
     looping = true,
     loopTime = DEFAULT_LOOP_TIME,
     isCancelledOnCancelRequest = false,
     nonBlocking = false,
   } = args
 
-  const { data } = await client.mutate({
-    mutation: acquireJobQuery,
-    variables: { typeList, workerId, workerType },
-  })
+  const { data } = await client.mutate(
+    workerVersion
+      ? {
+          mutation: acquireJobWithVersionQuery,
+          variables: { typeList, workerId, workerType, workerVersion },
+        }
+      : {
+          mutation: acquireJobQuery,
+          variables: { typeList, workerId, workerType },
+        }
+  )
 
   const { job } = data
 

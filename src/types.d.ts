@@ -20,6 +20,8 @@ export type JobType = {
   output: JSONValue
   status: JobStatus
   batchId: number
+  // The job is not dispatched to workers reporting a lower semver version, like "1.2.3".
+  requiredMinimumVersion?: string | null
   updatedAt: Date
 }
 
