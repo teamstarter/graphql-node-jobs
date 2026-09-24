@@ -15,7 +15,7 @@ yarn db-start
 
 ## Building
 
-The code is written in TypeScript in `src/`, and compiled into `lib/`, which is committed and published. The tests use `lib/` too, so build after each change and commit the `lib/` changes with the `src/` ones:
+The code is written in TypeScript in `src/`, and compiled with its type declarations into `lib/`, which is committed and published. The tests use `lib/` too, so build after each change and commit the `lib/` changes with the `src/` ones:
 
 ```bash
 yarn build

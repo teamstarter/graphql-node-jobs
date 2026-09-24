@@ -11,7 +11,7 @@
     "lib/**/*",
     "migrations/*"
   ],
-  "types": "./src/types.d.ts",
+  "types": "./lib/index.d.ts",
   "dependencies": {
     "@apollo/client": "^3.14.0",
     "@teamstarter/graphql-sequelize-generator": "^9.6.1",
@@ -89,7 +89,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "graphql-node-jobs": "node ./lib/gnj.js",
-    "build": "tsc --lib es2019,dom --esModuleInterop --skipLibCheck --outDir ./lib ./src/index.ts ./src/models/*.ts ./src/gnj.ts",
+    "build": "tsc --lib es2019,dom --esModuleInterop --skipLibCheck --declaration --outDir ./lib ./src/index.ts ./src/models/*.ts ./src/gnj.ts",
     "test": "NO_ASYNC=true NODE_ENV=test PORT=3332 TZ=UTC node --max-old-space-size=8192 ./node_modules/.bin/jest --config ./tests/jest.config.js --runInBand --ci --forceExit --verbose",
     "release": "yarn build && yarn standard-version",
     "gnj": "node ./lib/gnj.js",

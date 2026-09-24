@@ -19,7 +19,7 @@ global.WebSocket = WebSocket as any
 
 export default function getNewClient(
   uri: string,
-  wsUri: string,
+  wsUri?: string,
   apolloClientOptions: Partial<ApolloClientOptions<any>> = {}
 ) {
   const httpLink = createHttpLink({

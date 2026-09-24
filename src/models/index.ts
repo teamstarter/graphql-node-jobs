@@ -109,7 +109,7 @@ export async function getModelsAndInitializeDatabase({
   return db
 }
 
-export function getModels(dbConfig: any, sequelizeInstance: any) {
+export function getModels(dbConfig: any, sequelizeInstance?: Sequelize) {
   if (!db) {
     if (!sequelizeInstance) {
       if (

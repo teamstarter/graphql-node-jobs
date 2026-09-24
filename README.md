@@ -38,6 +38,8 @@ graphql-node-jobs (GNJ) stores jobs in PostgreSQL with Sequelize, exposes them t
 yarn add @teamstarter/graphql-node-jobs graphql@^16.6.0 graphql-relay@^0.10.0 graphql-sequelize@^9.5.1 sequelize@6.28.0
 ```
 
+The package includes its TypeScript declarations, with the types of the jobs (`JobType`, `JobInput`, `ProcessingInfo`...).
+
 ## Database setup
 
 GNJ ships its own migrations. Run them with the `gnj` CLI and a Sequelize configuration file:

@@ -154,11 +154,11 @@ export default async function checkForJobs(args: {
     facilities: { updateProcessingInfo: UpdateProcessingInfo }
   ) => Promise<any>
   client: ApolloClient<any>
-  typeList: Array<String>
+  typeList: string[]
   workerId?: string
-  workerType: string
+  workerType?: string
   workerVersion?: string
-  looping: true
+  looping?: boolean
   loopTime?: number
   isCancelledOnCancelRequest?: boolean
   nonBlocking?: boolean

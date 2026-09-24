@@ -9,6 +9,7 @@ export type JobStatus =
   | 'processing'
   | 'failed'
   | 'successful'
+  | 'cancel-requested'
   | 'cancelled'
 
 export type JobType = {
@@ -23,6 +24,24 @@ export type JobType = {
   // The job is not dispatched to workers reporting a lower semver version, like "1.2.3".
   requiredMinimumVersion?: string | null
   updatedAt: Date
+}
+
+/**
+ * Attributes accepted to create a job. Only the type is required.
+ */
+export type JobInput = {
+  type: string
+  name?: string
+  input?: JSONValue
+  status?: JobStatus
+  jobUniqueId?: string
+  priorityLevel?: number
+  startAfter?: Date | string
+  requiredMinimumVersion?: string | null
+  isRecoverable?: boolean
+  isHighFrequency?: boolean
+  batchId?: number
+  pipelineId?: number
 }
 
 /**
