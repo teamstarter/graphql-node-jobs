@@ -1,7 +1,14 @@
 name: Node CI
 
 on: [push]
-
+env:
+  PORT: 3333
+  DEBUG: '*,server:*,-babel,-pm2:*,-express:*,-eslint:*'
+  PGUSER: gnj
+  PGPASSWORD: gnj
+  PGDATABASE: gnj-dev
+  PGPORT: 5432
+  PGHOST: localhost
 jobs:
   build:
     runs-on: ubuntu-latest
