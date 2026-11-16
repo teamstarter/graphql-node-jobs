@@ -16,6 +16,10 @@ export declare const STALE_JOB_CANCEL_MESSAGE = "Interrupted: the worker of the 
  * without heartbeatInterval, or of an older version) is stale when it started
  * more than `withoutHeartbeatStaleAfter` ms ago.
  *
+ * Each recovery adds 1 to job.interruptedCount, which `getAction` reads: a
+ * job whose run kills its worker (out of memory, for example) would otherwise
+ * be requeued and kill a worker again, forever.
+ *
  * `getAction(job)` decides for each `processing` job:
  * - 'requeue': the same job goes back to `queued`, to be run again from the
  *   start (processingInfo emptied). It keeps its id, so what links to it keeps

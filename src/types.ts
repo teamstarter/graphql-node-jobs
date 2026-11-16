@@ -27,6 +27,8 @@ export type JobType = {
   startedAt?: Date | null
   // Last heartbeat of the worker running the job (checkForJobs heartbeatInterval).
   heartbeatAt?: Date | null
+  // How many times recoverStaleJobs recovered the job.
+  interruptedCount?: number
   updatedAt: Date
 }
 
