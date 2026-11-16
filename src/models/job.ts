@@ -132,6 +132,13 @@ export default function Job(sequelize: any) {
         allowNull: true,
         defaultValue: null,
       },
+      // How many times recoverStaleJobs requeued or cancelled the job because
+      // its worker stopped sending heartbeats.
+      interruptedCount: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
       createdAt: {
         type: DataTypes.DATE,
         allowNull: false,

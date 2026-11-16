@@ -49,6 +49,8 @@ export default function RetryJob(
         'endedAt',
         'deletedAt',
         'cancelledAt',
+        'heartbeatAt',
+        'interruptedCount',
       ]
 
       const oldJobAttributes = Object.keys(job.dataValues).reduce(
