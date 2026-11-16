@@ -16,28 +16,17 @@ import { workerMonitoring } from './workerMonitoring'
 import { workerSuccessRating } from './workerSuccessRating'
 
 /**
- * @param dbConfig Sequelize database configuration object
- * @param gsgParams Params from graphql-sequelize-generator that overwrite the default ones.
+ * Cancels every job still `processing` and calls onJobFail for each of them.
+ *
+ * Right when one server process runs both the API and the workers: its boot
+ * means that its workers were stopped. Wrong as soon as the workers run in
+ * other processes, which keep running their jobs while an API process boots:
+ * use cancelProcessingJobsOnBoot: false and recoverStaleJobs there.
  */
-export default async function getApolloServer({
-  dbConfig,
-  sequelizeInstance,
-  gsgParams = {},
-  customMutations = {},
-  onJobFail,
-  wsServer = null} : {
-  dbConfig: any,
-  sequelizeInstance?: Sequelize,
-  gsgParams?: any,
-  customMutations?: any,
-  onJobFail?: (job: JobType) => Promise<any>,
-  wsServer?: any
-  }
+async function cancelProcessingJobs(
+  models: any,
+  onJobFail?: (job: JobType) => Promise<any>
 ) {
-  const models = await getModelsAndInitializeDatabase({dbConfig, sequelizeInstance})
-
-  const types = generateModelTypes(models)
-
   const jobsFail = await models.job.findAll({
     where: { status: 'processing' },
   })
@@ -51,6 +40,39 @@ export default async function getApolloServer({
         await onJobFail(job)
       }
     }
+  }
+}
+
+/**
+ * @param dbConfig Sequelize database configuration object
+ * @param gsgParams Params from graphql-sequelize-generator that overwrite the default ones.
+ * @param cancelProcessingJobsOnBoot Cancel the jobs still `processing` when the
+ * server boots (default). Set it to false when the workers do not run in the
+ * process of the server, see cancelProcessingJobs.
+ */
+export default async function getApolloServer({
+  dbConfig,
+  sequelizeInstance,
+  gsgParams = {},
+  customMutations = {},
+  onJobFail,
+  wsServer = null,
+  cancelProcessingJobsOnBoot = true,
+}: {
+  dbConfig: any
+  sequelizeInstance?: Sequelize
+  gsgParams?: any
+  customMutations?: any
+  onJobFail?: (job: JobType) => Promise<any>
+  wsServer?: any
+  cancelProcessingJobsOnBoot?: boolean
+}) {
+  const models = await getModelsAndInitializeDatabase({dbConfig, sequelizeInstance})
+
+  const types = generateModelTypes(models)
+
+  if (cancelProcessingJobsOnBoot) {
+    await cancelProcessingJobs(models, onJobFail)
   }
 
   const pubSub = gsgParams.pubSubInstance

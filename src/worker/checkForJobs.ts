@@ -13,6 +13,53 @@ const debug = _debug('graphql-node-jobs')
 
 const DEFAULT_LOOP_TIME = 1000
 
+const heartbeatJobQuery = gql`
+  mutation heartbeatJob($id: Int!, $workerId: String) {
+    job: heartbeatJob(id: $id, workerId: $workerId) {
+      id
+      status
+    }
+  }
+`
+
+/**
+ * Sends a heartbeat for the job right away, then every `interval` ms, until
+ * the returned function is called. Without an interval, sends nothing.
+ *
+ * A failed heartbeat (the server is being deployed, for example) does not stop
+ * the job: the next one is sent at the next interval.
+ */
+function startHeartbeat({
+  client,
+  job,
+  workerId,
+  interval,
+}: {
+  client: ApolloClient<any>
+  job: JobType
+  workerId?: string
+  interval?: number
+}): () => void {
+  if (!interval) {
+    return () => {}
+  }
+
+  const beat = () =>
+    client
+      .mutate({
+        mutation: heartbeatJobQuery,
+        variables: { id: job.id, workerId },
+      })
+      .catch((err) => debug('Failed to send the heartbeat of the job', job.id, err))
+
+  beat()
+  const timer = setInterval(beat, interval)
+  // The heartbeat alone must not keep the process alive.
+  timer.unref?.()
+
+  return () => clearInterval(timer)
+}
+
 const acquireJobQuery = gql`
   mutation acquireJob(
     $typeList: [String!]!
@@ -162,6 +209,10 @@ export default async function checkForJobs(args: {
   loopTime?: number
   isCancelledOnCancelRequest?: boolean
   nonBlocking?: boolean
+  // When set, job.heartbeatAt is updated every heartbeatInterval ms while the
+  // job is processed, so that recoverStaleJobs can tell a running job from a
+  // job whose worker died.
+  heartbeatInterval?: number
 }): Promise<any> {
   if (!args.typeList || args.typeList.length === 0) {
     throw new Error('Please provide a typeList property in the configuration.')
@@ -192,6 +243,7 @@ export default async function checkForJobs(args: {
     loopTime = DEFAULT_LOOP_TIME,
     isCancelledOnCancelRequest = false,
     nonBlocking = false,
+    heartbeatInterval,
   } = args
 
   const { data } = await client.mutate(
@@ -220,17 +272,25 @@ export default async function checkForJobs(args: {
   parentPort?.postMessage({ status: 'PROCESSING' })
   debug('Reiceived a new job', job)
   let output = null
+  const stopHeartbeat = startHeartbeat({
+    client,
+    job,
+    workerId,
+    interval: heartbeatInterval,
+  })
   try {
-    const processingPromise = processingFunction(job, {
-      updateProcessingInfo: async (info: ProcessingInfo) => {
-        await updateProcessingInfo(
-          client,
-          job,
-          info,
-          isCancelledOnCancelRequest
-        )
-      },
-    })
+    const processingPromise = Promise.resolve(
+      processingFunction(job, {
+        updateProcessingInfo: async (info: ProcessingInfo) => {
+          await updateProcessingInfo(
+            client,
+            job,
+            info,
+            isCancelledOnCancelRequest
+          )
+        },
+      })
+    ).finally(stopHeartbeat)
 
     if (nonBlocking) {
       processingPromise
@@ -251,6 +311,8 @@ export default async function checkForJobs(args: {
       return await handleJobResult({ client, job, output, looping, args })
     }
   } catch (err: any) {
+    // processingFunction may throw before returning a promise.
+    stopHeartbeat()
     return handleError({ err, client, job, looping, args })
   }
 

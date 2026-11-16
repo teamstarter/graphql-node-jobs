@@ -11,7 +11,8 @@ export default async function getStandAloneServer(
   gsgParams: any = {},
   customMutations: any = {},
   onJobFail?: (job: JobType) => Promise<any>,
-  sequelizeInstance?: Sequelize
+  sequelizeInstance?: Sequelize,
+  { cancelProcessingJobsOnBoot = true }: { cancelProcessingJobsOnBoot?: boolean } = {}
 ) {
   const express = require('express')
   const http2 = require('http')
@@ -64,7 +65,8 @@ export default async function getStandAloneServer(
       gsgParams,
       customMutations,
       onJobFail,
-      wsServer
+      wsServer,
+      cancelProcessingJobsOnBoot,
     }
   )
   await server.start()

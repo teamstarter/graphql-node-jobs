@@ -4,6 +4,11 @@ import { CancelRequestedError } from './graphql/job'
 import migrate from './migrate'
 import { getModels, getModelsAndInitializeDatabase } from './models'
 import { PRIORITY_HIGH, PRIORITY_LOW, PRIORITY_MED } from './priority'
+import recoverStaleJobs, {
+  RecoverStaleJobsResult,
+  STALE_JOB_CANCEL_MESSAGE,
+  StaleJobAction,
+} from './recoverStaleJobs'
 import checkForJobs from './worker/checkForJobs'
 import createJob from './worker/createJob'
 import getNewClient from './worker/getNewClient'
@@ -12,7 +17,8 @@ import listJobs from './worker/listJobs'
 import toggleHoldJobType from './worker/toggleJobHoldType'
 
 export {
-  CancelRequestedError, PRIORITY_HIGH, PRIORITY_LOW, PRIORITY_MED, checkForJobs, createJob, getApolloServer, getModels, getModelsAndInitializeDatabase, getNewClient, getStandAloneServer, listJobHoldTypes, listJobs, migrate, toggleHoldJobType
+  CancelRequestedError, PRIORITY_HIGH, PRIORITY_LOW, PRIORITY_MED, STALE_JOB_CANCEL_MESSAGE, checkForJobs, createJob, getApolloServer, getModels, getModelsAndInitializeDatabase, getNewClient, getStandAloneServer, listJobHoldTypes, listJobs, migrate, recoverStaleJobs, toggleHoldJobType
 }
+export type { RecoverStaleJobsResult, StaleJobAction }
 export * from './types'
 

@@ -15,6 +15,9 @@ export type JobType = {
     status: JobStatus;
     batchId: number;
     requiredMinimumVersion?: string | null;
+    workerId?: string | null;
+    startedAt?: Date | null;
+    heartbeatAt?: Date | null;
     updatedAt: Date;
 };
 /**

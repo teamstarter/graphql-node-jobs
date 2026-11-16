@@ -12,6 +12,7 @@ import updatePipelineStatus from './utils/updatePipelineStatus'
 
 import { isAfter } from 'date-fns'
 import acquireJob from './job/acquire'
+import heartbeatJob from './job/heartbeat'
 import recoverJob from './job/recover'
 import retryJob from './job/retry'
 
@@ -83,6 +84,7 @@ export default function JobConfiguration(
     subscriptions: ['create', 'update', 'delete'],
     additionalMutations: {
       acquireJob: acquireJob(graphqlTypes, models),
+      heartbeatJob: heartbeatJob(graphqlTypes, models),
       recover: recoverJob(graphqlTypes, models),
       retryJob: retryJob(graphqlTypes, models, pubSubInstance),
     },

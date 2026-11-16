@@ -184,7 +184,7 @@ exports.closeEverything = async (mainServer, models, done) => {
   done()
 }
 
-exports.getNewServer = (onJobFail, sequelizeInstance) => {
+exports.getNewServer = (onJobFail, sequelizeInstance, options) => {
   return getStandAloneServer(
     dbConfig,
     {
@@ -220,6 +220,7 @@ exports.getNewServer = (onJobFail, sequelizeInstance) => {
       },
     },
     onJobFail,
-    sequelizeInstance
+    sequelizeInstance,
+    options
   )
 }
