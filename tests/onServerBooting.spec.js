@@ -183,4 +183,30 @@ describe('Test when server booting', () => {
     expect(responseJobList.body.errors).toBeUndefined()
     expect(responseJobList.body.data.job[0].status).toBe('cancelled')
   })
+
+  it('With cancelProcessingJobsOnBoot: false, a booting server leaves the processing jobs to their workers', async () => {
+    const responseCreateJob = await createJob(client, {
+      type: 'processingOfALiveWorker',
+      status: 'processing',
+    })
+    expect(responseCreateJob.status).toBe('processing')
+
+    const onJobFail = jest.fn(async () => {})
+    await new Promise((resolve) => server.close(() => resolve()))
+    server = await getNewServer(onJobFail, undefined, {
+      cancelProcessingJobsOnBoot: false,
+    })
+
+    const responseJobList = await request(server)
+      .post('/graphql')
+      .send(
+        jobList({
+          where: { type: 'processingOfALiveWorker' },
+        })
+      )
+
+    expect(responseJobList.body.errors).toBeUndefined()
+    expect(responseJobList.body.data.job[0].status).toBe('processing')
+    expect(onJobFail).not.toHaveBeenCalled()
+  })
 })

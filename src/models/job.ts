@@ -125,6 +125,13 @@ export default function Job(sequelize: any) {
         allowNull: true,
         defaultValue: null,
       },
+      // Last sign of life of the worker running the job, sent by checkForJobs
+      // when it is given a heartbeatInterval. recoverStaleJobs reads it.
+      heartbeatAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
+        defaultValue: null,
+      },
       createdAt: {
         type: DataTypes.DATE,
         allowNull: false,
