@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.4.0](https://github.com/teamstarter/graphql-node-jobs/compare/v5.3.0...v5.4.0) (2026-11-16)
+
+
+### Features
+
+* **job:** TEA-3131 count the recoveries of a job (interruptedCount) ([#99](https://github.com/teamstarter/graphql-node-jobs/issues/99)) ([69ad809](https://github.com/teamstarter/graphql-node-jobs/commit/69ad8095a2d9ee622c2cf5411eddc5974f0daa91))
+
 ## [5.3.0](https://github.com/teamstarter/graphql-node-jobs/compare/v5.2.0...v5.3.0) (2026-11-16)
 
 
