@@ -23,6 +23,10 @@ export type JobType = {
   batchId: number
   // The job is not dispatched to workers reporting a lower semver version, like "1.2.3".
   requiredMinimumVersion?: string | null
+  workerId?: string | null
+  startedAt?: Date | null
+  // Last heartbeat of the worker running the job (checkForJobs heartbeatInterval).
+  heartbeatAt?: Date | null
   updatedAt: Date
 }
 

@@ -145,7 +145,7 @@ httpServer.listen(8080)
 
 ### Server hooks
 
-- When a server boots, the jobs still `processing` are considered interrupted (by a crash or a deployment for example): they are set to `cancelled` and `onJobFail` is called for each of them.
+- When a server boots, the jobs still `processing` are considered interrupted (by a crash or a deployment for example): they are set to `cancelled` and `onJobFail` is called for each of them. This is right when the workers run in the process of the server. When they run in other processes, which keep running their jobs while a server boots, pass `cancelProcessingJobsOnBoot: false` to `getApolloServer` (or `{ cancelProcessingJobsOnBoot: false }` as the last argument of `getStandAloneServer`) and see [Recovering the jobs of a dead worker](#recovering-the-jobs-of-a-dead-worker).
 - `onJobFail(job)` is also called each time a job is updated to `failed`.
 
 ## Jobs
@@ -297,6 +297,7 @@ Then it looks for the next job right away, or after `loopTime` when there was no
 | `loopTime`                   | `1000`     | Milliseconds to wait before looking again when no job was available.                                                                                              |
 | `nonBlocking`                | `false`    | Look for the next job without waiting for the current one to be processed. The jobs are then processed concurrently, without limit.                               |
 | `isCancelledOnCancelRequest` | `false`    | Make `updateProcessingInfo` throw a `CancelRequestedError` when the cancellation of the job is requested, see [Cancellation](#cancellation).                      |
+| `heartbeatInterval`          |            | Milliseconds between two heartbeats of the running job, see [Recovering the jobs of a dead worker](#recovering-the-jobs-of-a-dead-worker).                       |
 
 ### Reporting progress
 
@@ -348,6 +349,32 @@ The jobs of a held type are not dispatched until the type is released. Toggle a 
 - `retryJob(id: Int!)` copies a `failed` or `cancelled` job into a new `queued` job, whose `retryOfJobId` references the original one.
 - `recover(id: Int!)` puts a `failed` job back in the queue if it has the `isRecoverable` flag. It keeps its `processingInfo`, so the worker can resume where it stopped.
 
+### Recovering the jobs of a dead worker
+
+When a worker dies (crash, out of memory, deployment, instance replaced), its job stays `processing`. By default, a booting server cancels every `processing` job (see [Server hooks](#server-hooks)), which is right only when the workers run in the process of the server. When they run elsewhere, use heartbeats instead:
+
+1. Give the workers a `heartbeatInterval`. `checkForJobs` then sets the `heartbeatAt` of the job when it acquires it, and every `heartbeatInterval` ms until the processing function ends, with the `heartbeatJob(id: Int!, workerId: String)` mutation. A failed heartbeat does not stop the job.
+2. Create the server with `cancelProcessingJobsOnBoot: false`.
+3. Run `recoverStaleJobs` regularly, from one process or several:
+
+```js
+const { recoverStaleJobs } = require('@teamstarter/graphql-node-jobs')
+
+const { requeued, cancelled } = await recoverStaleJobs({
+  sequelizeInstance, // or dbConfig
+  staleAfter: 10 * 60 * 1000, // No heartbeat for 10 minutes: the worker is dead.
+  withoutHeartbeatStaleAfter: 60 * 60 * 1000, // Optional, see below.
+  getAction: (job) => (job.type === 'render-tile' ? 'requeue' : 'cancel'),
+})
+```
+
+- `getAction(job)` returns `'requeue'` for a job that can run twice without harm: the same job (same id) goes back to `queued`, with an empty `processingInfo`, and is run again from the start. It returns `'cancel'` (default) for the others: the job becomes `cancelled`, with `output.cancelMessage` set to `STALE_JOB_CANCEL_MESSAGE`, and keeps its `processingInfo`. A stale `cancel-requested` job is always cancelled.
+- `onJobFail` is not called: the job was interrupted, it did not fail. Report the returned jobs as you want.
+- `withoutHeartbeatStaleAfter` also recovers the `processing` jobs that never sent a heartbeat (workers without `heartbeatInterval`, or of an older version) and started more than this duration ago. Use it while the workers are being upgraded.
+- Choose a `staleAfter` several times longer than `heartbeatInterval`, and longer than your longest server downtime: a job whose worker cannot reach the server for longer is recovered while it still runs.
+- Each job is recovered by one call only, even when several processes run it at the same time.
+- Upgrade and migrate the GNJ server before the workers use `heartbeatInterval`, older servers do not know the `heartbeatJob` mutation.
+
 ### Batches and pipelines
 
 A batch groups jobs. Create it with `batchCreate`, then create jobs with its `batchId`. When its jobs end, the batch becomes `successful` if they all succeeded, `failed` otherwise. Jobs created with a `batchId` start `planned`, so give them the `queued` status if the batch is not part of a pipeline.
@@ -373,7 +400,7 @@ The statistics are PostgreSQL materialized views that GNJ does not refresh. Refr
 The schema is generated from the models by [graphql-sequelize-generator](https://github.com/teamstarter/graphql-sequelize-generator):
 
 - **Queries**: `job`, `batch`, `pipeline`, `pipelineStep`, `jobHoldType`, `workerMonitoring`, `jobSuccessRating`, `workerSuccessRating`, with `where`, `order`, `limit` and `offset` arguments, and their `*Count` queries.
-- **Mutations**: `jobCreate`, `jobUpdate`, `acquireJob`, `retryJob`, `recover`, `toggleHoldJobType`, `batchCreate`, `batchUpdate`, `pipelineCreate`, `pipelineUpdate`, `startPipeline`, `pipelineStepCreate`, `pipelineStepUpdate`, `ping`, `pong`, `workerMonitoringUpdate`.
+- **Mutations**: `jobCreate`, `jobUpdate`, `acquireJob`, `heartbeatJob`, `retryJob`, `recover`, `toggleHoldJobType`, `batchCreate`, `batchUpdate`, `pipelineCreate`, `pipelineUpdate`, `startPipeline`, `pipelineStepCreate`, `pipelineStepUpdate`, `ping`, `pong`, `workerMonitoringUpdate`.
 - **Subscriptions**, when a `pubSubInstance` is given: `jobCreated`, `jobUpdated`, `jobDeleted`, `pinged`, `ponged`, `workerMonitoringUpdated`.
 
 The [online documentation](https://teamstarter.github.io/gnj-documentation/) has more examples, but may not be up to date.

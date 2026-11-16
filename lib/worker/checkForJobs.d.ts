@@ -13,4 +13,5 @@ export default function checkForJobs(args: {
     loopTime?: number;
     isCancelledOnCancelRequest?: boolean;
     nonBlocking?: boolean;
+    heartbeatInterval?: number;
 }): Promise<any>;

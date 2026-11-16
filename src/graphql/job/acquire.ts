@@ -123,7 +123,9 @@ async function acquireJob(
       UPDATE job
       SET "workerId" = ${args.workerId ? ':workerId' : 'NULL'},
           "status" = 'processing',
-          "startedAt" = CURRENT_TIMESTAMP
+          "startedAt" = CURRENT_TIMESTAMP,
+          -- A heartbeat left by a previous run would make the job look stale.
+          "heartbeatAt" = NULL
       FROM (
         SELECT id
         FROM job
