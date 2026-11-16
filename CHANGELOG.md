@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.3.0](https://github.com/teamstarter/graphql-node-jobs/compare/v5.2.0...v5.3.0) (2026-11-16)
+
+
+### Features
+
+* **job:** TEA-3131 heartbeats, and recovery of the jobs of a dead worker ([#98](https://github.com/teamstarter/graphql-node-jobs/issues/98)) ([1931951](https://github.com/teamstarter/graphql-node-jobs/commit/193195163d7af650177e19692843fbc06210f2a4))
+
 ## [5.2.0](https://github.com/teamstarter/graphql-node-jobs/compare/v5.1.0...v5.2.0) (2026-09-25)
 
 
