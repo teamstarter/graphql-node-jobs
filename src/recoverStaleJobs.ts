@@ -61,6 +61,10 @@ async function updateStaleJobs(
  * without heartbeatInterval, or of an older version) is stale when it started
  * more than `withoutHeartbeatStaleAfter` ms ago.
  *
+ * Each recovery adds 1 to job.interruptedCount, which `getAction` reads: a
+ * job whose run kills its worker (out of memory, for example) would otherwise
+ * be requeued and kill a worker again, forever.
+ *
  * `getAction(job)` decides for each `processing` job:
  * - 'requeue': the same job goes back to `queued`, to be run again from the
  *   start (processingInfo emptied). It keeps its id, so what links to it keeps
@@ -132,6 +136,7 @@ export default async function recoverStaleJobs({
       "startedAt" = NULL,
       "heartbeatAt" = NULL,
       "processingInfo" = NULL,
+      "interruptedCount" = "interruptedCount" + 1,
       "updatedAt" = :now`,
     idsToRequeue,
     `"status" = 'processing' AND ${staleCondition}`,
@@ -144,6 +149,7 @@ export default async function recoverStaleJobs({
       "output" = CAST(:output AS JSON),
       "cancelledAt" = :now,
       "endedAt" = :now,
+      "interruptedCount" = "interruptedCount" + 1,
       "updatedAt" = :now`,
     idsToCancel,
     staleCondition,

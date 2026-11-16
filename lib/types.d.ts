@@ -18,6 +18,7 @@ export type JobType = {
     workerId?: string | null;
     startedAt?: Date | null;
     heartbeatAt?: Date | null;
+    interruptedCount?: number;
     updatedAt: Date;
 };
 /**

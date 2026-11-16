@@ -80,6 +80,7 @@ const describeJob = (job) =>
     hasHeartbeatAt: Boolean(job.heartbeatAt),
     hasCancelledAt: Boolean(job.cancelledAt),
     hasEndedAt: Boolean(job.endedAt),
+    interruptedCount: job.interruptedCount,
   }
 
 const describeAll = async (models, jobs) => {
@@ -139,8 +140,10 @@ describe('recoverStaleJobs', () => {
       hasHeartbeatAt: false,
       hasCancelledAt: false,
       hasEndedAt: false,
+      interruptedCount: 1,
     })
     expect(after.deadNotRerunnable.status).toBe('cancelled')
+    expect(after.deadNotRerunnable.interruptedCount).toBe(1)
     expect(after.deadNotRerunnable.output).toEqual({
       cancelMessage: STALE_JOB_CANCEL_MESSAGE,
     })
@@ -201,6 +204,35 @@ describe('recoverStaleJobs', () => {
 
     const again = await recoverStaleJobs({ dbConfig, staleAfter: 10 * MINUTE })
     expect(again).toEqual({ requeued: [], cancelled: [] })
+  })
+
+  it('gives getAction the number of earlier interruptions, so that a job that kills its worker is not requeued forever', async () => {
+    const models = await getModelsAndInitializeDatabase()
+    // Requeued once already: its second run killed its worker again.
+    const job = await models.job.create({
+      type: 'rerunnable',
+      status: 'processing',
+      workerId: 'a-worker',
+      startedAt: minutesAgo(30),
+      heartbeatAt: minutesAgo(20),
+      interruptedCount: 1,
+    })
+
+    const seenCounts = []
+    const result = await recoverStaleJobs({
+      dbConfig,
+      staleAfter: 10 * MINUTE,
+      getAction: (staleJob) => {
+        seenCounts.push(staleJob.interruptedCount)
+        return staleJob.interruptedCount === 0 ? 'requeue' : 'cancel'
+      },
+    })
+
+    expect(seenCounts).toEqual([1])
+    expect(result.cancelled.map((cancelled) => cancelled.id)).toEqual([job.id])
+    const after = await models.job.findByPk(job.id)
+    expect(after.status).toBe('cancelled')
+    expect(after.interruptedCount).toBe(2)
   })
 
   it('refuses to run without a staleAfter duration', async () => {
